@@ -1,0 +1,701 @@
+<div class="row keywords mt-3">
+  <div class="align-items-stretch col-12">
+    <div class="card h-100">
+      <h5 class="card-header">
+        <span class="help" id="tooltip_8_1"
+          ><i class="fas fa-search"></i> Filter box</span
+        ><span class="card-header-buttons float-right">
+          <i
+            class="fa
+            fa-window-minimize"
+          ></i
+        ></span>
+      </h5>
+
+      <div class="card-body collapse show">
+        <div class="row">
+          <div class="col-lg-6 col-xs-12 border-right target-corpus">
+            <div class="d-flex justify-content-center">
+              <h5>Target</h5>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-lg-6 col-xs-12">
+                <div class="dropdown">
+                  <button
+                    class="btn btn-outline-primary dropdown-toggle ml-2"
+                    type="button"
+                    id="targetCorpus"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Preset
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="targetCorpus">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      data-preset="wars"
+                    >
+                      Wars
+                    </button>
+                    <div class="dropdown-divider"></div>
+
+                    <button
+                      class="dropdown-item hidden"
+                      type="button"
+                      data-preset="parliament"
+                    >
+                      Parliaments
+                    </button>
+                    <div class="dropdown-divider hidden"></div>
+
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      data-preset="decades"
+                    >
+                      Decades
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      data-preset="self-defined"
+                    >
+                      Self-defined
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-xs-12">
+                <div class="form-group col-md-10">
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input keywords house"
+                      type="radio"
+                      name="kwTargetHouseRadioOptions"
+                      value="commons"
+                      checked
+                    />
+                    <label class="form-check-label commons">Commons</label>
+                  </div>
+                  <br />
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input keywords house"
+                      type="radio"
+                      name="kwTargetHouseRadioOptions"
+                      value="lords"
+                    />
+                    <label class="form-check-label lords">Lords</label>
+                  </div>
+                  <br />
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input keywords house"
+                      type="radio"
+                      name="kwTargetHouseRadioOptions"
+                      value="both"
+                    />
+                    <label class="form-check-label both">Both</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-xs-12">
+                <div
+                  class="custom-control custom-switch help"
+                  id="tooltip_2_2c"
+                >
+                  <input
+                    type="checkbox"
+                    id="tooltipConfigKeywords"
+                    class="custom-control-input tooltip-config results"
+                    id="help"
+                    checked
+                  />
+                  <label
+                    class="custom-control-label"
+                    for="tooltipConfigKeywords"
+                    >Show help</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2 px-3 self-defined kw-sect">
+              <input
+                type="text"
+                class="form-control keywords-search input-query pr-1"
+                placeholder="Search term..."
+              />
+              <div class="invalid-feedback">
+                Please insert a valid query.
+              </div>
+            </div>
+
+            <div class="row mt-3 self-defined kw-sect">
+              <div class="col-12">
+                <div
+                  id="tooltip_3_4"
+                  class="col-md-12 help"
+                  style="padding:0 !important"
+                >
+                  <div class="form-row mb-2">
+                    <div class="col-12 col-sm-6">
+                      <label class="mr-3">From:</label>
+                      <input class="form-control datepicker datepicker-from" />
+                    </div>
+                    <div class="col-12 col-sm-6">
+                      <label class="mr-3">To:</label>
+                      <input class="form-control datepicker datepicker-to" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2 self-defined kw-sect">
+              <div class="col-lg-6 col-xs-12">
+                <label class="mr-3" style="visibility: hidden;">Member:</label>
+                <input
+                  id="tooltip_3_3b"
+                  type="text"
+                  class="help typeahead form-control keywords
+                typeahead-members commons"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+                <input
+                  type="text"
+                  class="typeahead form-control keywords
+                typeahead-members lords"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+                <input
+                  type="text"
+                  class="typeahead form-control keywords
+                typeahead-members both"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+              </div>
+            </div>
+
+            <div class="row mt-2 parliament kw-sect">
+              <div class="col-lg-6 col-xs-12">
+                <input
+                  type="text"
+                  class="typeahead form-control
+              typeahead-parliament"
+                  data-provide="typeahead"
+                  placeholder="Parliaments..."
+                />
+              </div>
+            </div>
+
+            <div class="row mt-2 decades kw-sect">
+              <div class="col-lg-6 col-xs-12">
+                <input
+                  type="text"
+                  class="typeahead form-control 
+              typeahead-decades"
+                  data-provide="typeahead"
+                  placeholder="List of decades..."
+                />
+              </div>
+            </div>
+
+            <div class="row mt-2 wars kw-sect">
+              <div class="col-4">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="1812_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >War of 1812</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="greek_war"
+                    checked
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >Greek War of Independence</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="first-opium_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >First Opium War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="crimean_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >Crimean War</label
+                  >
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="anglo-zulu_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >Anglo-Zulu War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="first-boer_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >First Boer War</label
+                  >
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="second-boer_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >Second Boer War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="wwi_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >World War I
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="wwii_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >World War II</label
+                  >
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="faklands_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >Falklands War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="persian-gulf_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >Persian Gulf War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warTargetRadio"
+                    value="iraq_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >Iraq War</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-xs-12 border-right comparison-corpus">
+            <div class="d-flex justify-content-center">
+              <h5>Comparison</h5>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-lg-6 col-xs-12">
+                <div class="dropdown">
+                  <button
+                    class="btn btn-outline-primary dropdown-toggle ml-2"
+                    type="button"
+                    id="comparisonCorpus"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Preset
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="comparisonCorpus">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      data-preset="wars"
+                    >
+                      Wars
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button
+                      class="dropdown-item hidden"
+                      type="button"
+                      data-preset="parliament"
+                    >
+                      Parliaments
+                    </button>
+                    <div class="dropdown-divider hidden"></div>
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      data-preset="decades"
+                    >
+                      Decades
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      data-preset="self-defined"
+                    >
+                      Self-defined
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-xs-12">
+                <div class="form-group col-md-10">
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input keywords house"
+                      type="radio"
+                      name="kwComparisonHouseRadioOptions"
+                      value="commons"
+                      checked
+                    />
+                    <label class="form-check-label commons">Commons</label>
+                  </div>
+                  <br />
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input keywords house"
+                      type="radio"
+                      name="kwComparisonHouseRadioOptions"
+                      value="lords"
+                    />
+                    <label class="form-check-label lords">Lords</label>
+                  </div>
+                  <br />
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input keywords house"
+                      type="radio"
+                      name="kwComparisonHouseRadioOptions"
+                      value="both"
+                    />
+                    <label class="form-check-label both">Both</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2 px-3 self-defined kw-sect">
+              <input
+                type="text"
+                class="form-control keywords-search input-query pr-1"
+                placeholder="Search term..."
+              />
+              <div class="invalid-feedback">
+                Please insert a valid query.
+              </div>
+            </div>
+
+            <div class="row mt-3 self-defined kw-sect">
+              <div class="col-12">
+                <div
+                  id="tooltip_3_4"
+                  class="col-md-12 help"
+                  style="padding:0 !important"
+                >
+                  <div class="form-row mb-2">
+                    <div class="col-12 col-sm-6">
+                      <label class="mr-3">From:</label>
+                      <input class="form-control datepicker datepicker-from" />
+                    </div>
+                    <div class="col-12 col-sm-6">
+                      <label class="mr-3">To:</label>
+                      <input class="form-control datepicker datepicker-to" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2 self-defined kw-sect">
+              <div class="col-lg-6 col-xs-12">
+                <label class="mr-3" style="visibility: hidden;">Member:</label>
+                <input
+                  id="tooltip_3_3c"
+                  type="text"
+                  class="help typeahead form-control keywords
+                typeahead-members commons"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+                <input
+                  type="text"
+                  class="typeahead form-control keywords
+                typeahead-members lords"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+                <input
+                  type="text"
+                  class="typeahead form-control keywords
+                typeahead-members both"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+              </div>
+            </div>
+
+            <div class="row mt-2 parliament kw-sect">
+              <div class="col-lg-6 col-xs-12">
+                <input
+                  type="text"
+                  class="typeahead form-control
+              typeahead-parliament col-6"
+                  data-provide="typeahead"
+                  placeholder="Parliaments ..."
+                />
+              </div>
+            </div>
+
+            <div class="row mt-2 decades kw-sect">
+              <div class="col-lg-6 col-xs-12">
+                <input
+                  type="text"
+                  class="typeahead form-control 
+              typeahead-decades"
+                  data-provide="typeahead"
+                  placeholder="List of decades ..."
+                />
+              </div>
+            </div>
+
+            <div class="row mt-2 wars kw-sect">
+              <div class="col-4">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="1812_war"
+                    checked
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >War of 1812</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="greek_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >Greek War of Independence</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="first-opium_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >First Opium War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="crimean_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >Crimean War</label
+                  >
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="anglo-zulu_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >Anglo-Zulu War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="first-boer_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >First Boer War</label
+                  >
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="second-boer_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >Second Boer War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="wwi_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >World War I
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="wwii_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >World War II</label
+                  >
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="faklands_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio1"
+                    >Falklands War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="persian-gulf_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio2"
+                    >Persian Gulf War</label
+                  >
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="warComparisonRadio"
+                    value="iraq_war"
+                  />
+                  <label class="form-check-label" for="inlineRadio3"
+                    >Iraq War</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12">
+            <button
+              id="tooltip_3_5"
+              class="btn btn-primary btn-lg submit submit-keywords text-center help"
+            >
+              Search
+            </button>
+            <button
+              type="button"
+              class="ml-2 btn btn-outline-primary reset-keywords btn"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- /.card-body -->
+      </div>
+    </div>
+  </div>
+</div>

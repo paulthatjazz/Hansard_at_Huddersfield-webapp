@@ -1,0 +1,36 @@
+<div class="row type mt-3">
+  <div class="col-12">
+    <div class="row d-flex d-lg-none justify-content-center">
+      <h4 class="card-title my-1 text-muted help select-function">
+        Select a function
+      </h4>
+    </div>
+    <div class="row d-flex justify-content-center type">
+      <button
+        type="button"
+        data-toggle="tooltip"
+        data-delay='{"show": 3000, "hide": 500}'
+        data-placement="top"
+        title="Examine Hansard by means of its most frequent words"
+        class="btn btn-lg btn-outline-primary col-xl-2 col-lg-3 col-md-4 col-5 mr-2"
+        data-function="word_cloud"
+      >
+        <i class="fa fa-cloud fa-lg"></i>
+        <br />
+        By frequencies
+      </button>
+      <button
+        type="button"
+        data-toggle="tooltip"
+        data-delay='{"show": 3000, "hide": 500}'
+        data-placement="top"
+        title="Examine Hansard by means of keywords"
+        class="btn btn-lg btn-outline-primary col-xl-2 col-lg-3 col-md-4 col-5 ml-0 ml-lg-1"
+        data-function="keywords"
+      >
+        <i class="fas fa-braille fa-lg"></i><br />
+        By keywords
+      </button>
+    </div>
+  </div>
+</div>

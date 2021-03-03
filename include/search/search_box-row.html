@@ -1,0 +1,357 @@
+<div class="row d-flex d-lg-none justify-content-center">
+  <h4 class="card-title my-1 text-muted help select-function">
+    Select a function
+  </h4>
+</div>
+<div class="row justify-content-center">
+  <div class="col-xl-10 col-lg-12 pt-3 pt-lg-0 search-box mb-3">
+    <div class="card h-100">
+      <h5 class="card-header">
+        <i class="fas fa-search fa-fw"></i> Search Box
+        <span class="card-header-buttons float-right">
+          <i class="fa fa-window-minimize"></i
+        ></span>
+      </h5>
+      <div class="card-body">
+        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active help"
+              id="pills-basic-tab"
+              data-toggle="pill"
+              href="#pills-basic"
+              role="tab"
+              aria-controls="pills-basic"
+              aria-selected="true"
+              >Basic</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link help"
+              id="pills-advanced-tab"
+              data-toggle="pill"
+              href="#pills-advanced"
+              role="tab"
+              aria-controls="pills-advanced"
+              aria-selected="false"
+              >Advanced</a
+            >
+          </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            class="tab-pane fade show active basic-search"
+            id="pills-basic"
+            role="tabpanel"
+            aria-labelledby="pills-basic-tab"
+          >
+            <div class="form-row mb-2 mr-sm-2">
+              <div class="col-md-8 col-10 pb-2">
+                <input
+                  id="tooltip_1_7"
+                  type="text"
+                  class="form-control basic-search input-query help"
+                  placeholder="Search term..."
+                  autocomplete="off"
+                />
+                <div class="invalid-feedback">
+                  Please insert a valid query.
+                </div>
+              </div>
+
+	      <div class="col-auto pb-2" hidden>
+                <button
+                  id="tooltip_1_8"
+                  type="button"
+                  class="btn btn-outline-primary related-search basic-search help"
+                >
+                  <i class="fas fa-search-plus"></i> Related terms
+                </button>
+              </div>
+
+              <div class="col-auto my-1">
+                <div class="custom-control custom-switch help" id="tooltip_2_2">
+                  <input
+                    type="checkbox"
+                    id="tooltipConfigBasic"
+                    class="custom-control-input tooltip-config results"
+                    id="help"
+                    checked
+                  />
+                  <label class="custom-control-label" for="tooltipConfigBasic"
+                    >Show help</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row pb-3 related-terms basic-search">
+              <div class="form-group col-12"></div>
+            </div>
+
+            <div class="form-row basic-search mb-2">
+              <div class="form-group col-md-2 col-6 date-time annual help">
+                <label>From:</label>
+                <input
+                  type="number"
+                  min="1803"
+                  max="2019"
+                  class="form-control annual-from"
+                  data-provide="typeahead"
+                  value="2000"
+                />
+                <div class="invalid-feedback">
+                  Please enter a number between 1803 and 2019.
+                </div>
+              </div>
+
+              <div class="form-group col-md-2 col-6 date-time annual">
+                <label>To:</label>
+                <input
+                  type="number"
+                  min="1803"
+                  max="2019"
+                  class="form-control annual-to"
+                  data-provide="typeahead"
+                  value="2019"
+                />
+                <div class="invalid-feedback">
+                  Please enter a number between 1803 and 2019.
+                </div>
+              </div>
+
+              <div
+                id="tooltip_1_10"
+                class="form-group col-md-7 offset-md-1 houses help"
+              >
+                <legend class="col-form-label pt-0">Select House:</legend>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input basic-search house"
+                    type="radio"
+                    name="basicSearchHouseRadioOptions"
+                    value="commons"
+                    checked
+                  />
+                  <label class="form-check-label commons">Commons</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input basic-search house"
+                    type="radio"
+                    name="basicSearchHouseRadioOptions"
+                    value="lords"
+                  />
+                  <label class="form-check-label lords">Lords</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input basic-search house"
+                    type="radio"
+                    name="basicSearchHouseRadioOptions"
+                    value="both"
+                  />
+                  <label class="form-check-label both">Both</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row basic-search">
+              <div class="pb-3 terms-list">
+                <label>
+                  <p class="font-italic">Selected terms:</p>
+                </label>
+                <div></div>
+              </div>
+            </div>
+
+            <div class="form-row basic-search justify-content-between">
+              <div class="col-lg-4 col-12">
+                <button
+                  id="tooltip_1_15"
+                  class="btn btn-primary btn-lg submit text-center help"
+                >
+                  Search
+                </button>
+                <button
+                  id="tooltip_1_13"
+                  type="button"
+                  class="btn btn-outline-primary reset-term basic-search btn
+                  help"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-pane fade advanced-search"
+            id="pills-advanced"
+            role="tabpanel"
+            aria-labelledby="pills-advanced-tab"
+          >
+            <div class="form-row mb-2">
+              <div class="col-lg-6 col-12">
+                <input
+                  type="text"
+                  class="form-control advanced-search input-query"
+                  placeholder="Search term..."
+                />
+                <div class="invalid-feedback">
+                  Please insert a valid query.
+                </div>
+              </div>
+
+              <div class="form-group col-lg-3 my-3 my-lg-0 col-9">
+                <input
+                  id="tooltip_3_3a"
+                  type="text"
+                  class="help typeahead form-control advanced-search
+                  typeahead-members commons"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+                <input
+                  type="text"
+                  class="typeahead form-control advanced-search
+                  typeahead-members lords"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+                <input
+                  type="text"
+                  class="typeahead form-control advanced-search
+                  typeahead-members both"
+                  data-provide="typeahead"
+                  placeholder="Member..."
+                />
+              </div>
+
+              <div class="col-2 my-3 my-lg-0 d-flex justify-content-center">
+                <div
+                  class="custom-control custom-switch help"
+                  id="tooltip_2_2a"
+                >
+                  <input
+                    type="checkbox"
+                    id="tooltipConfigAdvanced"
+                    class="custom-control-input tooltip-config results"
+                    id="help"
+                    checked
+                  />
+                  <label
+                    class="custom-control-label"
+                    for="tooltipConfigAdvanced"
+                    >Show help</label
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row mb-2 extra">
+              <div class="form-group col-md-6">
+                <div
+                  id="tooltip_3_4"
+                  class="col-md-12 help"
+                  style="padding:0 !important"
+                >
+                  <div class="form-row mb-2">
+                    <div class="col-6">
+                      <label class="mr-3">From:</label>
+                      <input class="form-control datepicker datepicker-from" />
+                    </div>
+                    <div class="col-6">
+                      <label class="mr-3">To:</label>
+                      <input class="form-control datepicker datepicker-to" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-3 col-12">
+                <label class="mr-3" style="visibility: hidden;"
+                  >Debate title:</label
+                >
+                <input
+                  id="tooltip_3_2"
+                  type="text"
+                  class="form-control advanced-search input-description help"
+                  placeholder="Debate title..."
+                />
+                <div class="invalid-feedback">
+                  Please insert a valid query.
+                </div>
+              </div>
+
+              <div class="form-row col-lg-3 col-12">
+                <div class="ml-lg-5">
+                  <legend class="col-form-label pt-0">Select House:</legend>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input advanced-search house"
+                      type="radio"
+                      name="advancedSearchHouseRadioOptions"
+                      value="commons"
+                      checked
+                    />
+                    <label class="form-check-label commons">Commons</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input advanced-search house"
+                      type="radio"
+                      name="advancedSearchHouseRadioOptions"
+                      value="lords"
+                    />
+                    <label class="form-check-label lords">Lords</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input advanced-search house"
+                      type="radio"
+                      name="advancedSearchHouseRadioOptions"
+                      value="both"
+                    />
+                    <label class="form-check-label both">Both</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row mb-2">
+              <div class="pb-3 terms-list">
+                <label>
+                  <p class="font-italic">Selected terms:</p>
+                </label>
+                <div></div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-lg-4 col-12">
+                <button
+                  id="tooltip_3_5"
+                  class="btn btn-primary btn-lg submit text-center help"
+                >
+                  Search
+                </button>
+                <button
+                  type="button"
+                  class="ml-2 btn btn-outline-primary reset-term advanced-search
+                  btn"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>

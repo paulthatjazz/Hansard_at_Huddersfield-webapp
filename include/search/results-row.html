@@ -1,0 +1,132 @@
+<div class="row mt-3 results">
+  <div class="col-lg-12">
+    <div class="card">
+      <h5 class="card-header">
+        <i class="fas fa-book-open fa-fw"></i>
+        <span id="tooltip_4_6" class="help">Texts</span>
+
+        <span id="results_term" class="badge badge-success term help"></span>
+        <span id="results_dates" class="badge badge-dark dates help"></span>
+        <span
+          id="results_description"
+          class="badge badge-secondary description help"
+        ></span>
+        <span id="results_member" class="badge badge-danger member help"></span>
+
+        <span
+          id="results_docs"
+          class="badge badge-pill badge-info docs help"
+        ></span>
+        <span
+          id="results_hits"
+          class="badge badge-pill badge-info hits help"
+        ></span>
+        <span class="card-header-buttons float-right">
+          <i class="fa fa-window-minimize"></i>
+        </span>
+      </h5>
+
+      <div class="card-body">
+        <div id="toolbar_results" class="form-row align-items-center">
+          <div class="col-auto my-1">
+            <button
+              type="button"
+              id="tooltip_4_7"
+              class="btn btn-sm btn-outline-primary selections results help"
+            >
+              Download Selected
+            </button>
+          </div>
+          <div class="col-auto my-1">
+            <div class="custom-control custom-switch help" id="tooltip_1_12">
+              <input
+                type="checkbox"
+                class="custom-control-input convert-rank results"
+                id="rank"
+              />
+              <label class="custom-control-label" for="rank"
+                >Order by relevance</label
+              >
+            </div>
+          </div>
+          <div class="col-auto my-1">
+            <div class="custom-control custom-switch help" id="tooltip_7_1">
+              <input
+                type="checkbox"
+                class="custom-control-input convert-title results"
+                id="title"
+              />
+              <label class="custom-control-label" for="title"
+                >Show debate title</label
+              >
+            </div>
+          </div>
+
+          <div class="col-auto my-1">
+            <div class="custom-control custom-switch help" id="tooltip_1_11">
+              <input
+                type="checkbox"
+                class="custom-control-input convert-kwic-doc results"
+                id="kwic"
+              />
+              <label class="custom-control-label" for="kwic">KWIC format</label>
+            </div>
+          </div>
+
+          <div class="col-auto my-1">
+            <form
+              id="tooltip_2_1d"
+              class="form-inline help context-word-container"
+            >
+              <div class="input-group">
+                <input
+                  type="number"
+                  min="10"
+                  max="300"
+                  class="form-control context-word"
+                  data-provide="typeahead"
+                  value="10"
+                />
+                <div class="input-group-prepend">
+                  <div class="input-group-text">words</div>
+                </div>
+                <span class="update-kwic results mx-2 invisible"
+                  ><i class="fas fa-sync-alt fa-lg" style="color: #339af0;"></i
+                ></span>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table
+            class="table table-striped table-xs"
+            id="results_table"
+            data-pagination="true"
+            data-id-field="id"
+            data-page-list="[10, 20, 50, 100, ALL]"
+            data-show-footer="false"
+            data-page-size="10"
+            data-side-pagination="server"
+            data-sort-name="relevance"
+            data-sort-order="desc"
+            data-click-to-select="true"
+            data-toolbar=".search .results #toolbar_results"
+            data-show-columns="true"
+          ></table>
+        </div>
+        <!-- /.table-responsive -->
+        <div class="loader mx-auto"></div>
+        <button
+          type="button"
+          class="btn btn-danger cancel-query btn-lg mx-auto"
+          data-cancel="results"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>

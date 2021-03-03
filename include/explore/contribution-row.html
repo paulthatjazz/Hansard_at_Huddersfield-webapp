@@ -1,0 +1,52 @@
+<div class="row mt-3 contribution">
+  <div class="col-lg-12">
+    <div class="card">
+      <h5 class="card-header">
+        <i class="fas fa-file-alt fa-sm"></i>
+        Contribution
+        <span
+          id="contribution_query"
+          class="badge badge-success"></span>
+        <span
+          id="contribution_member"
+          class="badge badge-danger pull-right"></span>
+        <span id="contribution_id" class="badge badge-info pull-right"></span>
+        <span class="card-header-buttons float-right">
+          <i class="fa fa-window-minimize"></i>
+        </span>
+      </h5>
+
+      <div class="card-body">
+        <div class="row justify-content-between">
+          <div class="col-3">
+            <h5><u>Analysis</u></h5>
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+              <button
+                type="button"
+                class="btn btn-outline-primary kw-analysis analysis">
+                Keywords
+              </button>
+              <!--<button type="button" class="btn btn-outline-danger reset-contribution btn-sm">Reset</button>-->
+            </div>
+          </div>
+          <div class="col-6"></div>
+        </div>
+
+        <div class="loader mx-auto"></div>
+        <button
+          type="button"
+          class="btn btn-danger cancel-query btn-lg mx-auto"
+          data-cancel="contribution">
+          Cancel
+        </button>
+
+        <div
+          id="contribution_card"
+          class="text-justify mt-4 pt-4 border-top"></div>
+        <div id="contribution_original"></div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+  </div>
+  <!-- /.card -->
+</div>

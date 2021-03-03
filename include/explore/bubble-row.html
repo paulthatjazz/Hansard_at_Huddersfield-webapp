@@ -1,0 +1,87 @@
+<div class="row mt-3 bubble">
+  <div class="col-lg-12">
+    <div class="card">
+      <h5 class="card-header">
+        <i class="fas fa-braille fa-fw"></i>
+        <span class="help" id="tooltip_6_1">Keywords</span>
+        <span class="card-header-buttons float-right">
+          <i class="fa fa-window-minimize"></i
+        ></span>
+      </h5>
+      <div class="card-body help">
+        <div class="row">
+          <div class="col-lg-9 col-xs-12">
+            <div id="bubble">
+              <svg></svg>
+              <!--
+              <svg
+                font-family="sans-serif"
+                font-size="10"
+                text-anchor="middle"
+              ></svg>
+              -->
+            </div>
+            <div class="loader mx-auto"></div>
+            <button
+              type="button"
+              class="btn btn-danger cancel-query btn-lg mx-auto"
+              data-cancel="bubble"
+            >
+              Cancel
+            </button>
+          </div>
+          <div class="col-lg-3 col-xs-12">
+            <div class="row d-flex justify-content-center mt-5">
+              <div class="form-group terms-list col-12">
+                <label>Selected terms: </label>
+                <div class="form-group"></div>
+              </div>
+            </div>
+
+            <div class="row mt-1 d-flex justify-content-end">
+              <div class="form-group terms-list col-md-10">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger reset-terms
+                  btn-sm bubble"
+                >
+                  Reset terms
+                </button>
+                <button
+                  data-function="search"
+                  class="btn btn-primary btn-lg
+                  submit-kw-terms"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <div class="row d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-lg btn-outline-danger
+                reset-bubble btn hidden"
+              >
+                Reset
+              </button>
+              <button
+                id="tooltip_6_3"
+                type="button"
+                class="btn btn-light btn-sm
+                export-png bubble help"
+                data-visual="bubble"
+              >
+                Image
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-between"></div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
