@@ -2473,7 +2473,6 @@ function getDistributionAdvanced(type, container) {
           entry.values.forEach((e)=>{
             if(prevEntry != null){
               if(prevEntry.x === e.x){
-                console.log(prevEntry, e)
                 e.y += prevEntry.y
                 e.freqRaw += prevEntry.freqRaw
                 entry.values.splice(prevEntry, 1)
