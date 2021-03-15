@@ -2627,14 +2627,6 @@ function getDistribution() {
   if (!distribution_ajax_complete) {
     cancelSQLQuery("." + selected_mode + " .distribution");
   }
-
-  console.log({
-    parameters: parameter_basic,
-    action: "distribution",
-    dateTo: dateTo,
-    dateFrom: dateFrom,
-    house: selected_house
-  })
   
   dateFrom = $(".basic-search .date-time.annual .annual-from").val();
   dateTo = $(".basic-search .date-time.annual .annual-to").val();
