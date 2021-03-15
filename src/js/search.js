@@ -2469,17 +2469,22 @@ function getDistributionAdvanced(type, container) {
           //sort by date
           entry.values.sort((a,b)=> Date.parse(a.x) - Date.parse(b.x))
           //group duplicates
-          prevEntry = null;
+          let v = [];
+
           entry.values.forEach((e)=>{
-            if(prevEntry != null){
-              if(prevEntry.x === e.x){
-                e.y += prevEntry.y
-                e.freqRaw += prevEntry.freqRaw
-                entry.values.splice(prevEntry, 1)
+            //removes duplicate entries by merging values with the same x (date)
+            if(v.length > 0){
+              if(v[v.length-1].x == e.x){
+                v[v.length-1].y += e.y
+                v[v.length-1].freqRaw += e.freqRaw
+              }else{
+                v.push(e)
               }
+            }else{
+              v.push(e)
             }
-            prevEntry = e
           })
+          entry.values = v
         })
 
         freq_line_data = data_json;
