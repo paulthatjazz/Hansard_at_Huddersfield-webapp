@@ -2463,6 +2463,25 @@ function getDistributionAdvanced(type, container) {
         }
 
         data_json = JSON.parse(data);
+
+        //cleans up the data before creating a table (ex. sorts by date, merges duplicates)
+        data_json.forEach((entry)=>{
+          //sort by date
+          entry.values.sort((a,b)=> Date.parse(a.x) - Date.parse(b.x))
+          //group duplicates
+          prevEntry = null;
+          entry.values.forEach((e)=>{
+            if(prevEntry != null){
+              if(prevEntry.x === e.x){
+                e.y += prevEntry.y
+                e.freqRaw += prevEntry.freqRaw
+                entry.values.splice(prevEntry, 1)
+              }
+            }
+            prevEntry = e
+          })
+        })
+
         freq_line_data = data_json;
 
         nv.addGraph(function() {
@@ -2607,7 +2626,7 @@ function getDistribution() {
   if (!distribution_ajax_complete) {
     cancelSQLQuery("." + selected_mode + " .distribution");
   }
-
+  
   dateFrom = $(".basic-search .date-time.annual .annual-from").val();
   dateTo = $(".basic-search .date-time.annual .annual-to").val();
 
