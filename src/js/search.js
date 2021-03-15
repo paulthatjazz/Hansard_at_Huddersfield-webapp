@@ -2473,6 +2473,7 @@ function getDistributionAdvanced(type, container) {
           entry.values.forEach((e)=>{
             if(prevEntry != null){
               if(prevEntry.x === e.x){
+                console.log(prevEntry, e)
                 e.y += prevEntry.y
                 e.freqRaw += prevEntry.freqRaw
                 entry.values.splice(prevEntry, 1)
@@ -2627,6 +2628,14 @@ function getDistribution() {
     cancelSQLQuery("." + selected_mode + " .distribution");
   }
 
+  console.log({
+    parameters: parameter_basic,
+    action: "distribution",
+    dateTo: dateTo,
+    dateFrom: dateFrom,
+    house: selected_house
+  })
+  
   dateFrom = $(".basic-search .date-time.annual .annual-from").val();
   dateTo = $(".basic-search .date-time.annual .annual-to").val();
 
