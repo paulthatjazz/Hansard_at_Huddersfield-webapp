@@ -567,7 +567,7 @@ function resetWC(reset_flag) {
   colours_queries = [
     ["#FF355E", false],
     ["#66FF66", false],
-    ["#50BFE6", false],
+    ["#EE82EE", false],
     ["#FF9933", false]
   ];
 
@@ -808,6 +808,7 @@ function resetKeywords(reset_flag) {
 }
 
 function generateBubble() {
+
   if (bubble_ajax != null) {
     bubble_ajax.abort();
   }
@@ -947,7 +948,14 @@ function generateWC() {
             .fill(
               d3.scale
                 .ordinal()
-                /*.range([
+                .range([
+                  "#6699CC",
+                  "#89CFF0",
+                  "#72A0C1",
+                  "#318CE7"
+                ])
+                /*
+                .range([
                   "#838B8B",
                   "#668B8B",
                   "#2F4F4F",
@@ -960,7 +968,7 @@ function generateWC() {
                   "#00FFFF",
                   "#BBFFFF",
                   "#00CED1"
-                ])*/
+                ])
                 .range([
                   "#d3d6de",
                   "#c4c8d4",
@@ -972,7 +980,7 @@ function generateWC() {
                   "#6c7592",
                   "#626a84",
                   "#2f3337"
-                ])
+                ])*/
             )
             .words(
               deepCopyWordCloud(wordsAux).filter(function(d, i) {
