@@ -276,7 +276,7 @@ if (isset($_GET['action'])) {
       $house = $parameters['comparisonCorpus']['house'];
       $file = $parameters['comparisonCorpus']['preCalculated'][1] . "_" . $house . ".Rda";
 
-      $pre_calculated_data_comparison = "/data/web/R_data/" . $type . "/" . $file;
+      $pre_calculated_data_comparison = "/data/hansard_aux_src_code/R_data/" . $type . "/" . $file;
     }
 
     if ($parameters['targetCorpus']['preCalculated'][0] == "false") {
@@ -317,7 +317,7 @@ if (isset($_GET['action'])) {
       $house = $parameters['targetCorpus']['house'];
       $file = $parameters['targetCorpus']['preCalculated'][1] . "_" . $house . ".Rda";
 
-      $pre_calculated_data_target = "/data/web/R_data/" . $type . "/" . $file;
+      $pre_calculated_data_target = "/data/hansard_aux_src_code/R_data/" . $type . "/" . $file;
     }
 
 
