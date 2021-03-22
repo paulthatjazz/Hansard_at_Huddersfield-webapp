@@ -954,33 +954,6 @@ function generateWC() {
                   "#72A0C1",
                   "#318CE7"
                 ])
-                /*
-                .range([
-                  "#838B8B",
-                  "#668B8B",
-                  "#2F4F4F",
-                  "#528B8B",
-                  "#388E8E",
-                  "#8FD8D8",
-                  "#70DBDB",
-                  "#8DEEEE",
-                  "#008B8B",
-                  "#00FFFF",
-                  "#BBFFFF",
-                  "#00CED1"
-                ])
-                .range([
-                  "#d3d6de",
-                  "#c4c8d4",
-                  "#b6bac9",
-                  "#a7acbe",
-                  "#989fb3",
-                  "#8a91a8",
-                  "#7b839d",
-                  "#6c7592",
-                  "#626a84",
-                  "#2f3337"
-                ])*/
             )
             .words(
               deepCopyWordCloud(wordsAux).filter(function(d, i) {
