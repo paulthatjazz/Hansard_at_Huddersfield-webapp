@@ -613,7 +613,7 @@ $(function() {
     } else if (selected_submode == "keyword") {
       if ($(this).hasClass("compare")) {
         searchContributionCompare(
-          null,
+          parameter_bubble,
           [false, false, false, false],
           "." + selected_mode + " .compare-results"
         );
