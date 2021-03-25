@@ -901,7 +901,6 @@
                                             target="_blank">More details</a>
                                     </p>
                                 </div>
-                                -->
                             <div class="media pt-3 col-4">
                                 <span class="mr-2"><i class="fas fa-calendar-plus fa-lg"
                                         style="color: #6f42c1;"></i></span>
@@ -921,6 +920,8 @@
 
                                 </p>
                             </div>
+                                -->
+                            No Upcoming Events
 
                         </div>
 
@@ -1570,7 +1571,7 @@
 
 
     <footer class="container py-3 text-center text-muted">
-        <p class="mb-1">&copy; 2020 Hansard at Huddersfield </p>
+        <p class="mb-1">&copy; <?php echo date("Y");?> Hansard at Huddersfield </p>
     </footer>
 
 
