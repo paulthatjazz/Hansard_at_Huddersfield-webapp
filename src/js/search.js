@@ -674,7 +674,19 @@ $(function() {
         );
       }
     } else if (selected_submode == "advanced") {
-      prepareAdvancedQuery();
+      if ($(this).hasClass("compare")) {
+        searchContributionAdvancedCompare(
+          CLICKED_POINTS_DISTRIB,
+          [false, false, false, false],
+          "." + selected_mode + " .compare-results"
+        );
+      } else if ($(this).hasClass("results")) {
+        searchContributionAdvanced(
+          CLICKED_POINTS_DISTRIB,
+          false,
+          "." + selected_mode + " .results"
+        );
+      }
     }
   });
 
