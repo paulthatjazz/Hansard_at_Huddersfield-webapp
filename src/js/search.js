@@ -59,29 +59,64 @@ $.xhrPool.abortAll = function() {
   });
 };
 
+var maxDate
+var maxDateY
+
+
 $(function() {
   // Date picker
-  $(".advanced-search .datepicker-from").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2000-01-01",
-    minDate: "1803-11-22",
-    maxDate: "2019-11-05",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
-    }
-  });
+  $.ajax(
+    {
+      url:"src/php/search_functions.php",
+      type:"post",
+      data: {
+        action: "maxDate"
+      },
+      success: (data, status)=>{
+        if ((data != null) & isJson(data)) {
+          maxDate = JSON.parse(data)[0]["upperdate"]
+  
+          maxDateY = new Date(maxDate).getFullYear()
+  
+          
+          document.querySelector("#max-year-input").setAttribute("value",maxDateY);
+  
+          document.querySelectorAll(".date-error").forEach(
+            (e)=>{
+            e.innerHTML = `Please enter a number between 1803 and ${maxDateY}.`
+            }
+          )
+        }
+      },
+      complete: (status)=>{
 
-  $(".advanced-search .datepicker-to").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2019-11-05",
-    minDate: "1803-11-22",
-    maxDate: "2019-11-05",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
+        //failsafe
+        maxDate = typeof(maxDate) == "undefined" ? "2021-02-25" : maxDate
+
+        $(".advanced-search .datepicker-from").datepicker({
+          format: "yyyy-mm-dd",
+          value: "2000-01-01",
+          minDate: "1803-11-22",
+          maxDate: maxDate,
+          uiLibrary: "bootstrap4",
+          change: function(e) {
+            updateSearchButtonOn();
+          }
+        });
+      
+        $(".advanced-search .datepicker-to").datepicker({
+          format: "yyyy-mm-dd",
+          value: maxDate,
+          minDate: "1803-11-22",
+          maxDate: maxDate,
+          uiLibrary: "bootstrap4",
+          change: function(e) {
+            updateSearchButtonOn();
+          }
+        });
+      }
     }
-  });
+  )
 
   // Auto complete
   $.get(
@@ -268,6 +303,7 @@ $(function() {
       }
     }
   );
+  
 
   $(".basic-search").on(
     "click",
@@ -662,7 +698,7 @@ $(function() {
     } else if (selected_submode == "keywords") {
       if ($(this).hasClass("compare")) {
         searchContributionCompare(
-          null,
+          parameter_bubble,
           [false, false, false, false],
           "." + selected_mode + " .compare-results"
         );
@@ -2822,6 +2858,7 @@ function prepareBasicQuery() {
 
   dateFrom = $(".basic-search .date-time.annual .annual-from").val();
   dateTo = $(".basic-search .date-time.annual .annual-to").val();
+  
 
   if (
     term.match(/\w+/g) != null ||
@@ -2831,9 +2868,9 @@ function prepareBasicQuery() {
   ) {
     if (
       parseInt(dateFrom) >= 1803 &&
-      parseInt(dateFrom) <= 2019 &&
+      parseInt(dateFrom) <= maxDateY &&
       parseInt(dateTo) >= 1803 &&
-      parseInt(dateTo) <= 2019
+      parseInt(dateTo) <= maxDateY
     ) {
       if (num_queries == 0) {
         $(".basic-search .terms-list").show();
