@@ -61,7 +61,15 @@
                             <p class="lead">Welcome to Hansard at Huddersfield! Explore
                                 the official, substantially verbatim report of what was
                                 said in both
-                                houses of Parliament between 1803-2020 through various
+                                houses of Parliament between 1803-<?php
+                                    include_once 'src/php/db/query_handler.php';
+
+                                    $sql = "SELECT max(sittingday) as upperdate FROM hansard_commons.commons";
+
+                                    $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+
+                                    echo str_split(strval( $rows[0]["upperdate"] ), 4)[0] ;
+                                ?> through various
                                 search functions and interactive visualisations.</p>
                             <p><a class="btn btn-outline-primary btn-lg application" href="site.php" role="button">Go to
                                     web application
