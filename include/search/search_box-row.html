@@ -98,11 +98,11 @@
                   type="number"
                   min="1803"
                   max="2019"
-                  class="form-control annual-from"
+                  class="form-control annual-from year-input"
                   data-provide="typeahead"
                   value="2000"
                 />
-                <div class="invalid-feedback">
+                <div class="invalid-feedback date-error">
                   Please enter a number between 1803 and 2019.
                 </div>
               </div>
@@ -113,11 +113,12 @@
                   type="number"
                   min="1803"
                   max="2019"
-                  class="form-control annual-to"
+                  class="form-control annual-to year-input"
                   data-provide="typeahead"
-                  value="2019"
+                  value=""
+                  id="max-year-input"
                 />
-                <div class="invalid-feedback">
+                <div class="invalid-feedback date-error">
                   Please enter a number between 1803 and 2019.
                 </div>
               </div>
@@ -184,6 +185,10 @@
                   Reset
                 </button>
               </div>
+              
+            
+            </div>
+            <div class="update-message">
             </div>
           </div>
 
@@ -346,7 +351,11 @@
                   Reset
                 </button>
               </div>
+              
             </div>
+            <div class="update-message">
+            </div>
+            
           </div>
         </div>
       </div>

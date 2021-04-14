@@ -883,7 +883,7 @@ if (isset($_GET['action'])) {
               ") z " .
               "JOIN (select year, total from hansard_" . $house . "_" . $total_word_db . ") as y ON y.year = z.year " .
               ") " .
-              "order by year asc";
+              "order by year asc ";
           } else {
 
             $sql =
@@ -1360,4 +1360,11 @@ if (isset($_GET['action'])) {
 } else if ($_POST['action'] == "killPID") {
   $var = query_handler::killingPID("dbname=hansard", $_SESSION["previous_PID"]);
   echo $var;
+} else if ($_POST['action'] == "maxDate"){
+
+  $sql = "SELECT max(sittingday) as upperdate FROM hansard_commons.commons";
+
+  $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+  
+  echo json_encode($rows);
 }

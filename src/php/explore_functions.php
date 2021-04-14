@@ -2,6 +2,8 @@
 
 session_start();
 
+ini_set("memory_limit", "1G");
+
 include_once './db/query_handler.php';
 include_once 'convert_data.php';
 
