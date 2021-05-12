@@ -89,44 +89,43 @@
 
         }
 
+        private function generateQuery($house, $term, $dateFrom, $dateTo){
+
+            $r = " ( SELECT freq, y.myear, total FROM";
+            //if($term->n == 1){
+                $r .=  " ( "
+                . " SELECT sum(sw.hits) as freq, sw.year as myear FROM hansard_" . $house . "_single_word_year sw "
+                . " WHERE sw.word like '" . $term->cleanterm . "' "
+                . " AND sw.year BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "' "
+                . " GROUP BY sw.year ) x "
+                . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as y ON y.myear = x.myear "
+                . " ) ";
+            /*}else{
+                $r .= "";
+            }*/
+
+            return $r;
+        }
+
         public static function distribution($paras, $house, $dateFrom, $dateTo){
             
             $i = 0;
+            
             foreach($paras as $value)
             {
-
                 $termdata = convert_data::prepareTerm($value["term"]);
 
-                if($termdata->n == 1)
-                {
-                    $sql = "SELECT sum(freq) as frequency, sum(total) as total, myear FROM ( ";
-                    if($house != "lords"){
-                        $sql .= " ( SELECT freq, y.myear, total FROM"
-                        . " ( "
-                        . " SELECT sum(sw.hits) as freq, sw.year as myear FROM hansard_commons_single_word_year sw "
-                        . " WHERE sw.word like '" . $termdata->cleanterm . "' "
-                        . " AND sw.year BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "' "
-                        . " GROUP BY sw.year ) x "
-                        . " JOIN (SELECT year as myear, total FROM hansard_commons_total_word_year) as y ON y.myear = x.myear "
-                        . " ) ";
-                    }
-                    if($house == "both"){
-                        $sql .= " UNION ";
-                    }
-                    if($house != "commons"){
-                        $sql .= " ( SELECT freq, y.myear, total FROM"
-                        . " ( "
-                        . " SELECT sum(sw.hits) as freq, sw.year as myear FROM hansard_lords_single_word_year sw "
-                        . " WHERE sw.word like '" . $termdata->cleanterm . "' "
-                        . " AND sw.year BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "' "
-                        . " GROUP BY sw.year ) x "
-                        . " JOIN (SELECT year as myear, total FROM hansard_lords_total_word_year) as y ON y.myear = x.myear "
-                        . " ) ";
-                    }
-                    $sql .= ") i GROUP BY myear ORDER BY myear asc";
-                }else{
-                    $sql = "";
+                $sql = "SELECT sum(freq) as frequency, sum(total) as total, myear FROM ( ";
+                if($house != "lords"){
+                    $sql .= self::generateQuery("commons", $termdata, $dateFrom, $dateTo);
                 }
+                if($house == "both"){
+                     $sql .= " UNION ";
+                }
+                if($house != "commons"){
+                    $sql .= self::generateQuery("lords", $termdata, $dateFrom, $dateTo);
+                }
+                $sql .= ") i GROUP BY myear ORDER BY myear asc";
 
                 $rows[$i] = self::query_no_parameters($sql, "dbname=hansard");
                 $i++;
