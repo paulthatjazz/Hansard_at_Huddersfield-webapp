@@ -3345,6 +3345,7 @@ function searchContribution(data_point, c_flag, func) {
   action_conf = conf["action"];
   sort_name = conf["sort_name"]; //First time
 
+
   $(func + " #results_table")
     .bootstrapTable("destroy")
     .bootstrapTable({
@@ -3380,6 +3381,7 @@ function searchContribution(data_point, c_flag, func) {
         }
       },
       queryParams: function(p) {
+        console.log(p)
         return {
           limit: p.limit,
           offset: p.offset,

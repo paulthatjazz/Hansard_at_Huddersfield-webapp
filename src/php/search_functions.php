@@ -3,6 +3,7 @@
 session_start();
 
 include_once './db/query_handler.php';
+include_once './db/search.php';
 include_once 'convert_data.php';
 
 header('Content-Type: text/html;charset=utf-8');
@@ -29,76 +30,7 @@ session_write_close();
 
 if (isset($_GET['action'])) {
 
-  if (($_GET['action'] == "contribution") || ($_GET['action'] == "contribution-kwic")) {
-
-
-    if ($_GET['sort'] == "date") {
-      $sort = "sittingday";
-    } else {
-      $sort = $_GET['sort'];
-    }
-
-    if ($_GET['formatDate'] == "year") {
-      $dateFrom = $_GET['dateFrom'] . "-01-01";
-      $dateTo = $_GET['dateTo'] . "-12-31";
-    } else {
-      $dateFrom = $_GET['dateFrom'];
-      $dateTo = $_GET['dateTo'];
-    }
-
-    $cleaned_term = convert_data::clean_query($_GET['parameters']['term']);
-    $ts_term = convert_data::gen_postgresql_query($cleaned_term);
-
-    if ($_GET['action'] == "contribution-kwic") {
-      $contributiontext = "ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>, HighlightAll=TRUE') as contributiontext";
-    } else {
-      $contributiontext = "contributiontext";
-    }
-
-
-
-    if ($house != "both") {
-
-      if ($_GET['count'] == 0 && $_GET['offset'] == 0) {
-        $total[] = array("count" => "total");
-      } else if ($_GET['count'] == 0 && $_GET['offset'] != 0) {
-        $total[] = array("count" => $_GET['count']);
-      } else {
-
-        $sql =
-          "SELECT count(*)"
-          . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-          . "WHERE "
-          . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-          . "and idxfti_simple @@ q ";
-
-        $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-      }
-
-      $sql =
-        "SELECT id, sittingday, " . $contributiontext . ", member, href as url, ts_rank(idxfti_simple, q) AS relevance, description "
-        . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-        . "WHERE "
-        . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-        . "and idxfti_simple @@ q "
-        . "ORDER BY " . $sort . " " . $_GET['order'] . " "
-        . "LIMIT " . $_GET['limit'] . " "
-        . "OFFSET " . $_GET['offset'];
-
-      $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
-
-      if ($_GET['action'] == "contribution") {
-        $var = convert_data::gen_json_documents($rows, $cleaned_term, $total);
-      } else  if ($_GET['action'] == "contribution-kwic") {
-        $var = convert_data::gen_json_kwic($rows, $cleaned_term, $total, $_GET['offset'], $_GET['context']);
-      }
-
-      $var2 = json_encode($var);
-      echo $var2;
-    } else {
-    }
-  } else if (($_GET['action'] == "contribution_nonRank") || ($_GET['action'] == "contribution-kwic_nonRank")) {
-
+  if (($_GET['action'] == "contribution") || ($_GET['action'] == "contribution-kwic" || $_GET['action'] == "contribution_nonRank") || ($_GET['action'] == "contribution-kwic_nonRank")) {
 
     if ($_GET['sort'] == "date") {
       $sort = "sittingday";
@@ -114,57 +46,11 @@ if (isset($_GET['action'])) {
       $dateTo = $_GET['dateTo'];
     }
 
-    $cleaned_term = convert_data::clean_query($_GET['parameters']['term']);
-    $ts_term = convert_data::gen_postgresql_query($cleaned_term);
+    $rows = search::contribution($dateFrom, $dateTo, $_GET['parameters']['term'], $house, $_GET['action'], $_GET['count'], $_GET['offset'], $sort, $_GET['order'], $_GET['limit'], $_GET['context']);
 
-    if ($_GET['action'] == "contribution-kwic_nonRank") {
-      $contributiontext = "ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>, HighlightAll=TRUE') as contributiontext";
-    } else {
-      $contributiontext = "contributiontext";
-    }
+    $var2 = json_encode($rows);
+    echo $var2;
 
-
-    if ($house != "both") {
-
-      if ($_GET['count'] == 0 && $_GET['offset'] == 0) {
-        $total[] = array("count" => "total");
-      } else if ($_GET['count'] == 0 && $_GET['offset'] != 0) {
-        $total[] = array("count" => $_GET['count']);
-      } else {
-
-        $sql =
-          "SELECT count(*)"
-          . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-          . "WHERE "
-          . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-          . "and idxfti_simple @@ q ";
-
-        $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-      }
-
-      $sql =
-        "SELECT id, sittingday, " . $contributiontext . ", member, href as url, description "
-        . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-        . "WHERE "
-        . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-        . "and idxfti_simple @@ q "
-        . "ORDER BY " . $sort . " " . $_GET['order'] . " "
-        . "LIMIT " . $_GET['limit'] . " "
-        . "OFFSET " . $_GET['offset'];
-
-
-      $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
-
-      if ($_GET['action'] == "contribution_nonRank") {
-        $var = convert_data::gen_json_documents($rows, $cleaned_term, $total);
-      } else  if ($_GET['action'] == "contribution-kwic_nonRank") {
-        $var = convert_data::gen_json_kwic($rows, $cleaned_term, $total, $_GET['offset'], $_GET['context']);
-      }
-
-      $var2 = json_encode($var);
-      echo $var2;
-    } else {
-    }
   } else if ($_GET['action'] == "contribution-advanced") {
 
     if ($_GET['kwic'] == "true") {
@@ -580,6 +466,10 @@ if (isset($_GET['action'])) {
   echo $var2;
 } else if ($_POST['action'] == "distribution") {
 
+  $rows = search::distribution($_POST['parameters'], $house, $_POST['dateFrom'], $_POST['dateTo']);
+
+  /*
+
   $i = 0;
   foreach ($_POST['parameters'] as &$value) {
 
@@ -656,6 +546,7 @@ if (isset($_GET['action'])) {
     $rows[$i] = query_handler::query_no_parameters($sql, "dbname=hansard");
     $i++;
   }
+  */
 
   if ($house == "both") {
 
@@ -681,6 +572,7 @@ if (isset($_GET['action'])) {
   $var2 = json_encode($var);
 
   echo $var2;
+
 } else if ($_POST['action'] == "distribution-advanced") {
 
   $i = 0;

@@ -1075,6 +1075,21 @@ class convert_data
 		}
 		return $flag_mwe;
 	}
+
+	public static function prepareTerm($q){
+
+		$cq = strtolower(self::clean_query($q));
+		$c = str_replace("*", "%", $cq);
+		$ts = self::gen_postgresql_query($cq);
+
+		$o = (object)[
+			'term' => $cq,
+			'cleanterm' => $c,
+			'tsterm' => $ts,
+			'n' => sizeof(explode(" ", $cq))
+		];
+		return $o;
+	}
 }
 
 /*
