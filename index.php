@@ -534,7 +534,7 @@
 
                         <ul class="list-group mb-3">
                             <li class="list-group-item d-flex
-                            justify-content-between lh-condensed">
+                            justify-content-between lh-condensed" style="cursor:pointer;">
                                 <div class="pub" data-url="pdf/Article Preprint for website.pdf" title="See more">
                                     <h6 class="my-0">Pre-print journal article</h6>
                                     <small class="text-muted">
@@ -546,8 +546,8 @@
                             </li>
                             <li class="list-group-item d-flex
                             justify-content-between lh-condensed">
-                                <div class="pub" data-url="" title="See more">
-                                    <h6 class="my-0">Book Chapter</h6>
+                                <div class="" data-url="" title="See more">
+                                    <h6 class="my-0">Book Chapter (Forthcoming)</h6>
                                     <small class="text-muted">
                                         Jeffries, L., Stradling, F., Lunen von, A. & Sanjurjo Gonzalez, H.
                                         (Forthcoming). Hansard at Huddersfield: streamlined corpus methods and
@@ -559,7 +559,7 @@
                                 </div>
                             </li>
                             <li class="list-group-item d-flex
-                            justify-content-between lh-condensed">
+                            justify-content-between lh-condensed" style="cursor:pointer;">
                                 <div class="pub" data-url="https://icame40.ch/wp-content/uploads/ICAME40_BoA.pdf"
                                     title="See more">
                                     <h6 class="my-0">Conference Presentation</h6>
@@ -574,7 +574,7 @@
                                 </div>
                             </li>
                             <li class="list-group-item d-flex
-                            justify-content-between lh-condensed">
+                            justify-content-between lh-condensed" style="cursor:pointer;">
                                 <div class="pub"
                                     data-url="https://adeit-estaticos.econgres.es/19_CILC/book_abstracts.pdf"
                                     title="See more">
