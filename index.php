@@ -213,8 +213,8 @@
                                 padding-top: 10px;">
                                 Brochure
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">A short, illustrative description of Hansard at Huddersfield’s aims and
+                                search functions.</p>
                         </div>
                     </div>
 
@@ -267,8 +267,7 @@
                                 padding-top: 10px;">
                                 Technologies Used
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">The technological details of the search functions of this site.</p>
                         </div>
                     </div>
 
@@ -281,8 +280,7 @@
                                 padding-top: 10px;">
                                 Academic Outputs
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Publications about Hansard at Huddersfield for academic audiences.</p>
                         </div>
                     </div>
 
@@ -295,14 +293,17 @@
                                 padding-top: 10px;">
                                 Events
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Details about upcoming and past workshops about using the Hansard at
+                                Huddersfield tool.</p>
                         </div>
                     </div>
 
                 </div>
 
                 <div class="container sub-c" id="tech">
+
+                    <hr>
+
                     <h4 class="d-flex justify-content-between
                             align-items-center mb-3">
                         <span id="technologies" class="text-muted">Technologies
@@ -522,6 +523,9 @@
                 </div>
 
                 <div class="container sub-c" id="academic">
+
+                    <hr>
+
                     <div class="">
                         <h4 class="d-flex justify-content-between
                         align-items-center mb-3">
@@ -531,9 +535,8 @@
                         <ul class="list-group mb-3">
                             <li class="list-group-item d-flex
                             justify-content-between lh-condensed">
-                                <div class="pub" data-url="https://icame40.ch/wp-content/uploads/ICAME40_BoA.pdf"
-                                    title="See more">
-                                    <h6 class="my-0">???</h6>
+                                <div class="pub" data-url="pdf/Article Preprint for website.pdf" title="See more">
+                                    <h6 class="my-0">Pre-print journal article</h6>
                                     <small class="text-muted">
                                         Lunen, A. von, Sanjurjo González, H., Jeffries, L. & Stradling, F.
                                         (Forthcoming). Hansard at Huddersfield: Adapting Corpus Linguistic Methods for
@@ -543,9 +546,8 @@
                             </li>
                             <li class="list-group-item d-flex
                             justify-content-between lh-condensed">
-                                <div class="pub" data-url="https://icame40.ch/wp-content/uploads/ICAME40_BoA.pdf"
-                                    title="See more">
-                                    <h6 class="my-0">???</h6>
+                                <div class="pub" data-url="" title="See more">
+                                    <h6 class="my-0">Book Chapter</h6>
                                     <small class="text-muted">
                                         Jeffries, L., Stradling, F., Lunen von, A. & Sanjurjo Gonzalez, H.
                                         (Forthcoming). Hansard at Huddersfield: streamlined corpus methods and
@@ -560,7 +562,7 @@
                             justify-content-between lh-condensed">
                                 <div class="pub" data-url="https://icame40.ch/wp-content/uploads/ICAME40_BoA.pdf"
                                     title="See more">
-                                    <h6 class="my-0">ICAME40</h6>
+                                    <h6 class="my-0">Conference Presentation</h6>
                                     <small class="text-muted">Jeffries, L. &
                                         Sanjurjo-González, H. (2019). Making
                                         Hansard accessible
@@ -576,7 +578,7 @@
                                 <div class="pub"
                                     data-url="https://adeit-estaticos.econgres.es/19_CILC/book_abstracts.pdf"
                                     title="See more">
-                                    <h6 class="my-0">CILC 2019</h6>
+                                    <h6 class="my-0">Conference Presentation</h6>
                                     <small class="text-muted">Jeffries, L. &
                                         Sanjurjo-González, H. (2019). Making
                                         corpus-based
@@ -799,8 +801,8 @@
                                 padding-top: 10px;">
                                 User Guide
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">A detailed guide to all the functionality of the Hansard at
+                                Huddersfield site.</p>
                         </div>
                     </div>
 
@@ -813,8 +815,8 @@
                                 padding-top: 10px;">
                                 Brochure for Teachers and Researchers
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Hansard at Huddersfield’s search functions illustrated for purposes of
+                                teaching and researching socio-political topics.</p>
                         </div>
                     </div>
 
@@ -827,8 +829,8 @@
                                 padding-top: 10px;">
                                 6th Form Guide
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">A detailed guide to using Hansard and Hansard at Huddersfield as a
+                                resource for 6th form research projects.</p>
                         </div>
                     </div>
 
@@ -841,8 +843,8 @@
                                 padding-top: 10px;">
                                 Videos
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Video descriptions guiding the user through Hansard at Huddersfield’s
+                                search functions.</p>
                         </div>
                     </div>
 
@@ -857,14 +859,16 @@
                                 padding-top: 10px;">
                                 Citing Our Website
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Referencing guidance for citing Hansard at Huddersfield.</p>
                         </div>
                     </div>
 
                 </div>
 
                 <div class="container sub-c" id="videos">
+
+                    <hr>
+
                     <div class="row">
 
                         <div class="col-md-12 mb-3">
@@ -883,6 +887,9 @@
                 </div>
 
                 <div class="container sub-c" id="cite">
+
+                    <hr>
+
 
                     <div class="col-md-12">
 
@@ -1031,8 +1038,8 @@
                                 padding-top: 10px;">
                                 Case Studies
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Simple sample studies that illustrate how search functions can be
+                                combined into a larger study.</p>
                         </div>
                     </div>
 
@@ -1045,8 +1052,8 @@
                                 padding-top: 10px;">
                                 Others using Hansard at Huddersfield
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Representative use of Hansard at Huddersfield tools by policymakers,
+                                researchers, and journalists</p>
                         </div>
                     </div>
                 </div>
@@ -1055,15 +1062,14 @@
                 <div class="container sub-c" id="case-studies">
 
                     <hr>
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <h2>Case studies</h2>
-                        </div>
-                    </div>
 
                     <div class="row mb-3">
 
                         <div class="col-md-12">
+                            <h4 class="d-flex justify-content-between
+                                align-items-center mb-3">
+                                <span id="team" class="text-muted">Case Studies</span>
+                            </h4>
                             <p>
                                 Download here a number of sample case studies that exemplify the different ways this
                                 site’s
@@ -1136,9 +1142,10 @@
 
                     <hr>
                     <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <h2>Others Using Hansard at Huddersfield</h2>
-                        </div>
+                        <h4 class="d-flex justify-content-between
+                                align-items-center mb-3">
+                            <span id="team" class="text-muted">Others Using Hansard at Huddersfield</span>
+                        </h4>
                     </div>
 
                     coming soon
@@ -1564,8 +1571,8 @@
                                 padding-top: 10px;">
                                 Partners
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Significant contributors without whom various aspects of our project
+                                would not have succeeded.</p>
                         </div>
                     </div>
 
@@ -1578,8 +1585,8 @@
                                 padding-top: 10px;">
                                 Acknowledgements
                             </h5>
-                            <p class="card-text">Quick sample text to create the card title and make up the body of the
-                                card's content.</p>
+                            <p class="card-text">Our thanks go out to those who have contributed data or feedback to the
+                                development of our website.</p>
                         </div>
                     </div>
                 </div>
@@ -1587,11 +1594,13 @@
 
                 <div class="container sub-c" id="partners">
 
-                    <h4 class="d-flex justify-content-between
-                                align-items-center mb-3">
-                        <span id="team" class="text-muted">Partners</span>
-                    </h4>
+                    <hr>
+
                     <div class="row">
+                        <h4 class="d-flex justify-content-between
+                                align-items-center mb-3">
+                            <span id="team" class="text-muted">Partners</span>
+                        </h4>
                         Various aspects of the Hansard at Huddersfield project would not have succeeded without the
                         enthusiastic contributions of our three main partner organisations.
                     </div>
@@ -1599,9 +1608,11 @@
                     <div class="row justify-content-center">
                         <div class="row">
                             <div class="col-lg-4 text-center">
-                                <img src="./img/OCR-logo.png" height="60" background="#777" color="#777" />
-                                <div class="my-3">
-                                    <h4>Hellenic OCR Team</h4>
+                                <div style="min-height:175px;"><img src="./img/OCR-logo.png" height="60"
+                                        background="#777" color="#777" />
+                                    <div class="my-3">
+                                        <h4>Hellenic OCR Team</h4>
+                                    </div>
                                 </div>
                                 <p>We are working with the <a href="https://hellenicocrteam.gr/"
                                         target="_blank">Hellenic
@@ -1618,9 +1629,13 @@
                                 </p>
                             </div>
                             <div class="col-lg-4 text-center">
-                                <img src="./img/UK_parliament-logo.png" height="60" background="#777" color="#777" />
-                                <div class="my-3">
-                                    <h4>John Vice (Editor Hansard Lords) and Jack Homer (Editor Hansard Commons)</h4>
+                                <div style="min-height:175px;">
+                                    <img src="./img/UK_parliament-logo.png" height="60" background="#777"
+                                        color="#777" />
+                                    <div class="my-3">
+                                        <h4>John Vice (Editor Hansard Lords) and Jack Homer (Editor Hansard Commons)
+                                        </h4>
+                                    </div>
                                 </div>
                                 <p>We have been working in partnership with Hansard in Westminster from the outset. We
                                     have
@@ -1630,9 +1645,12 @@
                                     Hansard about the future of our site.</p>
                             </div>
                             <div class="col-lg-4 text-center">
-                                <img src="./img/hop-logo.png" height="60" background="#777" color="#777" />
-                                <div class="my-3">
-                                    <h4>The History of Parliament Trust</h4>
+
+                                <div style="min-height:175px;">
+                                    <img src="./img/hop-logo.png" height="60" background="#777" color="#777" />
+                                    <div class="my-3">
+                                        <h4>The History of Parliament Trust</h4>
+                                    </div>
                                 </div>
                                 <p><a href="https://www.historyofparliamentonline.org/" target="_blank">The History of
                                         Parliament Trust</a> has been one of our key supporters and has communicated
@@ -1648,6 +1666,9 @@
                 </div>
 
                 <div class="container sub-c" id="ack2">
+
+                    <hr>
+
                     <h4 class="d-flex justify-content-between
                                 align-items-center mb-3">
                         <span id="team" class="text-muted">Acknowledgements</span>
