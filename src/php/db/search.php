@@ -91,18 +91,38 @@
 
         private function generateQuery($house, $term, $dateFrom, $dateTo){
 
-            $r = " ( SELECT freq, y.myear, total FROM";
-            //if($term->n == 1){
-                $r .=  " ( "
+            //generates a query based on search type (multi-word or single) and specific house
+            
+            if($term->n == 1){
+                $r = " ( " 
+                . " SELECT freq, y.myear, total FROM"
+                . " ( "
                 . " SELECT sum(sw.hits) as freq, sw.year as myear FROM hansard_" . $house . "_single_word_year sw "
                 . " WHERE sw.word like '" . $term->cleanterm . "' "
                 . " AND sw.year BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "' "
                 . " GROUP BY sw.year ) x "
                 . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as y ON y.myear = x.myear "
                 . " ) ";
-            /*}else{
-                $r .= "";
-            }*/
+            }else{
+                $r = " ( " 
+                . " SELECT freq, myear, total FROM "
+                . " (" 
+                . " SELECT myear, SUM(hits) as freq FROM "
+                . " ( "
+                // TO DO - hits is not accurate! needs a different approach
+                . " SELECT subq.myear, ((cardinality(string_to_array(subq.headline,'<b>'))-1)/" . $term->n . ") as hits "
+                . " FROM ( "
+                . " SELECT substring(sittingday::text,0,5) as myear, ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>,MaxWords=" . $term->n . ", MinWords=1, ShortWord=1, HighlightAll=FALSE, MaxFragments=9999, FragmentDelimiter=\" ... \"') as headline "
+                . " FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $term->tsterm . "') as q "
+                . " WHERE sittingday BETWEEN '" . $dateFrom . "-01-01'::DATE AND '" . $dateTo . "-12-31'::DATE "
+                . " AND idxfti_simple @@ q "
+                . " ) as subq "
+                . " )  x "
+                . " GROUP BY myear "
+                . " ) z "
+                . " JOIN (select year, total from hansard_" . $house . "_total_word_year) as y ON y.year = z.myear "
+                . " ) ";
+            }
 
             return $r;
         }
