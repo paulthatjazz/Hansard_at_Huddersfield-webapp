@@ -104,24 +104,39 @@
                 . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as y ON y.myear = x.myear "
                 . " ) ";
             }else{
-                $r = " ( " 
-                . " SELECT freq, myear, total FROM "
-                . " (" 
-                . " SELECT myear, SUM(hits) as freq FROM "
-                . " ( "
-                // TO DO - hits is not accurate! needs a different approach
-                . " SELECT subq.myear, ((cardinality(string_to_array(subq.headline,'<b>'))-1)/" . $term->n . ") as hits "
-                . " FROM ( "
-                . " SELECT substring(sittingday::text,0,5) as myear, ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>,MaxWords=" . $term->n . ", MinWords=1, ShortWord=1, HighlightAll=FALSE, MaxFragments=9999, FragmentDelimiter=\" ... \"') as headline "
-                . " FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $term->tsterm . "') as q "
-                . " WHERE sittingday BETWEEN '" . $dateFrom . "-01-01'::DATE AND '" . $dateTo . "-12-31'::DATE "
-                . " AND idxfti_simple @@ q "
-                . " ) as subq "
-                . " )  x "
-                . " GROUP BY myear "
-                . " ) z "
-                . " JOIN (select year, total from hansard_" . $house . "_total_word_year) as y ON y.year = z.myear "
-                . " ) ";
+                $r = "
+                (
+                    SELECT z.myear, freq, total FROM
+                    (
+                        SELECT y.myear, sum(y.hits) as freq
+                        FROM
+                        (
+                            SELECT x.myear, count(x.matches) as hits
+                            FROM
+                            (
+                                SELECT 
+                                sq.myear, 
+                                sq.contributiontext,
+                                regexp_matches(sq.contributiontext, '(?i)" . $term->term . "', 'g') as matches,
+                                sq.id
+                                FROM
+                                    (
+                                        SELECT 
+                                                substring(sittingday::text,0,5) as myear, contributiontext, id
+                                        FROM 
+                                            hansard_". $house . "." . $house . ", to_tsquery('simple', '" . $term->tsterm . "') as q
+                                        WHERE
+                                            sittingday BETWEEN '" . $dateFrom . "-01-01'::DATE AND '" . $dateTo . "-12-31'::DATE
+                                            AND idxfti_simple @@ q
+                                    ) as sq 
+                            ) as x
+                            GROUP BY x.id, x.contributiontext, x.myear
+                        ) as y
+                        GROUP BY y.myear
+                    ) as z
+                    JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as s ON z.myear = s.myear 
+                )
+                ";
             }
 
             return $r;
