@@ -11,40 +11,20 @@
 
             
             $termdata = convert_data::prepareTerm($term);
-            
-
-            if($kwic == "contribution-kwic" || $kwic == "contribution-kwic_nonRank")
-            {
-                $contributiontext = "ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>, HighlightAll=TRUE') as contributiontext";
-            } 
-            else 
-            {
-                $contributiontext = "contributiontext";
-            }
 
 
             $sql = "SELECT * FROM (";
-            if($house == "commons" || $house == "both")
+            if($house != "lords")
             {
-                $sql .= " ( "
-                . "SELECT id, href as url, " . $contributiontext . ", sittingday, 'commons' as house, ts_rank(idxfti_simple, q) AS relevance, description, member "
-                . "FROM hansard_commons.commons, to_tsquery('simple', '" . $termdata->tsterm . "') as q "
-                . "WHERE "
-                . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-                . "AND idxfti_simple @@ q "
-                . " ) ";
+                $sql .= self::generateContributionQuery("commons", $termdata, $dateFrom, $dateTo, $kwic);
             }
-            if($house == "both"){
+            if($house == "both")
+            {
                 $sql .= " UNION ";
             }
-            if($house == "lords" || $house == "both"){
-               $sql .= " ( "
-                . "SELECT id, href as url, " . $contributiontext . ", sittingday, 'lords' as house, ts_rank(idxfti_simple, q) AS relevance, description, member "
-                . "FROM hansard_lords.lords, to_tsquery('simple', '" . $termdata->tsterm . "') as q "
-                . "WHERE "
-                . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-                . "AND idxfti_simple @@ q "
-                . " ) "; 
+            if($house != "commons")
+            {
+                $sql .= self::generateContributionQuery("lords", $termdata, $dateFrom, $dateTo, $kwic);
             
             }
             $sql .= ") c ";
@@ -55,41 +35,88 @@
 
 
 
-            $total = self::contributionTotal($sql2, $count, $offset);
+            $total = self::contributionTotal($count, $offset, $house, $termdata, $dateFrom, $dateTo);
             
             $rows = self::query_no_parameters($sql, "dbname=hansard");
 
             if ($kwic == "contribution" || $kwic == "contribution_nonRank") 
             {
-                $var = convert_data::gen_json_documents($rows, $termdata->tsterm, $total);
+                $var = convert_data::gen_json_documents($rows, $termdata->cleanterm, $total);
             } 
             else  if ($kwic == "contribution-kwic" || $kwic == "contribution-kwic_nonRank") 
             {
-                $var = convert_data::gen_json_kwic($rows, $termdata->tsterm, $total, $offset, $context);
+                $var = convert_data::gen_json_kwic($rows, $termdata->cleanterm, $total, $offset, $context);
             }
 
             return $var;
         }
 
-        private function contributionTotal($sql, $count, $offset){
+        private function contributionTotal($count, $offset, $house, $term, $dateFrom, $dateTo){
 
-            if($count = 0 && $offset == 0)
-            {
+            if ($count == 0 && $offset == 0) {
                 $total[] = array("count" => "total");
-            }
-            else if($count = 0 && $offset != 0)
-            {
+              } else if ($count == 0 && $offset != 0) {
                 $total[] = array("count" => $count);
-            }else{
-                $sql = str_replace("*", "count(*)", $sql);
+              } else {
+                
+                
+                $sql = "SELECT count(*) FROM ";
+                if($house == "both"){
+                    $sql .= "
+                    (
+                        (  
+                            SELECT id FROM 
+                            hansard_commons.commons, to_tsquery('simple', '" . $term->tsterm . "') as q
+                            WHERE
+                            sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE  
+                            and idxfti_simple @@ q
+                        )
+                        UNION
+                        (  
+                            SELECT id FROM 
+                            hansard_lords.lords, to_tsquery('simple', '" . $term->tsterm . "') as q
+                            WHERE
+                            sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE  
+                            and idxfti_simple @@ q
+                        )
+                    ) x ";
+                }else{
+                    $sql .= "hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $term->tsterm . "') as q "
+                    . "WHERE "
+                    . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
+                    . "and idxfti_simple @@ q ";
+                }
+                
                 $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-            }
+              }
 
             return $total;
 
         }
 
-        private function generateQuery($house, $term, $dateFrom, $dateTo){
+        private function generateContributionQuery($house, $term, $dateFrom, $dateTo, $kwic){
+
+            if($kwic == "contribution-kwic" || $kwic == "contribution-kwic_nonRank")
+            {
+                $contributiontext = "ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>, HighlightAll=TRUE') as contributiontext";
+            } 
+            else 
+            {
+                $contributiontext = "contributiontext";
+            }
+
+            $r = " ( "
+                . " SELECT id, href as url, " . $contributiontext . ", sittingday, '" . ucfirst($house) . "' as source, ts_rank(idxfti_simple, q) AS relevance, description, member "
+                . " FROM hansard_" . $house . ". " . $house . ", to_tsquery('simple', '" . $term->tsterm . "') as q "
+                . " WHERE "
+                . " sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
+                . " AND idxfti_simple @@ q "
+                . " ) ";
+
+            return $r;
+        }
+
+        private function generateDistributionQuery($house, $term, $dateFrom, $dateTo){
 
             //generates a query based on search type (multi-word or single) and specific house
             
@@ -104,39 +131,16 @@
                 . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as y ON y.myear = x.myear "
                 . " ) ";
             }else{
-                $r = "
-                (
-                    SELECT z.myear, freq, total FROM
-                    (
-                        SELECT y.myear, sum(y.hits) as freq
-                        FROM
-                        (
-                            SELECT x.myear, count(x.matches) as hits
-                            FROM
-                            (
-                                SELECT 
-                                sq.myear, 
-                                sq.contributiontext,
-                                regexp_matches(sq.contributiontext, '(?i)" . $term->term . "', 'g') as matches,
-                                sq.id
-                                FROM
-                                    (
-                                        SELECT 
-                                                substring(sittingday::text,0,5) as myear, contributiontext, id
-                                        FROM 
-                                            hansard_". $house . "." . $house . ", to_tsquery('simple', '" . $term->tsterm . "') as q
-                                        WHERE
-                                            sittingday BETWEEN '" . $dateFrom . "-01-01'::DATE AND '" . $dateTo . "-12-31'::DATE
-                                            AND idxfti_simple @@ q
-                                    ) as sq 
-                            ) as x
-                            GROUP BY x.id, x.contributiontext, x.myear
-                        ) as y
-                        GROUP BY y.myear
-                    ) as z
-                    JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as s ON z.myear = s.myear 
-                )
-                ";
+                $r = " ( "
+                . " SELECT z.myear, freq, total FROM ( "
+                . " SELECT y.myear, sum(y.hits) as freq FROM ("
+                . " SELECT x.myear, count(x.matches) as hits FROM ( "
+                . " SELECT sq.myear, sq.contributiontext, regexp_matches(sq.contributiontext, '(?i)" . $term->term . "', 'g') as matches, sq.id FROM ( "
+                . " SELECT substring(sittingday::text,0,5) as myear, contributiontext, id FROM "
+                . " hansard_". $house . "." . $house . ", to_tsquery('simple', '" . $term->tsterm . "') as q "
+                . " WHERE sittingday BETWEEN '" . $dateFrom . "-01-01'::DATE AND '" . $dateTo . "-12-31'::DATE AND idxfti_simple @@ q ) as sq " 
+                . " ) as x GROUP BY x.id, x.contributiontext, x.myear ) as y GROUP BY y.myear ) as z "
+                . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as s ON z.myear = s.myear ) ";
             }
 
             return $r;
@@ -152,13 +156,13 @@
 
                 $sql = "SELECT sum(freq) as frequency, sum(total) as total, myear FROM ( ";
                 if($house != "lords"){
-                    $sql .= self::generateQuery("commons", $termdata, $dateFrom, $dateTo);
+                    $sql .= self::generateDistributionQuery("commons", $termdata, $dateFrom, $dateTo);
                 }
                 if($house == "both"){
                      $sql .= " UNION ";
                 }
                 if($house != "commons"){
-                    $sql .= self::generateQuery("lords", $termdata, $dateFrom, $dateTo);
+                    $sql .= self::generateDistributionQuery("lords", $termdata, $dateFrom, $dateTo);
                 }
                 $sql .= ") i GROUP BY myear ORDER BY myear asc";
 
