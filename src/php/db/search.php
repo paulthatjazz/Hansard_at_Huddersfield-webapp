@@ -119,8 +119,16 @@
         private function generateDistributionQuery($house, $term, $dateFrom, $dateTo){
 
             //generates a query based on search type (multi-word or single) and specific house
+
+
             
             if($term->n == 1){
+
+                if(strlen($dateTo) != 4){
+                    $dateFrom = substr($dateFrom, 0, -6);
+                    $dateTo = substr($dateTo, 0, -6);
+                }
+
                 $r = " ( " 
                 . " SELECT freq, y.myear, total FROM"
                 . " ( "
@@ -131,6 +139,12 @@
                 . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as y ON y.myear = x.myear "
                 . " ) ";
             }else{
+
+                if(strlen($dateTo) == 4){
+                    $dateFrom .= "-01-01";
+                    $dateTo .= "-12-31";
+                }
+
                 $r = " ( "
                 . " SELECT z.myear, freq, total FROM ( "
                 . " SELECT y.myear, sum(y.hits) as freq FROM ("
@@ -138,12 +152,41 @@
                 . " SELECT sq.myear, sq.contributiontext, regexp_matches(sq.contributiontext, '(?i)" . $term->term . "', 'g') as matches, sq.id FROM ( "
                 . " SELECT substring(sittingday::text,0,5) as myear, contributiontext, id FROM "
                 . " hansard_". $house . "." . $house . ", to_tsquery('simple', '" . $term->tsterm . "') as q "
-                . " WHERE sittingday BETWEEN '" . $dateFrom . "-01-01'::DATE AND '" . $dateTo . "-12-31'::DATE AND idxfti_simple @@ q ) as sq " 
+                . " WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE AND idxfti_simple @@ q ) as sq " 
                 . " ) as x GROUP BY x.id, x.contributiontext, x.myear ) as y GROUP BY y.myear ) as z "
                 . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as s ON z.myear = s.myear ) ";
             }
 
             return $r;
+        }
+
+        private function getDistributionQuery($term, $house, $dateFrom, $dateTo, $hitsOnly){
+            /*gets basic distribution of phraises between two dates. 
+
+            if hitsOnly is true, it will sum all totals together, otherwise it is split by year.*/
+
+            if($hitsOnly){
+                $sql = "SELECT sum(freq) as count FROM ( ";
+            }else{
+                $sql = "SELECT sum(freq) as frequency, sum(total) as total, myear FROM ( ";
+            }
+            if($house != "lords"){
+                $sql .= self::generateDistributionQuery("commons", $term, $dateFrom, $dateTo);
+            }
+            if($house == "both"){
+                 $sql .= " UNION ";
+            }
+            if($house != "commons"){
+                $sql .= self::generateDistributionQuery("lords", $term, $dateFrom, $dateTo);
+            }
+            if($hitsOnly){
+                $sql .= ") i";
+            }else{
+                $sql .= ") i GROUP BY myear ORDER BY myear asc";
+            }
+
+            return $sql;
+
         }
 
         public static function distribution($paras, $house, $dateFrom, $dateTo){
@@ -154,23 +197,25 @@
             {
                 $termdata = convert_data::prepareTerm($value["term"]);
 
-                $sql = "SELECT sum(freq) as frequency, sum(total) as total, myear FROM ( ";
-                if($house != "lords"){
-                    $sql .= self::generateDistributionQuery("commons", $termdata, $dateFrom, $dateTo);
-                }
-                if($house == "both"){
-                     $sql .= " UNION ";
-                }
-                if($house != "commons"){
-                    $sql .= self::generateDistributionQuery("lords", $termdata, $dateFrom, $dateTo);
-                }
-                $sql .= ") i GROUP BY myear ORDER BY myear asc";
+                $sql = self::getDistributionQuery($termdata, $house, $dateFrom, $dateTo, FALSE);
 
                 $rows[$i] = self::query_no_parameters($sql, "dbname=hansard");
                 $i++;
             }
 
             return $rows;
+        }
+
+        public static function hits($value, $dateFrom, $dateTo, $house){
+
+            $term = convert_data::prepareTerm($value['term']);
+            
+            $sql = self::getDistributionQuery($term, $house, $dateFrom, $dateTo, TRUE);
+
+            $total = query_handler::query_no_parameters($sql, "dbname=hansard");
+
+            return $total;
+
         }
 
     }

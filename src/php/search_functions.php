@@ -959,86 +959,11 @@ if (isset($_GET['action'])) {
     $dateFrom = $_POST['dateFrom'] . "-01-01";
     $dateTo = $_POST['dateTo'] . "-12-31";
 
-    $cleaned_term = strtolower(convert_data::clean_query($value['term']));
-    $num_terms = sizeof(explode(" ", $cleaned_term));
-    $ts_term = convert_data::gen_postgresql_query($cleaned_term);
-
-
-    if ($num_terms == 1) {
-
-      $minWords = 1;
-      $maxWords = 2;
-
-      if (substr($cleaned_term, -1) == ".") {
-        $cleaned_term = substr($cleaned_term, 0, strlen($cleaned_term) - 1);
-      }
-
-      if ($house != "both") {
-
-        if (strpos($cleaned_term, "*") == FALSE) {
-
-          $sql =
-            "SELECT nentry as count "
-            . "FROM ts_stat('select idxfti_simple from hansard_" . $house . "." . $house . " WHERE sittingday BETWEEN ''" . $dateFrom . "''::DATE AND ''" . $dateTo . "''::DATE "
-            . "and idxfti_simple @@ to_tsquery(''simple'',''" . $ts_term . "'')') "
-            . "where word = (ts_lexize('english_stem', '" . $cleaned_term . "'))[1] ";
-
-
-          $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-
-          if ($total == 0) {
-
-            $sql =
-              "SELECT nentry as count "
-              . "FROM ts_stat('select idxfti_simple from hansard_" . $house . "." . $house . " WHERE sittingday BETWEEN ''" . $dateFrom . "''::DATE AND ''" . $dateTo . "''::DATE "
-              . "and idxfti_simple @@ to_tsquery(''simple'',''" . $ts_term . "'')') "
-              . "where word = '" . $cleaned_term . "' ";
-
-
-
-            $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-          }
-        } else {
-
-          $cleaned_term = str_replace("*", "%", $cleaned_term);
-
-          $sql =
-            "SELECT sum(nentry) as count "
-            . "FROM ts_stat('select idxfti_simple from hansard_" . $house . "." . $house . " WHERE sittingday BETWEEN ''" . $dateFrom . "''::DATE AND ''" . $dateTo . "''::DATE  "
-            . "and idxfti_simple @@ to_tsquery(''simple'',''" . $ts_term . "'')') "
-            . "where word like '" . $cleaned_term . "'";
-
-          $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-        }
-      } else {
-      }
-    } else {
-
-      $minWords = 1;
-      $maxWords = $num_terms;
-
-      if ($house != "both") {
-
-        $sql =
-          "SELECT SUM(hits) as count "
-          . " FROM ( "
-          . "select ((cardinality(string_to_array(subq.headline,'<b>'))-1)/" . $num_terms . ") as hits "
-          . "from ( "
-          . "SELECT ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>,MaxWords=" . $maxWords . ", MinWords=" . $minWords . ", ShortWord=1, HighlightAll=FALSE, MaxFragments=9999, FragmentDelimiter=\" ... \"') as headline "
-          . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-          . "WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-          . "and idxfti_simple @@ q "
-          . ") as subq "
-          . ") as x ";
-      } else {
-      }
-
-
-      $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-    }
-
+    $total = search::hits($value, $dateFrom, $dateTo, $house);
+    
     $var2 = json_encode($total);
     echo $var2;
+
   } else if ($_POST['type'] == "advanced") {
 
     if (strlen($_POST['dateFrom']) > 4) {
