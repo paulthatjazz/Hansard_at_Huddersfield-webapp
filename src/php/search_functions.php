@@ -424,10 +424,7 @@ if (isset($_GET['action'])) {
   }
 } else if ($_POST['action'] == "contribution-expand") {
 
-  if ($house != "both") {
-    $sql = "SELECT id, sittingday, contributiontext, member, href as url FROM hansard_" . $house . "." . $house . " WHERE id='" . $_POST['id'] . "'";
-  } else {
-  }
+  $sql = "SELECT id, sittingday, contributiontext, member, href as url FROM hansard_" . $_POST['row_house'] . "." . $_POST['row_house'] . " WHERE id='" . $_POST['id'] . "'";
 
   $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
 
@@ -1177,4 +1174,11 @@ if (isset($_GET['action'])) {
 } else if ($_POST['action'] == "killPID") {
   $var = query_handler::killingPID("dbname=hansard", $_SESSION["previous_PID"]);
   echo $var;
+} else if ($_POST['action'] == "maxDate"){
+
+  $sql = "SELECT max(sittingday) as upperdate FROM hansard_commons.commons";
+
+  $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+  
+  echo json_encode($rows);
 }
