@@ -574,7 +574,7 @@
                                         non-expert users through data
                                         visualisation. Talk presented at
                                         ICAME40 conference.
-                                        Neuchâtel, Switzerland</small>
+                                        Neuchâtel, Switzerland.</small>
                                 </div>
                             </li>
                             <li class="list-group-item d-flex
@@ -592,7 +592,7 @@
                                         XI International
                                         Conference on
                                         Corpus Linguistics (CILC 2019)
-                                        conference. Valencia, Spain</small>
+                                        conference. Valencia, Spain.</small>
                                 </div>
                             </li>
 
@@ -606,7 +606,7 @@
                                     title="See more">
                                     <h6 class="my-0">Blog Post</h6>
                                     <small class="text-muted">De Jager, F. (2018, May 28). Hansard at Huddersfield:
-                                        Improving Democracy Through Technology. AHRC Blog</small>
+                                        Improving Democracy Through Technology. AHRC Blog.</small>
                                 </div>
                             </li>
 
@@ -630,7 +630,7 @@
                                     <h6 class="my-0">Blog Post</h6>
                                     <small class="text-muted">Jeffries, L., De Jager, F. (2019, March 9). Democratising
                                         Hansard: continuing to improve the accessibility of parliamentary records. LSE
-                                        Blog</small>
+                                        Blog.</small>
                                 </div>
                             </li>
 
@@ -680,23 +680,15 @@
                                     align-items-center mb-3">
                                 <span id="citing" class="text-muted">Upcoming events</span>
                             </h4>
+                            <div style=" text-align: center;">
+                                No Events Scheduled.
+                            </div>
                         </div>
 
                         <div class="col-md-12">
 
                             <div class="row mb-3 justify-content-center">
-                                <div class="media pt-3 col-4 ">
-                                    <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
-                                            style="color: #6f42c1;"></i></span>
-                                    <p class="pr-3 mr-0">
-                                        <strong class="d-block text-gray-dark">Virtual Event</strong>
-                                        27th January 2021</br>4-6pm</br>
-                                        <a target="_blank"
-                                            href="https://www.westminster.ac.uk/events/hansard-at-huddersfield-applying-corpus-search-methods-to-the-official-record-of-parliament-lesley">Online
-                                            Event
-                                        </a> by University of Westminister
-                                    </p>
-                                </div>
+
 
                             </div>
 
@@ -712,6 +704,19 @@
                         <div class="col-md-12">
 
                             <div class="row mb-3 justify-content-center border-top border-bottom border-gray">
+
+                                <div class="media pt-3 col-4 ">
+                                    <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
+                                            style="color: #6f42c1;"></i></span>
+                                    <p class="pr-3 mr-0">
+                                        <strong class="d-block text-gray-dark">Virtual Event</strong>
+                                        27th January 2021</br>4-6pm</br>
+                                        <a target="_blank"
+                                            href="https://www.westminster.ac.uk/events/hansard-at-huddersfield-applying-corpus-search-methods-to-the-official-record-of-parliament-lesley">Online
+                                            Event
+                                        </a> by University of Westminister
+                                    </p>
+                                </div>
 
 
                                 <div class="media pt-3 col-4 ">
@@ -735,6 +740,10 @@
                                     </p>
                                 </div>
 
+                            </div>
+
+                            <div class="row mb-3 justify-content-center border-bottom border-gray">
+
                                 <div class="media pt-3 col-4 ">
                                     <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
                                             style="color: #6f42c1;"></i></span>
@@ -745,10 +754,6 @@
                                         London, Margaret MacMillan Building, Goldsmiths: University of London
                                     </p>
                                 </div>
-
-                            </div>
-
-                            <div class="row mb-3 justify-content-center border-bottom border-gray">
 
                                 <div class="media pt-3 col-4 ">
                                     <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
@@ -770,6 +775,13 @@
                                         Huddersfield, Heritage Quay: University of Huddersfield
                                     </p>
                                 </div>
+
+
+                            </div>
+
+                            <div class="row mb-3 justify-content-center border-bottom border-gray">
+
+
                                 <div class="media pt-3 col-4 ">
                                     <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
                                             style="color: #33FF71;"></i></span>
@@ -780,11 +792,6 @@
                                         London, House of Lords: Houses of Parliament
                                     </p>
                                 </div>
-
-
-                            </div>
-
-                            <div class="row mb-3 justify-content-center border-bottom border-gray">
 
                                 <div class="media pt-3 col-4 ">
                                     <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
@@ -807,6 +814,11 @@
                                     </p>
                                 </div>
 
+                            </div>
+
+                            <div class="row mb-3 justify-content-center border-bottom border-gray">
+
+
                                 <div class="media pt-3 col-4 ">
                                     <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
                                             style="color: #FF5733;"></i></span>
@@ -818,9 +830,6 @@
                                     </p>
                                 </div>
 
-                            </div>
-
-                            <div class="row mb-3 justify-content-center border-bottom border-gray">
                                 <div class="media pt-3 col-4 ">
                                     <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
                                             style="color: #FF5733;"></i></span>
@@ -903,11 +912,13 @@
                     <div class="card function function-hover2 card2"
                         style="width: 18rem; background-color: white; color: black;" data-function="videos">
                         <div class="card-body">
-                            <i class="fas fa-film fa-5x card-icon" style="background-color: #17954c;"></i>
+                            <i class="fas fa-film fa-5x card-icon" style="background-color: lightgrey;"></i>
                             <h5 class="card-title" style="
                                 text-align: center;
                                 padding-top: 10px;">
                                 Videos
+
+                                <h6 style="text-align: center;">Coming Soon</h6>
                             </h5>
                             <p class="card-text">Video descriptions guiding the user through Hansard at Huddersfield’s
                                 search functions.</p>
@@ -1122,7 +1133,7 @@
                                 Others using Hansard at Huddersfield
                             </h5>
                             <p class="card-text">Representative use of Hansard at Huddersfield tools by policymakers,
-                                researchers, and journalists</p>
+                                researchers, and journalists.</p>
                         </div>
                     </div>
                 </div>
@@ -1226,7 +1237,7 @@
                                 <div class="pub"
                                     data-url="https://www.southampton.ac.uk/~assets/doc/Emergence%20Volume%20X%20-%20Tradition%20vs.%20Innovation.pdf"
                                     title="See more">
-                                    <h6 class="my-0">Research Journal</h6>
+                                    <h6 class="my-0">Journal Article</h6>
                                     <small class="text-muted">
                                         Brinkley, L. (2018). Innovation versus Tradition in Historical Research Methods:
                                         The ‘Digital Turn’. Emergence X, 34-48
@@ -1252,7 +1263,7 @@
                             justify-content-between lh-condensed" style="cursor:pointer;">
                                 <div class="pub" data-url="https://www.aclweb.org/anthology/2020.parlaclarin-1.5.pdf"
                                     title="See more">
-                                    <h6 class="my-0">Conference Presentation</h6>
+                                    <h6 class="my-0">Conference Proceedings</h6>
                                     <small class="text-muted">Coole, M., Rayson, P., Mariani, J. (2020). Unfinished
                                         Business: Construction and Maintenance of a Semantically Tagged Historical
                                         Parliamentary Corpus, UK Hansard from 1803 to the present day. Proceedings of
@@ -1318,7 +1329,7 @@
                                     <h6 class="my-0">Presentation</h6>
                                     <small class="text-muted">Navickas, K. (2019). "'Right of Public Meeting' in
                                         Hansard" [PowerPoint Slide]. Paper presented at "Remembering Peterloo: protest,
-                                        satire and reform", London, 11 July 2019</small>
+                                        satire and reform", London, 11 July 2019.</small>
                                 </div>
                             </li>
 
@@ -1763,7 +1774,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div>
                     The Hansard at Huddersfield project team has also worked closely with likely end-users from a
                     diverse group of organisations which share a professional interest in the deliberations of UK
                     parliament. We would like to thank all of our end-users for their helpful suggestions and feedback.
