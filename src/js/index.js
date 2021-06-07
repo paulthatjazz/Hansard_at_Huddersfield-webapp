@@ -75,24 +75,43 @@ $(function() {
 
   $("#hugo").click(function() {
     window.open(
-      "https://pure.hud.ac.uk/en/persons/hugo-sanjurjo-gonzalez",
+      "https://estudiantes.deusto.es/cs/Satellite/estudiantes/en/students-1/academic-information/teaching-staff-1/28212/profesor",
       "_blank"
     );
   });
 
   $("#fransina").click(function() {
     window.open(
-      "https://www.linguisticsathuddersfield.com/fransina-de-jager",
+      "https://www.linguisticsathuddersfield.com/fransina-stradling",
+      "_blank"
+    );
+  });
+  
+  $("#paul").click(function() {
+    window.open(
+      "https://pure.hud.ac.uk/en/persons/paul-crossley",
       "_blank"
     );
   });
 
   $(".function").click(function() {
-    $(".only-one.container").hide();
+    
+    if($(this).hasClass("function-hover2")){
+      $(".sub-c").hide();
+    }else{
+      $(".only-one.container").hide();
+    }
 
     if ($(this).data("function") == "blog") {
       window.open("https://hansardhud.edublogs.org/", "_blank");
+    } else if ($(this).data("function") == "brochure") {
+      window.open("https://cloud.3dissue.com/18743/41457/106040/POLICY/index.html?r=27", "_blank");
+    } else if ($(this).data("function") == "brochure-teach") {
+      window.open("https://cloud.3dissue.com/18743/41457/106040/TEACHERS/index.html?r=59", "_blank");
+    }else if ($(this).data("function") == "user-guide"){
+      window.open("pdf/Hansard at Huddersfield User Guide - Version May 2020_Final.pdf", "_blank");
     } else {
+
       $("#" + $(this).data("function")).show();
 
       if ($(this).data("subfunction")) {
