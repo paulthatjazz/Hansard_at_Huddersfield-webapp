@@ -278,7 +278,7 @@
                             <h5 class="card-title" style="
                                 text-align: center;
                                 padding-top: 10px;">
-                                Academic Outputs
+                                Outputs
                             </h5>
                             <p class="card-text">Publications about Hansard at Huddersfield for academic audiences.</p>
                         </div>
@@ -532,7 +532,11 @@
                             <span id="outputs" class="text-muted">Outputs</span>
                         </h4>
 
-                        <ul class="list-group mb-3">
+                        <ul class="list-group mb-3 othershan">
+
+
+                            <h5>Academic Outputs</h5>
+
                             <li class="list-group-item d-flex
                             justify-content-between lh-condensed" style="cursor:pointer;">
                                 <div class="pub" data-url="pdf/Article Preprint for website.pdf" title="See more">
@@ -591,6 +595,56 @@
                                         conference. Valencia, Spain</small>
                                 </div>
                             </li>
+
+
+                            <h5>Blogs</h5>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://ahrc-blog.com/2018/05/28/hansard-at-huddersfield-improving-democracy-through-technology/"
+                                    title="See more">
+                                    <h6 class="my-0">Blog Post</h6>
+                                    <small class="text-muted">De Jager, F. (2018, May 28). Hansard at Huddersfield:
+                                        Improving Democracy Through Technology. AHRC Blog</small>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://www.democraticaudit.com/2019/03/06/democratising-hansard-continuing-to-improve-the-accessibility-of-parliamentary-records/"
+                                    title="See more">
+                                    <h6 class="my-0">Blog Post</h6>
+                                    <small class="text-muted">Jeffries, L., De Jager, F. (2019, March 6). Democratising
+                                        Hansard: continuing to improve the accessibility of parliamentary records.
+                                        Democratic Audit.</small>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://blogs.lse.ac.uk/politicsandpolicy/democratising-hansard/"
+                                    title="See more">
+                                    <h6 class="my-0">Blog Post</h6>
+                                    <small class="text-muted">Jeffries, L., De Jager, F. (2019, March 9). Democratising
+                                        Hansard: continuing to improve the accessibility of parliamentary records. LSE
+                                        Blog</small>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://thehistoryofparliament.wordpress.com/2019/04/01/hansard-at-huddersfield-making-democracy-more-searchable/"
+                                    title="See more">
+                                    <h6 class="my-0">Blog Post</h6>
+                                    <small class="text-muted">Jeffries, L. (2019, April 1). Hansard at Huddersfield:
+                                        Making democracy more searchable. History of Parliament Blog.</small>
+                                </div>
+                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -631,7 +685,18 @@
                         <div class="col-md-12">
 
                             <div class="row mb-3 justify-content-center">
-                                No Upcoming Events
+                                <div class="media pt-3 col-4 ">
+                                    <span class="mr-2"><i class="fas fa-calendar-check fa-lg"
+                                            style="color: #6f42c1;"></i></span>
+                                    <p class="pr-3 mr-0">
+                                        <strong class="d-block text-gray-dark">Virtual Event</strong>
+                                        27th January 2021</br>4-6pm</br>
+                                        <a target="_blank"
+                                            href="https://www.westminster.ac.uk/events/hansard-at-huddersfield-applying-corpus-search-methods-to-the-official-record-of-parliament-lesley">Online
+                                            Event
+                                        </a> by University of Westminister
+                                    </p>
+                                </div>
 
                             </div>
 
@@ -823,11 +888,12 @@
                     <div class="card function function-hover2 card2"
                         style="width: 18rem; background-color: white; color: black;" data-function="6th-form">
                         <div class="card-body">
-                            <i class="fas fa-book-reader fa-5x card-icon" style="background-color: #17954c;"></i>
+                            <i class="fab fa-readme fa-5x card-icon" style="background-color: lightgrey;"></i>
                             <h5 class="card-title" style="
                                 text-align: center;
                                 padding-top: 10px;">
                                 6th Form Guide
+                                <h6 style="text-align: center;">Coming Soon</h6>
                             </h5>
                             <p class="card-text">A detailed guide to using Hansard and Hansard at Huddersfield as a
                                 resource for 6th form research projects.</p>
@@ -876,13 +942,16 @@
                                     align-items-center mb-3">
                                 <span class="text-muted">Videos</span>
                             </h4>
+                            <p>
+                                Coming Soon
+                            </p>
                         </div>
 
                         <div class="col-12 justify-content-center mt-2 mb-5
                         video-player">
                         </div>
 
-                        Coming Soon
+
                     </div>
                 </div>
 
@@ -1143,13 +1212,147 @@
                     <hr>
                     <div class="row">
                         <h4 class="d-flex justify-content-between
-                                align-items-center mb-3">
-                            <span id="team" class="text-muted">Others Using Hansard at Huddersfield</span>
+                        align-items-center mb-3">
+                            <span id="outputs" class="text-muted">Others Using Hansard at Huddersfield</span>
                         </h4>
-                    </div>
 
-                    coming soon
+
+                        <ul class="list-group mb-3 othershan">
+
+                            <h5>Academic Articles and Conference Proceedings</h5>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://www.southampton.ac.uk/~assets/doc/Emergence%20Volume%20X%20-%20Tradition%20vs.%20Innovation.pdf"
+                                    title="See more">
+                                    <h6 class="my-0">Research Journal</h6>
+                                    <small class="text-muted">
+                                        Brinkley, L. (2018). Innovation versus Tradition in Historical Research Methods:
+                                        The ‘Digital Turn’. Emergence X, 34-48
+                                    </small>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://www.tandfonline.com/doi/full/10.1080/13572334.2020.1726635"
+                                    title="See more">
+                                    <h6 class="my-0">Journal Article</h6>
+                                    <small class="text-muted">
+                                        McKay, L. (2020). Does constituency focus improve attitudes to MPs? A test for
+                                        the UK. The Journal of Legislative Studies 26(1), 1-26, DOI:
+                                        10.1080/13572334.2020.1726635
+                                    </small>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub" data-url="https://www.aclweb.org/anthology/2020.parlaclarin-1.5.pdf"
+                                    title="See more">
+                                    <h6 class="my-0">Conference Presentation</h6>
+                                    <small class="text-muted">Coole, M., Rayson, P., Mariani, J. (2020). Unfinished
+                                        Business: Construction and Maintenance of a Semantically Tagged Historical
+                                        Parliamentary Corpus, UK Hansard from 1803 to the present day. Proceedings of
+                                        ParlaCLARIN II Workshop, Language Resources and Evaluation Conference (LREC
+                                        2020), Marseille, 23-27.</small>
+                                </div>
+                            </li>
+
+
+                            <h5>Blogs</h5>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://hansardhud.edublogs.org/2020/07/02/using-hansard-at-huddersfield-for-historical-research-the-spanish-flu-of-1918/"
+                                    title="See more">
+                                    <h6 class="my-0">Blog Post</h6>
+                                    <small class="text-muted">Hart, G. (2020, July 2). Using Hansard at Huddersfield for
+                                        Historical Research: The Spanish Flu of 1918. Hansard at Huddersfield.</small>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="http://alsatia.org.uk/site/2019/10/resource-cobbetts-parliamentary-history/"
+                                    title="See more">
+                                    <h6 class="my-0">Blog Post</h6>
+                                    <small class="text-muted">Levin, J. (2019, October 8). Resource: Cobbett’s
+                                        Parliamentary History. Alsatia.</small>
+                                </div>
+                            </li>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://historyofpublicspace.uk/history/definitions-and-typologies-of-public-space/"
+                                    title="See more">
+                                    <h6 class="my-0">Blog Post</h6>
+                                    <small class="text-muted">Navickas, K. (N.D.) Definitions of Public Space. History
+                                        of Public Space.</small>
+                                </div>
+                            </li>
+
+                            <h5>News Outlets</h5>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://bylinetimes.com/2021/02/12/ur-fascism-the-parliamentary-language-that-defines-the-uk/"
+                                    title="See more">
+                                    <h6 class="my-0">News Article</h6>
+                                    <small class="text-muted">Overton, I. (2021, February 12). UR-FASCISM? The
+                                        Parliamentary Language that Defines the UK. Byline Times.</small>
+                                </div>
+                            </li>
+
+                            <h5>Presentations</h5>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub" title="See more">
+                                    <h6 class="my-0">Presentation</h6>
+                                    <small class="text-muted">Navickas, K. (2019). "'Right of Public Meeting' in
+                                        Hansard" [PowerPoint Slide]. Paper presented at "Remembering Peterloo: protest,
+                                        satire and reform", London, 11 July 2019</small>
+                                </div>
+                            </li>
+
+                            <h5>Website Links</h5>
+
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub" data-url="https://victoriancommons.wordpress.com/resources/"
+                                    title="See more">
+                                    <h6 class="my-0">Victorian Commons</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub"
+                                    data-url="https://archives.parliament.uk/online-resources/parliamentary-debates-hansard/"
+                                    title="See more">
+                                    <h6 class="my-0">Parliamentary archives</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex
+                            justify-content-between lh-condensed" style="cursor:pointer;">
+                                <div class="pub" data-url="https://www.clarin.ac.uk/hansard-huddersfield#/"
+                                    title="See more">
+                                    <h6 class="my-0">Clarin UK consortium</h6>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
                 </div>
+
+
+            </div>
             </div>
 
             <div id="about_us" class="container only-one">
@@ -1161,14 +1364,23 @@
                         <h2>About us</h2>
                     </div>
                 </div>
+                <div class="row mb-3">
 
-                <div class="row">
-                    With joint expertise in linguistics, computer science and history, our team has worked since March
-                    2018 to produce an accessible site with search tools that aid the straightforward exploration and
-                    interpretation of overarching trends and patterns in Hansard. We adapted expert software to study
-                    language patterns in large databases of text by combining some of its most common tools with
-                    interactive visualisations, aiming to help non-linguists mine the data’s potential without needing
-                    to master complex software packages
+                    <div class="col-md-12">
+                        <p>
+                            With joint expertise in linguistics, computer science and history, our team has worked since
+                            March
+                            2018 to produce an accessible site with search tools that aid the straightforward
+                            exploration
+                            and
+                            interpretation of overarching trends and patterns in Hansard. We adapted expert software to
+                            study
+                            language patterns in large databases of text by combining some of its most common tools with
+                            interactive visualisations, aiming to help non-linguists mine the data’s potential without
+                            needing
+                            to master complex software packages
+                        </p>
+                    </div>
                 </div>
 
                 <div class="row justify-content-center">
@@ -1176,8 +1388,7 @@
 
 
                     <div class="col-md-3 mb-4">
-                        <h4 class="d-flex justify-content-between
-                                align-items-center mb-3">
+                        <h4 class="d-flex  mb-3">
                             <span id="team" class="text-muted">The Team</span>
                         </h4>
                         <ul class="list-group mb-3">
