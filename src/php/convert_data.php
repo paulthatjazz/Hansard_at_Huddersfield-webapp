@@ -251,7 +251,7 @@ class convert_data
 					foreach ($entry as $key => $value) {
 						if ($key == "frequency") {
 							$freq = $value;
-						} else if ($key == "year") {
+						} else if ($key == "myear") {
 							$year = $value;
 						} else if ($key == "total") {
 							$total = $value;
@@ -323,7 +323,7 @@ class convert_data
 					foreach ($entry as $key => $value) {
 						if ($key == "frequency") {
 							$freq = $value;
-						} else if ($key == "year") {
+						} else if ($key == "myear") {
 							$date = $value;
 						} else if ($key == "total") {
 							$total = $value;
@@ -494,6 +494,9 @@ class convert_data
 	public static function formatMatchedDocument($text, $query, $offset)
 	{ 	// En negrita el primer hit, cuenta los otros y reduce la contribucion
 
+		
+		$query = str_replace("%", "*", $query);
+
 		$query = preg_quote($query);
 		$query =	str_replace("\*", '\w*', $query); //wildcard
 		$query =	str_replace(" ", '[\p{P}]* ', $query); //spaces and punctuaction -> Postgresql search in this way Ireland, can
@@ -506,7 +509,6 @@ class convert_data
 				$pattern = '/\b' . $query . '\b/ui';
 			}
 		}
-
 
 		// Search hits: \b word boundary; \p punctuaction, P: any punctuaction -> https://www.regular-expressions.info/unicode.html#prop
 		preg_match_all($pattern, $text, $matches, PREG_OFFSET_CAPTURE);
@@ -1077,8 +1079,15 @@ class convert_data
 	}
 
 	public static function prepareTerm($q){
+		if($q == ""){
+			return (object)[
+				'term' => NULL,
+				'n' => 0
+			];
+		}
 
 		$cq = strtolower(self::clean_query($q));
+		$reg = str_replace("*", "(.*?)", $cq);
 		$c = str_replace("*", "%", $cq);
 		$ts = self::gen_postgresql_query($cq);
 
@@ -1086,6 +1095,7 @@ class convert_data
 			'term' => $cq,
 			'cleanterm' => $c,
 			'tsterm' => $ts,
+			'regexterm' => $reg,
 			'n' => sizeof(explode(" ", $cq))
 		];
 		return $o;
