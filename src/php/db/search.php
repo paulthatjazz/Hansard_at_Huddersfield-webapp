@@ -383,11 +383,29 @@
             return $rows;
         }
 
-        public static function hits($value, $dateFrom, $dateTo, $house){
+        public static function hits($value, $dateFrom, $dateTo, $house, $type, $monthly){
+
 
             $term = convert_data::prepareTerm($value['term']);
+
+            if($type == "advanced"){
+                if($value["description"]){
+                    $desc = $value["description"];
+                }else{
+                    $desc = NULL;
+                }
+
+                if($value["member"]){
+                    $member = $value["member"];
+                }else{
+                    $member = NULL;
+                }
+            }else{
+                $desc = NULL;
+                $member = NULL;
+            }
             
-            $sql = self::getDistributionQuery($term, $house, $dateFrom, $dateTo, TRUE);
+            $sql = self::getDistributionQuery($term, $house, $dateFrom, $dateTo, TRUE, $monthly, $member, $desc);
 
             $total = query_handler::query_no_parameters($sql, "dbname=hansard");
 

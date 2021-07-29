@@ -184,215 +184,23 @@ if (isset($_GET['action'])) {
   
 } else if ($_POST['action'] == "hits") {
 
-  if ($_POST['type'] == "basic") {
-
     $value = $_POST['parameters'];
-
-    $dateFrom = $_POST['dateFrom'] . "-01-01";
-    $dateTo = $_POST['dateTo'] . "-12-31";
-
-    $total = search::hits($value, $dateFrom, $dateTo, $house);
-    
-    $var2 = json_encode($total);
-    echo $var2;
-
-  } else if ($_POST['type'] == "advanced") {
 
     if (strlen($_POST['dateFrom']) > 4) {
       $dateFrom = $_POST['dateFrom'];
       $dateTo = $_POST['dateTo'];
+      $monthly = TRUE;
     } else {
       $dateFrom = $_POST['dateFrom'] . "-01-01";
       $dateTo = $_POST['dateTo'] . "-12-31";
+      $monthly = FALSE;
     }
 
-    $value = $_POST['parameters'];
-
-    if (isset($value['description']) && $value['description'] != "" && $value['description'] != " ") {
-      $description = $value['description'];
-
-      $cleaned_description = convert_data::clean_query($value['description']);
-      $ts_description = convert_data::gen_postgresql_query($cleaned_description);
-    } else {
-      $description = FALSE;
-    }
-
-    if (isset($value['member']) && $value['member'] != "" && $value['member'] != " ") {
-      $member = $value['member'];
-
-      $cleaned_member = convert_data::clean_query($value['member']);
-      $ts_member = convert_data::gen_postgresql_query($cleaned_member);
-
-      if ($cleaned_member == "Speaker") {
-        $cleaned_member = " ilike ''%speaker%''";
-      } else {
-        $cleaned_member = " = ''" . $cleaned_member . "''";
-      }
-    } else {
-      $member = FALSE;
-    }
-
-    $cleaned_term = convert_data::clean_query($value['term']);
-    $num_terms = sizeof(explode(" ", $cleaned_term));
-    $ts_term = convert_data::gen_postgresql_query($cleaned_term);
-
-
-    if ($num_terms == 1) {
-
-      $minWords = 1;
-      $maxWords = 2;
-
-      if (substr($cleaned_term, -1) == ".") {
-        $cleaned_term = substr($cleaned_term, 0, strlen($cleaned_term) - 1);
-      }
-
-
-      if ($member && $description) {
-
-        if ($house != "both") {
-
-          if (strpos($cleaned_term, "*") == TRUE) {
-            $cleaned_term = str_replace("*", "%", $cleaned_term);
-          }
-
-          $sql =
-            "SELECT sum(nentry) as count "
-            . "FROM ts_stat('"
-            . "select idxfti_simple from hansard_" . $house . "." . $house . " WHERE "
-            . "sittingday BETWEEN ''" . $dateFrom . "''::DATE AND ''" . $dateTo . "''::DATE  "
-            . "and idxfti_simple @@ to_tsquery(''simple'',''" . $ts_term . "'')"
-            . "and description ilike ''%" . $cleaned_description . "%'' "
-            . "and member " . $cleaned_member . " "
-            . "') "
-            . "where word ilike '" . $cleaned_term . "'";
-        } else {
-        }
-      } else if ($member) {
-
-        if ($house != "both") {
-
-          if (strpos($cleaned_term, "*") == TRUE) {
-            $cleaned_term = str_replace("*", "%", $cleaned_term);
-          }
-
-          $sql =
-            "SELECT sum(nentry) as count "
-            . "FROM ts_stat('"
-            . "select idxfti_simple from hansard_" . $house . "." . $house . " WHERE "
-            . "sittingday BETWEEN ''" . $dateFrom . "''::DATE AND ''" . $dateTo . "''::DATE  "
-            . "and idxfti_simple @@ to_tsquery(''simple'',''" . $ts_term . "'')"
-            . "and member " . $cleaned_member . " "
-            . "') "
-            . "where word ilike '" . $cleaned_term . "'";
-        } else {
-        }
-      } else if ($description) {
-        if ($house != "both") {
-
-          if (strpos($cleaned_term, "*") == TRUE) {
-            $cleaned_term = str_replace("*", "%", $cleaned_term);
-          }
-
-          $sql =
-            "SELECT sum(nentry) as count "
-            . "FROM ts_stat('"
-            . "select idxfti_simple from hansard_" . $house . "." . $house . " WHERE "
-            . "sittingday BETWEEN ''" . $dateFrom . "''::DATE AND ''" . $dateTo . "''::DATE  "
-            . "and idxfti_simple @@ to_tsquery(''simple'',''" . $ts_term . "'')"
-            . "and description ilike ''%" . $cleaned_description . "%'' "
-            . "') "
-            . "where word ilike '" . $cleaned_term . "'";
-        } else {
-        }
-      } else {
-        if ($house != "both") {
-
-          if (strpos($cleaned_term, "*") == TRUE) {
-            $cleaned_term = str_replace("*", "%", $cleaned_term);
-          }
-
-          $sql =
-            "SELECT nentry as count "
-            . "FROM ts_stat('select idxfti_simple from hansard_" . $house . "." . $house . " WHERE sittingday BETWEEN ''" . $dateFrom . "''::DATE AND ''" . $dateTo . "''::DATE "
-            . "and idxfti_simple @@ to_tsquery(''simple'',''" . $ts_term . "'')') "
-            . "where word ilike '" . $cleaned_term . "' ";
-        } else {
-        }
-      }
-    } else {
-
-      $minWords = 1;
-      $maxWords = $num_terms;
-
-      if ($house != "both") {
-
-        if ($member && $description) {
-
-          $sql =
-            "SELECT SUM(hits) as count "
-            . " FROM ( "
-            . "select ((cardinality(string_to_array(subq.headline,'<b>'))-1)/" . $num_terms . ") as hits "
-            . "from ( "
-            . "SELECT ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>,MaxWords=" . $maxWords . ", MinWords=" . $minWords . ", ShortWord=1, HighlightAll=FALSE, MaxFragments=9999, FragmentDelimiter=\" ... \"'
-                ) as headline "
-            . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-            . "WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-            . "and idxfti_simple @@ q "
-            . "and description ilike '%" . $cleaned_description . "%' "
-            . "and member " . $cleaned_member . " "
-            . ") as subq "
-            . ") as x ";
-        } else if ($member) {
-
-          $sql =
-            "SELECT SUM(hits) as count "
-            . " FROM ( "
-            . "select ((cardinality(string_to_array(subq.headline,'<b>'))-1)/" . $num_terms . ") as hits "
-            . "from ( "
-            . "SELECT ts_headline('simple', contributiontext,q, 'StartSel=<b>, StopSel=</b>,MaxWords=" . $maxWords . ", MinWords=" . $minWords . ", ShortWord=1, HighlightAll=FALSE, MaxFragments=9999, FragmentDelimiter=\" ... \"') as headline "
-            . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-            . "WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-            . "and idxfti_simple @@ q "
-            . "and member " . $cleaned_member . " "
-            . ") as subq "
-            . ") as x ";
-        } else if ($description) {
-          $sql =
-            "SELECT SUM(hits) as count "
-            . " FROM ( "
-            . "select ((cardinality(string_to_array(subq.headline,'<b>'))-1)/" . $num_terms . ") as hits "
-            . "from ( "
-            . "SELECT ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>,MaxWords=" . $maxWords . ", MinWords=" . $minWords . ", ShortWord=1, HighlightAll=FALSE, MaxFragments=9999, FragmentDelimiter=\" ... \"') as headline "
-            . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-            . "WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-            . "and idxfti_simple @@ q "
-            . "and description ilike '%" . $cleaned_description . "%' "
-            . ") as subq "
-            . ") as x ";
-        } else {
-
-          $sql =
-            "SELECT SUM(hits) as count "
-            . " FROM ( "
-            . "select ((cardinality(string_to_array(subq.headline,'<b>'))-1)/" . $num_terms . ") as hits "
-            . "from ( "
-            . "SELECT ts_headline('simple',contributiontext,q, 'StartSel=<b>, StopSel=</b>,MaxWords=" . $maxWords . ", MinWords=" . $minWords . ", ShortWord=1, HighlightAll=FALSE, MaxFragments=9999, FragmentDelimiter=\" ... \"') as headline "
-            . "FROM hansard_" . $house . "." . $house . ", to_tsquery('simple','" . $ts_term . "') as q "
-            . "WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-            . "and idxfti_simple @@ q "
-            . ") as subq "
-            . ") as x ";
-        }
-      } else {
-      }
-    }
-
-    $total = query_handler::query_no_parameters($sql, "dbname=hansard");
-
-
+    $total = search::hits($value, $dateFrom, $dateTo, $house, $_POST['type'], $monthly);
+    
     $var2 = json_encode($total);
     echo $var2;
-  }
+  
 } else if ($_POST['action'] == "save_documents") {
 
 
