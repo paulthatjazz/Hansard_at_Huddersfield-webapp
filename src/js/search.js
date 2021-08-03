@@ -816,14 +816,16 @@ function getTotalHits(compare_flag, identif) {
           },
 
           success: function(data, status) {
-            if ((data != null) & isJson(data)) {
               data_json = JSON.parse(data);
-
-              $("." + selected_mode + " #results_hits").html(
-                data_json[0].count + " hits"
-              );
-            } else {
+              if(data_json != null){
+                $("." + selected_mode + " #results_hits").html(
+                  data_json[0].count + " hits"
+                );
+              }else{
               $(".error-code").html("<b>Error code:</b> 1 - hits");
+              $("." + selected_mode + " #results_hits").html(
+                "Unable to load hits"
+              );
               $("#error").modal("show");
             }
           },
@@ -3421,6 +3423,7 @@ function searchContribution(data_point, c_flag, func) {
   action_conf = conf["action"];
   sort_name = conf["sort_name"]; //First time
 
+
   $(func + " #results_table")
     .bootstrapTable("destroy")
     .bootstrapTable({
@@ -3583,8 +3586,6 @@ function searchContribution(data_point, c_flag, func) {
         }
       },
       onLoadError: function(status) {
-        console.log(status);
-
         $(func + " #results_table")
           .bootstrapTable("destroy")
           .bootstrapTable({

@@ -114,7 +114,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "relevance",
@@ -181,7 +181,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "relevance",
@@ -339,7 +339,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "relevance",
@@ -405,7 +405,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "relevance",
@@ -739,7 +739,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "relevance",
@@ -806,7 +806,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "relevance",
@@ -965,7 +965,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "relevance",
@@ -1036,7 +1036,7 @@ function getTableConfiguration(action_var, parameters) {
               field: "#document",
               title: "#",
               width: "4%",
-              sortable: true
+              sortable: false
             },
             {
               field: "date",

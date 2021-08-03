@@ -253,13 +253,7 @@ $(function() {
   });
 
   $("input.house[type='radio']:not(.keywords)").click(function() {
-    //BORRAR
-    if ($(this).val() == "both") {
-      $("#underConstructionModal").modal("show");
-      $(".basic-search.house[value='commons']").attr("checked", "true");
-    } else {
       selectHouse($(this).val());
-    }
   });
 
   $(".new-search").click(function() {
