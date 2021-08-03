@@ -782,3 +782,8 @@ section.explore {
 #tooltip_1_1 {
 	cursor: default;
 }
+
+.update-message {
+	float: right;
+	font-size: 1rem;
+}

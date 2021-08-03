@@ -59,29 +59,75 @@ $.xhrPool.abortAll = function() {
   });
 };
 
+var maxDate
+var maxDateY
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+
 $(function() {
   // Date picker
-  $(".advanced-search .datepicker-from").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2000-01-01",
-    minDate: "1803-11-22",
-    maxDate: "2019-11-05",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
-    }
-  });
+  $.ajax(
+    {
+      url:"src/php/search_functions.php",
+      type:"post",
+      data: {
+        action: "maxDate"
+      },
+      success: (data, status)=>{
+        if ((data != null) & isJson(data)) {
+          maxDate = JSON.parse(data)[0]["upperdate"]
+  
+          maxDateAsDate = new Date(maxDate)
 
-  $(".advanced-search .datepicker-to").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2019-11-05",
-    minDate: "1803-11-22",
-    maxDate: "2019-11-05",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
+          maxDateY = maxDateAsDate.getFullYear()
+  
+          
+          document.querySelector("#max-year-input").setAttribute("value",maxDateY);
+  
+          document.querySelectorAll(".date-error").forEach(
+            (e)=>{
+            e.innerHTML = `Please enter a number between 1803 and ${maxDateY}.`
+            }
+          )
+
+          document.querySelectorAll(".update-message").forEach(
+            (e)=>{
+              e.innerHTML = `Hansard records until ${maxDateAsDate.getDate()} ${monthNames[maxDateAsDate.getMonth()]} ${maxDateAsDate.getFullYear()}`
+            }
+          )
+        }
+      },
+      complete: (status)=>{
+
+        //failsafe
+        maxDate = typeof(maxDate) == "undefined" ? "2021-02-25" : maxDate
+
+        $(".advanced-search .datepicker-from").datepicker({
+          format: "yyyy-mm-dd",
+          value: "2000-01-01",
+          minDate: "1803-11-22",
+          maxDate: maxDate,
+          uiLibrary: "bootstrap4",
+          change: function(e) {
+            updateSearchButtonOn();
+          }
+        });
+      
+        $(".advanced-search .datepicker-to").datepicker({
+          format: "yyyy-mm-dd",
+          value: maxDate,
+          minDate: "1803-11-22",
+          maxDate: maxDate,
+          uiLibrary: "bootstrap4",
+          change: function(e) {
+            updateSearchButtonOn();
+          }
+        });
+      }
     }
-  });
+  )
 
   // Auto complete
   $.get(
@@ -268,6 +314,7 @@ $(function() {
       }
     }
   );
+  
 
   $(".basic-search").on(
     "click",
@@ -662,7 +709,7 @@ $(function() {
     } else if (selected_submode == "keywords") {
       if ($(this).hasClass("compare")) {
         searchContributionCompare(
-          null,
+          parameter_bubble,
           [false, false, false, false],
           "." + selected_mode + " .compare-results"
         );
@@ -2478,8 +2525,36 @@ function getDistributionAdvanced(type, container) {
 
         data_json = JSON.parse(data);
 
+        //in monthly based charts, add months to fill in gaps.
+        let blank_months = []
+
+        if(flag_monthly_based){
+          let months;
+          let d1 = new Date(dateFrom);
+          let d2 = new Date(dateTo)
+
+          months = (d2.getFullYear() - d1.getFullYear()) * 12
+          months -= d1.getMonth()
+          months += d2.getMonth();
+
+          let m = (d1.getMonth()+1).toString()
+
+          m = m.length > 1 ? m : "0"+m;
+
+          blank_months.push({x: `${d1.getFullYear()}-${m}`, y: 0, freqRaw: 0, series: 0})
+
+          for (let i = 0; i < months; i++) {
+            let d3 = new Date(d1.setMonth(d1.getMonth()+1))
+            let m = (d3.getMonth()+1).toString()
+            m = m.length > 1 ? m : "0"+m;
+            blank_months.push({x: `${d3.getFullYear()}-${m}`, y: 0, freqRaw: 0, series: 0})
+          }
+        }
+
         //cleans up the data before creating a table (ex. sorts by date, merges duplicates)
         data_json.forEach((entry)=>{
+          //add blank months
+          entry.values = entry.values.concat(blank_months)
           //sort by date
           entry.values.sort((a,b)=> Date.parse(a.x) - Date.parse(b.x))
           //group duplicates
@@ -2824,6 +2899,7 @@ function prepareBasicQuery() {
 
   dateFrom = $(".basic-search .date-time.annual .annual-from").val();
   dateTo = $(".basic-search .date-time.annual .annual-to").val();
+  
 
   if (
     term.match(/\w+/g) != null ||
@@ -2833,9 +2909,9 @@ function prepareBasicQuery() {
   ) {
     if (
       parseInt(dateFrom) >= 1803 &&
-      parseInt(dateFrom) <= 2019 &&
+      parseInt(dateFrom) <= maxDateY &&
       parseInt(dateTo) >= 1803 &&
-      parseInt(dateTo) <= 2019
+      parseInt(dateTo) <= maxDateY
     ) {
       if (num_queries == 0) {
         $(".basic-search .terms-list").show();

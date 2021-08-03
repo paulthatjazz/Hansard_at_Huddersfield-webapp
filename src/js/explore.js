@@ -6,9 +6,6 @@ var parameter_wc = {};
 var wc_distribution_ajax_complete = true;
 
 var wc_filter = new Object();
-var wc_filter = {
-  year: [2000, 2019]
-};
 var wc_original_objects = {};
 
 var parameter_kw = {};
@@ -48,50 +45,6 @@ $(function() {
     "json"
   );
 
-  // Date picker
-  $(".explore .keywords .target-corpus .datepicker-from").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2018-01-01",
-    minDate: "1803-11-22",
-    maxDate: "2020-12-31",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
-    }
-  });
-
-  $(".explore .keywords .target-corpus .datepicker-to").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2020-12-31",
-    minDate: "1803-11-22",
-    maxDate: "2020-12-31",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
-    }
-  });
-
-  $(".explore .keywords .comparison-corpus .datepicker-from").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2018-01-01",
-    minDate: "1803-11-22",
-    maxDate: "2020-12-31",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
-    }
-  });
-
-  $(".explore .keywords .comparison-corpus .datepicker-to").datepicker({
-    format: "yyyy-mm-dd",
-    value: "2020-12-31",
-    minDate: "1803-11-22",
-    maxDate: "2020-12-31",
-    uiLibrary: "bootstrap4",
-    change: function(e) {
-      updateSearchButtonOn();
-    }
-  });
 
   $(".target-corpus input.house.keywords[type='radio']").click(function() {
     if ($(this).val() == "both") {
@@ -322,49 +275,126 @@ $(function() {
     resetBubble(false);
   });
 
-  // Slider word_cloud
-  noUiSlider.create($("#slider_wc")[0], {
-    connect: true,
-    behaviour: "tap",
-    start: [2000, 2019],
-    range: {
-      min: 1803,
-      max: 2019
-    }
-  });
-
+  
   var wc_range_nodes = [
     $(".word_cloud .lower-value")[0],
     $(".word_cloud .upper-value")[0]
   ];
 
-  $("#slider_wc")[0].noUiSlider.on("change", function(
-    values,
-    handle,
-    unencoded,
-    isTap,
-    positions
-  ) {
-    wc_range_nodes[handle].innerHTML = parseInt(values[handle]);
-    wc_filter["year"][handle] = parseInt(values[handle]);
+    
+  var maxDate2
+  var maxDateY2
 
-    exploreByWords();
-  });
+  $.ajax(
+    {
+      url:"src/php/search_functions.php",
+      type:"post",
+      data: {
+        action: "maxDate"
+      },
+      success: (data, status)=>{
 
-  $("#slider_wc")[0].noUiSlider.on("slide", function(
-    values,
-    handle,
-    unencoded,
-    isTap,
-    positions
-  ) {
-    wc_range_nodes[handle].innerHTML = parseInt(values[handle]);
-    wc_filter["year"][handle] = parseInt(values[handle]);
+        //dynamic max date retrieval
 
-    $(".explore .word_cloud .rangeYear").html(
-      wc_filter["year"][0] + " - " + wc_filter["year"][1]
-    );
-  });
+        if ((data != null) & isJson(data)) {
+
+          maxDate2 = JSON.parse(data)[0]["upperdate"]
+  
+          maxDateY2 = new Date(maxDate2).getFullYear()
+
+          wc_filter = {
+            year: [2000, maxDateY2]
+          };
+
+          noUiSlider.create($("#slider_wc")[0], {
+            connect: true,
+            behaviour: "tap",
+            start: [2000, maxDateY2],
+            range: {
+              min: 1803,
+              max: maxDateY2
+            }
+          });
+          
+          wc_range_nodes[0].innerHTML = 2000
+          wc_range_nodes[1].innerHTML = maxDateY2
+        
+          $("#slider_wc")[0].noUiSlider.on("change", function(
+            values,
+            handle,
+            unencoded,
+            isTap,
+            positions
+          ) {
+            wc_range_nodes[handle].innerHTML = parseInt(values[handle]);
+            wc_filter["year"][handle] = parseInt(values[handle]);
+        
+            exploreByWords();
+          });
+        
+          $("#slider_wc")[0].noUiSlider.on("slide", function(
+            values,
+            handle,
+            unencoded,
+            isTap,
+            positions
+          ) {
+            wc_range_nodes[handle].innerHTML = parseInt(values[handle]);
+            wc_filter["year"][handle] = parseInt(values[handle]);
+        
+            $(".explore .word_cloud .rangeYear").html(
+              wc_filter["year"][0] + " - " + wc_filter["year"][1]
+            );
+          });
+          
+          // Date picker
+          $(".explore .keywords .target-corpus .datepicker-from").datepicker({
+            format: "yyyy-mm-dd",
+            value: "2018-01-01",
+            minDate: "1803-11-22",
+            maxDate: maxDate2,
+            uiLibrary: "bootstrap4",
+            change: function(e) {
+              updateSearchButtonOn();
+            }
+          });
+
+          $(".explore .keywords .target-corpus .datepicker-to").datepicker({
+            format: "yyyy-mm-dd",
+            value: maxDate2,
+            minDate: "1803-11-22",
+            maxDate: maxDate2,
+            uiLibrary: "bootstrap4",
+            change: function(e) {
+              updateSearchButtonOn();
+            }
+          });
+
+          $(".explore .keywords .comparison-corpus .datepicker-from").datepicker({
+            format: "yyyy-mm-dd",
+            value: "2018-01-01",
+            minDate: "1803-11-22",
+            maxDate: maxDate2,
+            uiLibrary: "bootstrap4",
+            change: function(e) {
+              updateSearchButtonOn();
+            }
+          });
+
+          $(".explore .keywords .comparison-corpus .datepicker-to").datepicker({
+            format: "yyyy-mm-dd",
+            value: maxDate2,
+            minDate: "1803-11-22",
+            maxDate: maxDate2,
+            uiLibrary: "bootstrap4",
+            change: function(e) {
+              updateSearchButtonOn();
+            }
+          });
+        }
+      }
+    }
+  )
 });
 
 $(".explore .word_cloud .terms-list").on(
