@@ -3383,20 +3383,6 @@ function searchContribution(data_point, c_flag, func) {
         }
       },
       queryParams: function(p) {
-        console.log({
-          limit: p.limit,
-          offset: p.offset,
-          sort: p.sort,
-          order: p.order,
-          parameters: parameters[0],
-          action: action_conf,
-          dateFrom: dateFrom,
-          dateTo: dateTo,
-          house: selected_house,
-          context: context,
-          count: count_of_documents,
-          formatDate: formatDate
-        })
         return {
           limit: p.limit,
           offset: p.offset,
