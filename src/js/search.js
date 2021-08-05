@@ -4288,6 +4288,7 @@ function resetComparison() {
 
 //Reset all except dates
 function resetAllSearch() {
+  selectHouse("commons");
   resetInputsSearch();
   resetVariablesSearch();
   hideResultsSearch();

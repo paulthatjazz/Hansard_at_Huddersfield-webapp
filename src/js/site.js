@@ -288,6 +288,9 @@ $(function() {
 
   $(".main-function").click(function() {
     if ($(this).data("function") != selected_mode) {
+
+      resetAllSearch();
+
       selected_mode = $(this).data("function");
 
       $(".main-function").removeClass("active");
