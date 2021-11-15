@@ -1,6 +1,7 @@
 <?php 
 
     include_once 'query_handler.php';
+    include_once 'analytics.php';
     include_once './convert_data.php';
 
     class search extends query_handler
@@ -353,6 +354,7 @@
             
             $i = 0;
 
+            analytics::recordQuery($paras, $adv, $dateFrom, $dateTo, $house);
             foreach($paras as $value)
             {
                 $termdata = convert_data::prepareTerm($value["term"]);
@@ -413,6 +415,31 @@
 
         }
 
+        private function generateDocumentQuery($house, $id){
+            return "SELECT sittingday, contributiontext, member, description FROM hansard_" . $house . "." . $house . " WHERE id in (" . $id . ")";
+        }
+
+        public static function getDocumentsById($house, $id){
+
+            $sql = "SELECT * FROM "
+            . " ( ";
+            if($house != "lords"){
+                $sql .= self::generateDocumentQuery("commons", $id);
+            }
+            if($house == "both"){
+                $sql .= " UNION ";
+            }
+            if($house != "commons"){
+                $sql .= self::generateDocumentQuery("lords", $id);
+            }
+            $sql .= " ) as x";
+
+            
+            error_log($sql);
+
+            return $sql;
+
+        }
     }
 
 ?>

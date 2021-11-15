@@ -787,3 +787,8 @@ section.explore {
 	float: right;
 	font-size: 1rem;
 }
+
+.member-link:hover {
+	color: #17a2b8 !important;
+	text-decoration: underline;
+}

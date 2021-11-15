@@ -53,7 +53,7 @@ class convert_data
 					'document_id' => $id,
 					'date' => $date,
 					'contribution' => $contribution,
-					'member' => "<span data-url='" . $url . "'>" . $member . "</span>",
+					'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 					'relevance' => $relevance,
 					'description' => $description,
 					'house' => $house,
@@ -117,7 +117,7 @@ class convert_data
 					'document_id' => $id,
 					'date' => $date,
 					'contribution' => $contribution,
-					'member' => "<span data-url='" . $url . "'>" . $member . "</span>",
+					'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 					'relevance' => $relevance,
 					'description' => $description,
 					'house' => $house,
@@ -453,7 +453,7 @@ class convert_data
 					'date' => $date,
 					'contribution' => $contribution,
 					'description' => $description,
-					'member' => "<span data-url='" . $url . "'>" . $member . "</span>",
+					'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 					'relevance' => $relevance,
 					'house' => $house,
 				);
@@ -525,6 +525,7 @@ class convert_data
 		$result = "<b>...</b> ";
 		$result .= mb_substr($text, $start, $offset * 2, "utf-8");
 
+		
 		$result .= "<b>...</b> <span style='color: #007bff; font-style: italic;'>[" . (count($matches[0]) - 1) . " more]</span>";
 
 		return $result;
@@ -609,7 +610,7 @@ class convert_data
 						'left_context' => $concordance[0],
 						'hit' => $concordance[1],
 						'right_context' => $concordance[2],
-						'member' => "<span data-url='" . $url . "'>" . $member . "</span>",
+						'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 						'relevance' => $relevance,
 						'description' => $description,
 						'house' => $house,
@@ -683,7 +684,7 @@ class convert_data
 						'left_context' => $concordance[0],
 						'hit' => $concordance[1],
 						'right_context' => $concordance[2],
-						'member' => "<span data-url='" . $url . "'>" . $member . "</span>",
+						'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 						'relevance' => $relevance,
 						'description' => $description,
 						'house' => $house,
@@ -756,6 +757,8 @@ class convert_data
 				foreach ($entry as $key => $value) {
 					if ($key == "id") {
 						$id = $value;
+					}else if ($key == "member"){
+						$member = $value;
 					} else if ($key == "sittingday") {
 						$date = $value;
 					} else if ($key == "description") {
@@ -780,6 +783,7 @@ class convert_data
 				$aux[] = array(
 					'document_id' => $id,
 					'date' => $date,
+					'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 					'contribution' => $contribution,
 					'house' => $house,
 					'description' => $description,
@@ -833,7 +837,7 @@ class convert_data
 					'document_id' => $id,
 					'date' => $date,
 					'description' => $description,
-					'member' => "<span data-url='" . $url . "'>" . $member . "</span>",
+					'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 					'contribution' => $contribution,
 					'house' => $house,
 				);
@@ -960,7 +964,7 @@ class convert_data
 
 			$info = "<button class='spk-contrib btn btn-outline-info btn-sm'> Contributions</button> <button class='member-info btn btn-outline-info btn-sm'>More info </button>";
 			$aux[] = array(
-				'member' => "<span data-url='" . $url . "'>" . $member . "</span>",
+				'member' => "<span class='member-link' data-url='" . $url . "'>" . $member . "</span>",
 				'house' => $house,
 				'info' => $info,
 			);

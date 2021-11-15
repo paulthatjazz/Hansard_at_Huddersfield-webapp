@@ -4,6 +4,7 @@ session_start();
 
 include_once './db/query_handler.php';
 include_once './db/search.php';
+include_once './db/analytics.php';
 include_once 'convert_data.php';
 
 header('Content-Type: text/html;charset=utf-8');
@@ -204,11 +205,7 @@ if (isset($_GET['action'])) {
 } else if ($_POST['action'] == "save_documents") {
 
 
-  if ($house != "both") {
-
-    $sql = "SELECT sittingday, contributiontext, member, description FROM hansard_" . $house . "." . $house . " WHERE id in (" . $_POST['query'] . ")";
-  } else {
-  }
+  $sql = search::getDocumentsById($house, $_POST['query']);
 
   $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
 
@@ -224,4 +221,11 @@ if (isset($_GET['action'])) {
   $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
   
   echo json_encode($rows);
+} else if ($_POST['action'] == 'sharedLink'){
+
+  $id = $_POST['id'];
+  
+  $searchData = analytics::getQueryData($id);
+  
+  echo json_encode($searchData);
 }

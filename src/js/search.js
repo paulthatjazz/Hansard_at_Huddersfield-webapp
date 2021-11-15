@@ -59,12 +59,54 @@ $.xhrPool.abortAll = function() {
   });
 };
 
+var shared = false;
+var searchId = checkParas();
+var sessionId = generateId(18);
+
 var maxDate
 var maxDateY
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
+function checkParas(){
+  let q = window.location.search;
+  let p = new URLSearchParams(q);
+  let id = p.get("q");
+
+  if(id){
+    $.ajax({
+      url:"src/php/search_functions.php",
+      type:"post",
+      data: {
+        action: "sharedLink",
+        id: id
+      },
+      success: (data, status)=>{
+        sharedQueryData = JSON.parse(data)[0];
+
+        if(sharedQueryData){
+          shared = true;
+        }else{
+          shared = false;
+        }
+
+      }
+    })
+  }
+  //
+
+  return generateId(10);
+}
+
+function generateId(length){
+  let id = "";
+  let characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
+
+  for ( var i = 0; i < (length-1); i++ ) id += characters.charAt(Math.floor(Math.random() * characters.length));
+
+  return id;
+}
 
 $(function() {
   // Date picker
@@ -482,6 +524,10 @@ $(function() {
     });
     $("#downloadFile").modal("show");
   });
+  $(".search .share-socials").click(()=>{
+    let url = "https://hansard.hud.ac.uk/site/site.php?id=" + searchId;
+    console.log(url);
+  })
 
   // Concordances interactions
 
@@ -1285,6 +1331,8 @@ function prepareAdvancedQuery() {
 
         parameter_advanced[num_queries] = {
           term: term,
+          searchId: searchId,
+          sessionId: sessionId,
           member: member,
           description: description,
           query: parameters_vars,
@@ -1305,6 +1353,8 @@ function prepareAdvancedQuery() {
 
           parameter_advanced[num_queries] = {
             term: term,
+            searchId: searchId,
+            sessionId: sessionId,
             member: member,
             description: description,
             query: parameters_vars,
@@ -1320,6 +1370,8 @@ function prepareAdvancedQuery() {
 
           parameter_advanced[num_queries] = {
             term: term,
+            searchId: searchId,
+            sessionId: sessionId,
             member: member,
             description: description,
             query: parameters_vars,
@@ -1357,6 +1409,8 @@ function prepareAdvancedQuery() {
 
       parameter_advanced[num_queries] = {
         term: term,
+        searchId: searchId,
+        sessionId: sessionId,
         member: member,
         description: description,
         query: parameters_vars
@@ -2439,7 +2493,7 @@ function relatedTerms() {
 }
 
 function searchContributionDate(identif, date, member, element) {
-  $("#underConstructionModal").modal("show");
+  //$("#underConstructionModal").modal("show");
 }
 
 function getDistributionAdvanced(type, container) {
@@ -2974,6 +3028,8 @@ function addCompareTerm(term) {
     parameter_basic[num_queries] = {
       term: term,
       query: term,
+      searchId: searchId,
+      sessionId: sessionId,
       colour: selected_colour
     };
 
@@ -3599,7 +3655,8 @@ function searchContribution(data_point, c_flag, func) {
       },
       onClickCell: function(field, value, row, $element) {
         $("td").removeClass("text-info font-weight-bold");
-        $element.addClass("text-info font-weight-bold");
+
+        if(field != "date") $element.addClass("text-info font-weight-bold");
 
         identif = row.document_id;
         date = row.date;
@@ -4288,6 +4345,7 @@ function resetComparison() {
 
 //Reset all except dates
 function resetAllSearch() {
+  searchId = generateId(10);
   selectHouse("commons");
   resetInputsSearch();
   resetVariablesSearch();

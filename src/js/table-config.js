@@ -137,7 +137,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "left_context",
               title: "Left Context",
-              width: "20%",
               align: "center"
             },
             {
@@ -149,7 +148,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "right_context",
               title: "Right Context",
-              width: "20%",
               align: "center"
             },
             {
@@ -263,7 +261,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "contribution",
               title: "Contribution",
-              width: "49%",
               align: "center"
             },
             {
@@ -311,7 +308,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "contribution",
               title: "Contribution",
-              width: "62%",
               align: "center"
             },
             {
@@ -427,7 +423,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "left_context",
               title: "Left Context",
-              width: "22%",
               align: "center"
             },
             {
@@ -439,7 +434,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "right_context",
               title: "Right Context",
-              width: "22%",
               align: "center"
             },
             {
@@ -937,7 +931,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "contribution",
               title: "Contribution",
-              width: "49%",
               align: "center"
             },
             {
@@ -1053,7 +1046,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "left_context",
               title: "Left Context",
-              width: "19%",
               align: "center"
             },
             {
@@ -1065,7 +1057,6 @@ function getTableConfiguration(action_var, parameters) {
             {
               field: "right_context",
               title: "Right Context",
-              width: "19%",
               align: "center"
             },
             {

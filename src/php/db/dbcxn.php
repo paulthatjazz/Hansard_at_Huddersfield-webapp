@@ -13,6 +13,7 @@ class DBCxn {
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
    );
 
+   public static $analytics = True;
     // Internal variable to hold the connection
     private static $db;
     // No cloning or instantiating allowed
