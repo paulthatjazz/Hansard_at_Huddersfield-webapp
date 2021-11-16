@@ -1082,6 +1082,7 @@ class convert_data
 		return $flag_mwe;
 	}
 
+
 	public static function prepareTerm($q){
 		if($q == ""){
 			return (object)[
@@ -1090,12 +1091,43 @@ class convert_data
 			];
 		}
 
+		$isBoolOp = false;
+
+		$j = explode(" ", $q);
+		foreach($j as $k){
+			$l = $k[0];
+			$isBoolOp = ($l == '-' || $l == '+' || strpos($k, '|') !== false || $isBoolOp == true);
+		}
+
 		$cq = strtolower(self::clean_query($q));
 		$reg = str_replace("*", "(.*?)", $cq);
 		$c = str_replace("*", "%", $cq);
 		$ts = self::gen_postgresql_query($cq);
 
+		if($isBoolOp == true){
+			$ts = "";
+			foreach($j as $k){
+				$l = $k[0];
+				if($l == '-'){
+					$ts .= str_replace("-", "!", $k);
+				}else if($l == '+'){
+					$ts .= str_replace("+", "", $k);
+				}else{
+					$ts .= $k;
+				}
+
+				$ts .= " & ";
+			}
+
+			$cq = strtolower(self::clean_query($j[0]));
+			$reg = str_replace("*", "(.*?)", $cq);
+			$c = str_replace("*", "%", $cq);
+			$ts = substr($ts, 0, -3);
+		}
+
+
 		$o = (object)[
+			'booleanOperaton' => $isBoolOp,
 			'term' => $cq,
 			'cleanterm' => $c,
 			'tsterm' => $ts,
@@ -1104,7 +1136,9 @@ class convert_data
 		];
 		return $o;
 	}
+
 }
+
 
 /*
 	#delete

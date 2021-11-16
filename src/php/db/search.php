@@ -208,8 +208,7 @@
         private function generateDistributionQuery($house, $term, $dateFrom, $dateTo, $monthly, $member = NULL, $description = NULL){
 
             //generates a query based on search type (multi-word or single) and specific house
-
-            if($term->n == 1 && $monthly == FALSE && $member == NULL && $description == NULL){
+            if($term->n == 1 && $monthly == FALSE && $member == NULL && $description == NULL && $term->booleanOperaton != TRUE){
 
                 //single word query per year
 
@@ -433,9 +432,6 @@
                 $sql .= self::generateDocumentQuery("lords", $id);
             }
             $sql .= " ) as x";
-
-            
-            error_log($sql);
 
             return $sql;
 
