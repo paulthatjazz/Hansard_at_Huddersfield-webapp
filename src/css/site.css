@@ -792,3 +792,27 @@ section.explore {
 	color: #17a2b8 !important;
 	text-decoration: underline;
 }
+
+.houses {
+	max-width: 25%;
+}
+.search-tips {
+	background-color: rgb(182, 182, 182);
+	padding: 10px;
+	max-width: 30%;
+	float: right;
+	margin-left: 25px;
+}
+
+.date-house-buttons {
+	min-width: 60%;
+	margin-right: 10px;
+}
+
+.para-block {
+	display: inline-flex;
+}
+
+.para-block-no-tips {
+	display: inherit;
+}

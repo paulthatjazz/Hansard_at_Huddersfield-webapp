@@ -205,7 +205,7 @@
             return $r;
         }
 
-        private function generateDistributionQuery($house, $term, $dateFrom, $dateTo, $monthly, $member = NULL, $description = NULL){
+        private function generateDistributionQuery($house, $term, $dateFrom, $dateTo, $monthly, $member = NULL, $description = NULL, $hitsOnly){
 
             //generates a query based on search type (multi-word or single) and specific house
             if($term->n == 1 && $monthly == FALSE && $member == NULL && $description == NULL && $term->booleanOperaton != TRUE){
@@ -269,6 +269,14 @@
 
                     // term, term + desc, term + member, term + member + desc scenarios
 
+                    if($hitsOnly && $term->booleanOperaton)
+                    {
+                        $t = $term->highlightterm;
+                        
+                    }else{
+                        $t = $term->regexterm;
+                    }
+
                     $r = " ( "
                     . " SELECT z.myear, freq, total FROM ( "
                     . " SELECT y.myear, sum(y.hits) as freq FROM ("
@@ -331,13 +339,13 @@
                 $sql = "SELECT sum(freq) as frequency, sum(total) as total, myear FROM ( ";
             }
             if($house != "lords"){
-                $sql .= self::generateDistributionQuery("commons", $term, $dateFrom, $dateTo, $monthly, $member, $desc);
+                $sql .= self::generateDistributionQuery("commons", $term, $dateFrom, $dateTo, $monthly, $member, $desc, $hitsOnly);
             }
             if($house == "both"){
                  $sql .= " UNION ";
             }
             if($house != "commons"){
-                $sql .= self::generateDistributionQuery("lords", $term, $dateFrom, $dateTo, $monthly, $member, $desc);
+                $sql .= self::generateDistributionQuery("lords", $term, $dateFrom, $dateTo, $monthly, $member, $desc, $hitsOnly);
             }
             if($hitsOnly){
                 $sql .= ") i";

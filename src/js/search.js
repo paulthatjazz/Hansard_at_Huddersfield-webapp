@@ -243,24 +243,20 @@ $(function() {
     resetAllSearch();
   });
 
+  
+
+  $("[data-toggle='tooltip'], .help, th, .keep-open.btn-group").tooltip(
+    "disable"
+  );
+
+  $(".semantic-tags-search.advanced-search").attr("title", "Disambiguate");
+  $(".related-search.basic-search").attr("title", "Related terms");
+
   $(".tooltip-config").change(function() {
-    if ($(this).is(":checked")) {
-      $(".tooltip-config").prop("checked", true);
 
-      $("[data-toggle='tooltip'], .help, th").tooltip("enable");
+    $(".search-tips").toggle();
 
-      $(".semantic-tags-search.advanced-search").attr("title", "");
-      $(".related-search.basic-search").attr("title", "");
-    } else {
-      $(".tooltip-config").prop("checked", false);
-
-      $("[data-toggle='tooltip'], .help, th, .keep-open.btn-group").tooltip(
-        "disable"
-      );
-
-      $(".semantic-tags-search.advanced-search").attr("title", "Disambiguate");
-      $(".related-search.basic-search").attr("title", "Related terms");
-    }
+    $(".para-block").toggleClass("para-block-no-tips");
   });
 
   $(

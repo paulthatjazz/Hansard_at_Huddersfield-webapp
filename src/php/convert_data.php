@@ -494,10 +494,22 @@ class convert_data
 	public static function formatMatchedDocument($text, $query, $offset)
 	{ 	// En negrita el primer hit, cuenta los otros y reduce la contribucion
 
-		
+
 		$query = str_replace("%", "*", $query);
 
-		$query = preg_quote($query);
+		//in the case of an OR condition, runs preg_quote on each instance then rebuilds.
+		if(strpos($query, "|") !== FALSE){
+			$q2 = "";
+			$qs = explode("|", $query);
+			foreach($qs as $q){
+				$q = preg_quote($q);
+				$q2 .= $q . "|";
+			}
+			$query = substr($q2, 0, -1);
+		}else{
+			$query = preg_quote($query);
+		}
+
 		$query =	str_replace("\*", '\w*', $query); //wildcard
 		$query =	str_replace(" ", '[\p{P}]* ', $query); //spaces and punctuaction -> Postgresql search in this way Ireland, can
 		if (strpos($query, ".") == FALSE) {
@@ -705,11 +717,11 @@ class convert_data
 
 		$text =	preg_replace('/\s+/', ' ', trim($text));
 		$word_text = explode(" ", $text);
+
 		$num_words = count(explode(" ", $query));
 
 		$matches  = preg_grep('/<b>[\w+ ]*<\/b>/i', $word_text);
-
-
+		
 		if ($num_words == 1) {
 			foreach ($matches as $key => $value) {
 
@@ -720,17 +732,40 @@ class convert_data
 				$result[] = $concordance;
 			}
 		} else {
-			foreach ($matches as $key => $value) {
-				$matches_sequence[] = array('pos' => $key, 'val' => $value);
-			}
 
+			foreach ($matches as $key => $value) {
+
+				$matches_sequence[] = array('pos' => $key, 'val' => $value);
+
+			}
+			
+			$queries = explode("|", $query);
 
 			for ($i = 0; $i < count($matches_sequence); $i++) {
+
+				if(count($queries) > 1){
+					## if OR query, num_words may vary.
+
+					$num_words = 1;
+
+					foreach($queries as $q){
+
+						foreach(explode(" ", $q) as $qw){
+							$p = "/" . $qw . "/i";
+
+							if(preg_match($p, $matches_sequence[$i]['val']) > 0){
+								$num_words = max(count(explode(" ", $q)), $num_words);
+							}
+						}
+					}
+
+				}
+
 				if (convert_data::isMWE($num_words, $matches_sequence, $i)) {
+
 					$keys[] = $matches_sequence[$i]['pos'];
 				}
 			}
-
 
 			foreach ($keys as $key) {
 
@@ -741,6 +776,8 @@ class convert_data
 				$result[] = $concordance;
 			}
 		}
+
+		
 
 		return $result;
 	}
@@ -856,6 +893,36 @@ class convert_data
 		return strrpos($haystack, $needle) === strlen($haystack) - strlen($needle);
 	}
 
+	function tagContribution($text, $query, $col){
+
+		if(strpos($query, "|") !== FALSE){
+
+			$q2 = "";
+			$qs = explode("|", $query);
+			
+			foreach($qs as $q){
+				$q = preg_quote($q);
+				$q2 .= $q . "|";
+			}
+
+			$query = substr($q2, 0, -1);
+
+		}else{
+
+			$query= preg_quote($query);
+			
+		}
+		
+		$query =	str_replace("\*", '\w*', $query); //wildcard
+
+		$pattern = '/\b[^a-zA-Z0-9][\s]*' . $query. '[^a-zA-Z0-9][\s]*\b/ui';
+
+		$text = preg_replace($pattern, "$1<span style='background-color: " . $col . "; font-weight:bold;'>$0</span>$2", $text);
+
+		return $text;
+		
+	}
+
 	public static function format_contributionOne($db_inp, $query)
 	{
 
@@ -869,13 +936,15 @@ class convert_data
 
 		if ($query != "" && $query != null) {
 
-			$query = preg_quote($query);
-			$query =	str_replace("\*", '\w*', $query); //wildcard
+			$t = self::prepareTerm($query);
 
-			//$pattern = '/\b[^a-zA-Z0-9\s]' . $query . '[^a-zA-Z0-9\s]\b/ui';
-			$pattern = '/\b[^a-zA-Z0-9][\s]*' . $query . '[^a-zA-Z0-9][\s]*\b/ui';
+			if($t->booleanOperaton == TRUE){
 
-			$outp['contributiontext'] = preg_replace($pattern, "$1<span style='background-color: #f3f315; font-weight:bold;'>$0</span>$2", $db_inp[0]['contributiontext']);
+				$outp['contributiontext'] = self::tagContribution($db_inp[0]['contributiontext'], $t->highlightterm, "#f3f315");
+
+			}else{
+				$outp['contributiontext'] = self::tagContribution($db_inp[0]['contributiontext'], $query, "#f3f315");
+			}
 		} else {
 			$outp['contributiontext'] = $db_inp[0]['contributiontext'];
 		}
@@ -1082,9 +1151,11 @@ class convert_data
 		return $flag_mwe;
 	}
 
-
 	public static function prepareTerm($q){
+		//function ensures uniformallity across the system
+
 		if($q == ""){
+			//no query available to parse, return NULL
 			return (object)[
 				'term' => NULL,
 				'n' => 0
@@ -1092,38 +1163,99 @@ class convert_data
 		}
 
 		$isBoolOp = false;
+		$regHighlight = NULL;
 
-		$j = explode(" ", $q);
+		$q = str_replace("¦", "|", $q);
+
+		$j = explode(" ", strtolower($q));
 		foreach($j as $k){
+			//checks for boolean operators (ex. -, +, & |)
 			$l = $k[0];
 			$isBoolOp = ($l == '-' || $l == '+' || strpos($k, '|') !== false || $isBoolOp == true);
 		}
 
-		$cq = strtolower(self::clean_query($q));
-		$reg = str_replace("*", "(.*?)", $cq);
-		$c = str_replace("*", "%", $cq);
-		$ts = self::gen_postgresql_query($cq);
+		// is either multiword search "European Union" or single word "Europe"
+		$MWE = (!$isBoolOp && ((sizeof($j) > 1 && $q[0] == '"' && substr($q, -1) == '"') || (sizeof($j) == 1)));
+		
 
-		if($isBoolOp == true){
+		if($isBoolOp == true || !$MWE){
+
+			$isBoolOp = true;
+
+			//search terms unspecified as MWE (no quotation marks) are considered as AND operations (European Union -> European & Union)
 			$ts = "";
-			foreach($j as $k){
-				$l = $k[0];
-				if($l == '-'){
-					$ts .= str_replace("-", "!", $k);
-				}else if($l == '+'){
-					$ts .= str_replace("+", "", $k);
-				}else{
-					$ts .= $k;
-				}
+			$regHighlight = "";
 
-				$ts .= " & ";
+			$boolOps = false;
+			$plus = false;
+			$excl = false;
+
+			preg_match_all("/(?:(?:\"(?:\\\\\"|[^\"])+\")|(?:'(?:\\\'|[^'])+'))/is",$q, $res);
+			foreach($res[0] as $r){
+				$q = str_replace($r, str_replace(" ", "<->", $r), $q);
 			}
 
-			$cq = strtolower(self::clean_query($j[0]));
+			$j = explode(" ", strtolower(str_replace('"', "", $q)));
+			
+			foreach($j as $k){
+
+				if($ts == ""){
+
+					$regHighlight .= $k;
+					$ts .= $k;
+				}else if($k == "+"){
+					
+					$plus = true;
+
+				}else if($k == "-"){
+
+					$excl = true;
+
+				}else if($k[0] == "-" || $k[0] == "+" || $boolOps || $plus || $excl){
+
+					$boolOps = true;
+
+					if($k[0] != "-" && !$excl){
+						$regHighlight .= "|" . str_replace("+","", $k);
+					}
+
+					if($excl){
+						$and = " & !(";
+					}else{
+						$and = " & (";
+					}
+
+					$ts .= $and . str_replace("<!>", "<->", str_replace("+", "", str_replace("-", "!",$k))) . ")";
+
+					$plus = false;
+					$excl = false;
+
+				}else{
+
+					$regHighlight .= "|" . $k;
+					$ts .= " & " . $k;
+
+				}
+
+			} 
+			
+			$rq = str_replace("<->", " ", trim(explode("&", $ts)[0]));
+			$cq = strtolower(self::clean_query($rq));
 			$reg = str_replace("*", "(.*?)", $cq);
 			$c = str_replace("*", "%", $cq);
-			$ts = substr($ts, 0, -3);
+			$ts = str_replace("*", ':*', $ts);
+
+			
+		}else{
+
+			$q = str_replace('"','', $q);
+			$cq = strtolower(self::clean_query($q));
+			$reg = str_replace("*", "(.*?)", $cq);
+			$c = str_replace("*", "%", $cq);
+			$ts = self::gen_postgresql_query($cq);
 		}
+
+
 
 
 		$o = (object)[
@@ -1132,84 +1264,11 @@ class convert_data
 			'cleanterm' => $c,
 			'tsterm' => $ts,
 			'regexterm' => $reg,
+			'highlightterm' => $regHighlight,
 			'n' => sizeof(explode(" ", $cq))
 		];
+
 		return $o;
 	}
 
 }
-
-
-/*
-	#delete
-    #ts_headline(contributiontext,q, 'HighlightAll=TRUE') as contributiontext takes a lot of time
-	public static function formatMatchedHits($text, $query, $context) {
-
-		$query = preg_quote($query);
-		$query=	str_replace("\*", '\w*[\p{P}]*',$query); //wildcard
-
-		$query=	str_replace(" ", '[\p{P}]* ',$query); //spaces and punctuaction -> Postgresql search in this way Ireland, can
-
-		$pattern1 = '/(?:\S+\s+){0,'.$context.'}\w*\W*\b'.$query.'\W*\b\s*(?:\S+\s*){0,'.$context.'}/i';
-		preg_match_all ($pattern1, $text, $matches);
-		$pattern2 = '/\b'.$query.'\W*\b/i';
-
-		if (count($matches)==0){ // Error
-			
-			print_r("ERROR");
-			print_r($query."\n\n");
-			print_r($text);
-			
-			exit("error-0");
-
-		};
-
-		foreach($matches[0] as $aux){
-          
-			$concordance = preg_replace($pattern2, '#####<b>$0</b>#####', $aux);
-			$result[] = explode("#####",$concordance);
-		}
-		return $result;
-
-	}
-
-	#delete
-	public static function format_contributionOne($db_inp, $query){
-
-		$myfile = fopen("../../tmp/".session_id().".txt", "w") or die("Unable to open file!");
-		$txt = $db_inp[0]['contributiontext'];
-		fwrite($myfile, $txt);
-		fclose($myfile);
-
-		$outp['id'] = $db_inp[0]['id'];
-		$outp['member'] = $db_inp[0]['member'];
-
-		if($query!="" && $query!=null){
-
-			$query = preg_quote($query);
-			$query=	str_replace("\*", '\w*',$query); //wildcard
-
-			$pattern = '/\b'.$query.'\W*\b/ui';
-
-			$outp['contributiontext'] = preg_replace($pattern,"$1<span style='background-color: #f3f315; font-weight:bold;'>$0</span>$2",$db_inp[0]['contributiontext']);	
-		}else{
-			$outp['contributiontext'] = $db_inp[0]['contributiontext'];
-		}
-
-		$pattern = '/([a-z]+)\.[ ]*([A-Z])+/';
-		$outp['contributiontext'] = preg_replace($pattern,"$1.<br><br>$2",$outp['contributiontext']);
-
-		
-		$pattern = '/hon\.<br><br>/';
-		$outp['contributiontext'] = preg_replace($pattern,"hon. ",$outp['contributiontext']);
-
-		$pattern = '/Mr\.<br><br>/';
-		$outp['contributiontext'] = preg_replace($pattern,"Mr. ",$outp['contributiontext']);
-
-		$pattern = '/Dr\.<br><br>/';
-		$outp['contributiontext'] = preg_replace($pattern,"Dr. ",$outp['contributiontext']);
-
-		return $outp;
-	}
-
-*/
