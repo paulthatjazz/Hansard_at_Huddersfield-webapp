@@ -1195,6 +1195,10 @@ class convert_data
 				$q = str_replace($r, str_replace(" ", "<->", $r), $q);
 			}
 
+			//Allowing spaces for OR (|) operations
+			$q = preg_replace('!\s+!', ' ', $q);
+			$q = str_replace(" | ", "|", $q);
+
 			$j = explode(" ", strtolower(str_replace('"', "", $q)));
 			
 			foreach($j as $k){
