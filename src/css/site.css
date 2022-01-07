@@ -799,9 +799,6 @@ section.explore {
 	text-decoration: underline;
 }
 
-.houses {
-	max-width: 25%;
-}
 .search-tips {
 	background-color: rgba(0, 0, 0, .03);
 	border: 1px solid rgba(51, 51, 51, 0.125);

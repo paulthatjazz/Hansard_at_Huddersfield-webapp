@@ -252,11 +252,15 @@ $(function() {
   $(".semantic-tags-search.advanced-search").attr("title", "Disambiguate");
   $(".related-search.basic-search").attr("title", "Related terms");
 
+
   $(".tooltip-config").change(function() {
 
-    $(".search-tips").toggle();
+    m = this.id == 'tooltipConfigBasic' ? 'basic' : 'advanced'
 
-    $(".para-block").toggleClass("para-block-no-tips");
+    $('#search-tips-' + m).toggle();
+
+    $(".para-block-" + m).toggleClass("para-block-no-tips");
+
   });
 
   $(
