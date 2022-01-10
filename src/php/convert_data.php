@@ -1242,6 +1242,8 @@ class convert_data
 				}
 
 			} 
+
+			$ts = str_replace("(!", "!(", $ts);
 			
 			$rq = str_replace("<->", " ", trim(explode("&", $ts)[0]));
 			$cq = strtolower(self::clean_query($rq));
