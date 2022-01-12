@@ -2919,7 +2919,7 @@ function getDistribution() {
       }
     },
     error: function(xhr, desc, err) {
-      console("Test");
+      console.log("Test");
       if(desc == "Gateway Time-out"){
           $(".error-code").html("<b>Error code:</b> Server Timeout");
           $("#error").modal("show");
