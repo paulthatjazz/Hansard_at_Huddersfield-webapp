@@ -2919,20 +2919,20 @@ function getDistribution() {
       }
     },
     error: function(xhr, desc, err) {
+      console("Test");
       if(desc == "Gateway Time-out"){
           $(".error-code").html("<b>Error code:</b> Server Timeout");
           $("#error").modal("show");
           $(".search .distribution .loader").css("display", "none");
           $(".search .distribution .cancel-query").css("display", "none");
           console.log("Details: " + desc + "\nError:" + err);
-      if (err != "abort") {
-        console.log(xhr);
-        console.log("Details: " + desc + "\nError:" + err);
-        $(".error-code").html("<b>Error code:</b> 3 - distribution");
-        $("#error").modal("show");
-        $(".search .distribution .loader").css("display", "none");
-        $(".search .distribution .cancel-query").css("display", "none");
-        }
+      }else if (err != "abort") {
+          console.log(xhr);
+          console.log("Details: " + desc + "\nError:" + err);
+          $(".error-code").html("<b>Error code:</b> 3 - distribution");
+          $("#error").modal("show");
+          $(".search .distribution .loader").css("display", "none");
+          $(".search .distribution .cancel-query").css("display", "none");
       }
     }
   });
