@@ -286,7 +286,8 @@
                     . " hansard_". $house . "." . $house . ", to_tsquery('simple', '" . $term->tsterm . "') as q "
                     . " WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE AND idxfti_simple @@ q " . $memquery . $descquery . " ) as sq " 
                     . " ) as x GROUP BY x.id, x.contributiontext, x.myear ) as y GROUP BY y.myear ) as z "
-                    . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_" . $db . ") as s ON z.myear = s.myear ) ";
+                    . " JOIN (SELECT year as myear, total FROM hansard_precomp.hansard_" . $house . "_" . $db . ") as s ON z.myear = s.myear ) ";
+
 
                 }else{
 
