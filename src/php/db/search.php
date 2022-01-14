@@ -240,9 +240,11 @@
                 if($monthly == TRUE){
                     $d = 8;
                     $db = "total_word_month_year";
+                    $year = "substring(sittingday::text,0," . $d . ") as myear";
                 }else{
                     $d = 5;
                     $db = "total_word_year";
+                    $year = "cast(substring(sittingday::text,0," . $d . ") as integer) as myear";
                 }
 
                 if($member != NULL){
