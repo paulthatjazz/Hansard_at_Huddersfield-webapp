@@ -723,6 +723,7 @@ class convert_data
 		$matches  = preg_grep('/<b>[\w+ ]*<\/b>/i', $word_text);
 		
 		if ($num_words == 1) {
+			
 			foreach ($matches as $key => $value) {
 
 				$concordance[0] = implode(" ", array_slice($word_text, ($key - $context > 0 ? $key - $context : 0), ($key - $context > 0 ? $context : $key)));
@@ -1247,16 +1248,25 @@ class convert_data
 			
 			$rq = str_replace("<->", " ", trim(explode("&", $ts)[0]));
 			$cq = strtolower(self::clean_query($rq));
+
 			$reg = str_replace("*", "(.*?)", $cq);
+			$reg = str_replace("|", "\y|\y", $reg);
+			$reg = "\y" . str_replace("(.*?)\y", "(.*?)", str_replace("\y(.*?)", "(.*?)", $reg)) . "\y";
+
 			$c = str_replace("*", "%", $cq);
 			$ts = str_replace("*", ':*', $ts);
+
+			error_log($reg);
 
 			
 		}else{
 
 			$q = str_replace('"','', $q);
 			$cq = strtolower(self::clean_query($q));
-			$reg = str_replace("*", "(.*?)", $cq);
+			
+			$reg = "\y" + str_replace("*", "(.*?)", $cq) + "\y";
+			$reg = str_replace("(.*?)\y", "(.*?)", str_replace("\y(.*?)", "(.*?)", $reg));
+
 			$c = str_replace("*", "%", $cq);
 			$ts = self::gen_postgresql_query($cq);
 		}
