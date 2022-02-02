@@ -4,8 +4,8 @@ header('Content-Type: text/html;charset=utf-8');
 
 //for dev purposes, change to version in live env.
 
-$v = time(); 
-//$v = 1.0;
+//$v = time(); 
+$v = "BooleanUpdate";
 
 session_start();
 
