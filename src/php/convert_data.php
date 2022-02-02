@@ -712,6 +712,8 @@ class convert_data
 		return $outp;
 	}
 
+	
+
 	public static function formatMatchedHits($text, $query, $context)
 	{
 
@@ -782,6 +784,10 @@ class convert_data
 
 		return $result;
 	}
+
+	
+
+
 
 	public static function gen_json_concordance_member($db_inp, $total)
 	{
@@ -1169,6 +1175,7 @@ class convert_data
 		$q = str_replace("¦", "|", $q);
 
 		$j = explode(" ", strtolower($q));
+		
 		foreach($j as $k){
 			//checks for boolean operators (ex. -, +, & |)
 			$l = $k[0];
@@ -1245,8 +1252,22 @@ class convert_data
 			} 
 
 			$ts = str_replace("(!", "!(", $ts);
-			
-			$rq = str_replace("<->", " ", trim(explode("&", $ts)[0]));
+
+			/*
+			$s = explode("&", $ts);
+			$rq = '';
+			foreach($s as $w){
+				if($w[0] != "!"){
+					$rq .= trim($w) . '|';
+				}
+			}
+
+			$rq = substr($rq, 0, -1);
+*/
+
+			$rq = trim(explode("&", $ts)[0]);
+
+			$rq = str_replace("<->", " ", $rq);
 			$cq = strtolower(self::clean_query($rq));
 
 			$reg = str_replace("*", "(.*?)", $cq);
@@ -1255,20 +1276,18 @@ class convert_data
 
 			$c = str_replace("*", "%", $cq);
 			$ts = str_replace("*", ':*', $ts);
-
-			error_log($reg);
-
 			
 		}else{
 
 			$q = str_replace('"','', $q);
-			$cq = strtolower(self::clean_query($q));
+            $cq = strtolower(self::clean_query($q));
 			
-			$reg = "\y" + str_replace("*", "(.*?)", $cq) + "\y";
-			$reg = str_replace("(.*?)\y", "(.*?)", str_replace("\y(.*?)", "(.*?)", $reg));
+            $reg = "\y" . str_replace("*", "(.*?)", $cq) . "\y";
+            $reg = str_replace("(.*?)\y", "(.*?)", str_replace("\y(.*?)", "(.*?)", $reg));
 
-			$c = str_replace("*", "%", $cq);
-			$ts = self::gen_postgresql_query($cq);
+            $c = str_replace("*", "%", $cq);
+            $ts = self::gen_postgresql_query($cq);
+
 		}
 
 
