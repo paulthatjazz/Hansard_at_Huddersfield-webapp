@@ -205,11 +205,10 @@
             return $r;
         }
 
-        private function generateDistributionQuery($house, $term, $dateFrom, $dateTo, $monthly, $member = NULL, $description = NULL){
+        private function generateDistributionQuery($house, $term, $dateFrom, $dateTo, $monthly, $member = NULL, $description = NULL, $hitsOnly){
 
             //generates a query based on search type (multi-word or single) and specific house
-
-            if($term->n == 1 && $monthly == FALSE && $member == NULL && $description == NULL){
+            if($term->n == 1 && $monthly == FALSE && $member == NULL && $description == NULL && $term->booleanOperaton != TRUE){
 
                 //single word query per year
 
@@ -241,9 +240,11 @@
                 if($monthly == TRUE){
                     $d = 8;
                     $db = "total_word_month_year";
+                    $year = "substring(sittingday::text,0," . $d . ") as myear";
                 }else{
                     $d = 5;
                     $db = "total_word_year";
+                    $year = "cast(substring(sittingday::text,0," . $d . ") as integer) as myear";
                 }
 
                 if($member != NULL){
@@ -270,16 +271,25 @@
 
                     // term, term + desc, term + member, term + member + desc scenarios
 
+                    if($hitsOnly && $term->booleanOperaton)
+                    {
+                        $t = $term->highlightterm;
+                        
+                    }else{
+                        $t = $term->regexterm;
+                    }
+
                     $r = " ( "
                     . " SELECT z.myear, freq, total FROM ( "
                     . " SELECT y.myear, sum(y.hits) as freq FROM ("
                     . " SELECT x.myear, count(x.matches) as hits FROM ( "
-                    . " SELECT sq.myear, sq.contributiontext, regexp_matches(sq.contributiontext, '(?i)\y" . $term->regexterm . "\y', 'g') as matches, sq.id FROM ( "
-                    . " SELECT substring(sittingday::text,0," . $d . ") as myear, contributiontext, id FROM "
+                    . " SELECT sq.myear, sq.contributiontext, regexp_matches(sq.contributiontext, '(?i)" . $t . "', 'g') as matches, sq.id FROM ( "
+                    . " SELECT " . $year . ", contributiontext, id FROM "
                     . " hansard_". $house . "." . $house . ", to_tsquery('simple', '" . $term->tsterm . "') as q "
                     . " WHERE sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE AND idxfti_simple @@ q " . $memquery . $descquery . " ) as sq " 
                     . " ) as x GROUP BY x.id, x.contributiontext, x.myear ) as y GROUP BY y.myear ) as z "
-                    . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_" . $db . ") as s ON z.myear = s.myear ) ";
+                    . " JOIN (SELECT year as myear, total FROM hansard_precomp.hansard_" . $house . "_" . $db . ") as s ON z.myear = s.myear ) ";
+
 
                 }else{
 
@@ -332,13 +342,13 @@
                 $sql = "SELECT sum(freq) as frequency, sum(total) as total, myear FROM ( ";
             }
             if($house != "lords"){
-                $sql .= self::generateDistributionQuery("commons", $term, $dateFrom, $dateTo, $monthly, $member, $desc);
+                $sql .= self::generateDistributionQuery("commons", $term, $dateFrom, $dateTo, $monthly, $member, $desc, $hitsOnly);
             }
             if($house == "both"){
                  $sql .= " UNION ";
             }
             if($house != "commons"){
-                $sql .= self::generateDistributionQuery("lords", $term, $dateFrom, $dateTo, $monthly, $member, $desc);
+                $sql .= self::generateDistributionQuery("lords", $term, $dateFrom, $dateTo, $monthly, $member, $desc, $hitsOnly);
             }
             if($hitsOnly){
                 $sql .= ") i";
@@ -433,9 +443,6 @@
                 $sql .= self::generateDocumentQuery("lords", $id);
             }
             $sql .= " ) as x";
-
-            
-            error_log($sql);
 
             return $sql;
 
