@@ -220,12 +220,13 @@
                 $r = " ( " 
                 . " SELECT freq, y.myear, total FROM"
                 . " ( "
-                . " SELECT sum(sw.hits) as freq, sw.year as myear FROM hansard_" . $house . "_single_word_year sw "
+                . " SELECT sum(sw.hits) as freq, sw.year as myear FROM hansard_precomp.hansard_" . $house . "_single_word_year sw "
                 . " WHERE sw.word like '" . $term->cleanterm . "' "
                 . " AND sw.year BETWEEN '" . $dateFrom . "' AND '" . $dateTo . "' "
                 . " GROUP BY sw.year ) x "
-                . " JOIN (SELECT year as myear, total FROM hansard_" . $house . "_total_word_year) as y ON y.myear = x.myear "
+                . " JOIN (SELECT year as myear, total FROM hansard_precomp.hansard_" . $house . "_total_word_year) as y ON y.myear = x.myear "
                 . " ) ";
+
             }else{
 
                 //more logic required for monthly or multi word/advanced queries
@@ -306,9 +307,9 @@
                         . " group by year ) s ) x ";
 
                     }else{
-                        $totalcontrib = "select year, 0 as frequency, total from hansard_" 
-                        . $house . "_total_contributions_year WHERE year BETWEEN substring('" . $dateFrom . "'::text,0,5) AND substring('" 
-                        . $dateTo . "'::text,0,5)	" 
+                        $totalcontrib = "select year, 0 as frequency, total from hansard_precomp.hansard_" 
+                        . $house . "_total_contributions_year WHERE year BETWEEN cast(substring('" . $dateFrom . "'::text,0,5) as integer) AND cast(substring('" 
+                        . $dateTo . "'::text,0,5) as integer)	" 
                         . ") x "; 
                     }
 
@@ -362,11 +363,14 @@
 
         public static function distribution($paras, $house, $dateFrom, $dateTo, $adv = FALSE, $monthly = FALSE){
             
+
             $i = 0;
 
             analytics::recordQuery($paras, $adv, $dateFrom, $dateTo, $house);
+
             foreach($paras as $value)
             {
+
                 $termdata = convert_data::prepareTerm($value["term"]);
 
                 if($adv == TRUE){
@@ -388,10 +392,13 @@
                     $sql = self::getDistributionQuery($termdata, $house, $dateFrom, $dateTo, FALSE);
                 }
 
+                error_log($sql);
+
                 $rows[$i] = self::query_no_parameters($sql, "dbname=hansard");
+                
                 $i++;
             }
-
+            
             return $rows;
         }
 
@@ -447,6 +454,7 @@
             return $sql;
 
         }
+
     }
 
 ?>
