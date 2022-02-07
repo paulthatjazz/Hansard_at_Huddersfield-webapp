@@ -392,8 +392,6 @@
                     $sql = self::getDistributionQuery($termdata, $house, $dateFrom, $dateTo, FALSE);
                 }
 
-                error_log($sql);
-
                 $rows[$i] = self::query_no_parameters($sql, "dbname=hansard");
                 
                 $i++;
