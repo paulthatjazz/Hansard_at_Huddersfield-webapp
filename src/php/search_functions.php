@@ -135,9 +135,9 @@ if (isset($_GET['action'])) {
       "SELECT sum(total) as total, year " .
       "FROM " .
       "( " .
-      "select total, year from hansard_commons_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
+      "select total, year from hansard_precomp.hansard_commons_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
       "UNION ALL " .
-      "select total, year from hansard_lords_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
+      "select total, year from hansard_precomp.hansard_lords_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
       ") " .
       "x " .
       "group by year ORDER BY year";
@@ -210,6 +210,7 @@ if (isset($_GET['action'])) {
   $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
 
   $var = convert_data::format_saveDocuments($rows, $_POST['offset']);
+  
   echo $var;
 } else if ($_POST['action'] == "killPID") {
   $var = query_handler::killingPID("dbname=hansard", $_SESSION["previous_PID"]);
