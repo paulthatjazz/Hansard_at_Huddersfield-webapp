@@ -1,0 +1,182 @@
+.hwt-container {
+	background-color: #f8f9fa;
+}
+
+.hwt-content {
+	width: 760px;
+	height: 30px;
+	padding: 20px;
+	border: 1px solid #adb5bd;
+	color: inherit;
+	font: 18px/25px 'Droid Sans Mono', sans-serif;
+}
+
+.hwt-input:focus {
+	outline-color: #495057;
+}
+
+.hwt-content mark {
+	border-radius: 3px;
+	background-color: #d0bfff;
+}
+
+.hwt-content mark.red {
+	background-color: #ffc9c9;
+}
+
+.hwt-content mark.blue {
+	background-color: #a3daff;
+}
+
+.hwt-content mark.yellow {
+	background-color: #ffec99;
+}
+.advanced-options {
+	display: none;
+}
+
+.preview-window {
+	height: 12vw;
+	width: 12vw;
+	border: rgb(224, 224, 224) solid 2px;
+	border-radius: 1.4pt;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.preview-window:hover {
+	border: rgb(115, 199, 255) solid 2px;
+}
+
+.adv-check {
+	margin-top: 15px;
+	margin-left: 15px;
+}
+
+.commons-lords {
+	width: 100px;
+	margin-left: 15px;
+}
+
+.adv-date,
+.basic-date {
+	display: none;
+}
+
+.active {
+	display: inline-flex;
+}
+
+.date-select {
+	padding-right: 20px;
+}
+
+.dpf {
+	margin-right: 20px;
+}
+
+.form-check-input {
+	margin-left: 20px;
+}
+
+.house-selection {
+	float: right;
+	padding-top: 35px;
+}
+
+.distribution,
+.contribution {
+	display: none;
+}
+
+.distribution .accordion-body,
+.contribution .accordion-body {
+	height: 60vh;
+}
+
+.datepicker {
+	padding: 7px;
+}
+
+@media only screen and (max-width: 980px) {
+	.house-selection {
+		float: none;
+		display: flex;
+		padding-top: 15px;
+	}
+
+	.house-selection .form-check-input {
+		margin-left: 2px;
+		margin-right: 5px;
+	}
+
+	.house-selection .form-check-label {
+		margin-right: 15px;
+	}
+}
+
+.member {
+	display: none;
+}
+
+#commons-member {
+	display: inline-block;
+}
+
+.members-title-commons {
+	color: green;
+}
+
+.members-title-lords {
+	color: orange;
+}
+
+.tt-menu {
+	background-color: gainsboro;
+	border: #495057 1px;
+}
+
+.loader {
+	border: 16px solid #f3f3f3; /* Light grey */
+	border-top: 16px solid #3498db; /* Blue */
+	border-radius: 50%;
+	width: 120px;
+	height: 120px;
+	animation: spin 2s linear infinite;
+
+	margin-left: 42%;
+	margin-top: 15%;
+
+	display: none;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.nvd3 .nv-groups .nv-point.selected {
+	stroke-opacity: 0.5 !important;
+	stroke-width: 15px;
+	fill: #fafa37;
+	stroke: #fafa37;
+}
+
+#timeline-selected {
+	background-color: #495057;
+	color: white;
+	padding: 3px;
+	border-radius: 5px;
+}
+
+.tab-term {
+	color: white;
+	padding: 3px;
+	border-radius: 5px;
+	display: inline-flex;
+	margin-right: 10px;
+}

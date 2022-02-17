@@ -73,6 +73,8 @@
                                     echo $maxd ;
                                 ?> through various
                                 search functions and interactive visualisations.</p>
+                            <p style="color:red;">Please note this search tool is experimental, and therefore subject to
+                                change.</p>
                             <p><a class="btn btn-outline-primary btn-lg application" href="site.php" role="button">Go to
                                     web application
                                     &raquo;</a></p>
