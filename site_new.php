@@ -18,12 +18,9 @@ session_start();
     <meta name="author" content="">
     <link rel="icon" href="img/icon.ico">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
-        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
-    </script>
+
     <script src="lib/jquery/jquery.3.3.1.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
         integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -31,6 +28,12 @@ session_start();
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
         integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
+    </script>
 
     <script src="vendor\typeahead.bundle.js"></script>
 
@@ -48,6 +51,23 @@ session_start();
     <script src="vendor/d3-wordcloud/d3.wordcloud.js"></script>
     <script src="vendor/d3-bubble/d3.bubble.js"></script>
     <script src="vendor/nvd3/nv.d3.1.8.6.min.js"></script>
+    <script src="vendor/bootstrap-table/bootstrap-table.1.12.1.js"></script>
+
+
+    <!-- Fonts -->
+    <link href="vendor/fontawesome.5.11.2.min.css" rel="stylesheet">
+
+    <!--link rel="stylesheet" href="lib/bootstrap/bootstrap.4.3.1.min.css" -->
+    <link href="vendor/gijgo/gijgo.1.9.10.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap-table/bootstrap-table.1.12.1.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap4-typeahead.js/typeaheadjs.css" rel="stylesheet" />
+    <link href="vendor/tableexport/tableexport.5.0.0.min.css" rel="stylesheet" />
+
+
+    <!-- CSS styles for this site -->
+    <link href="src/css/site.css?<?php echo $v; ?>" rel="stylesheet">
+    <!-- JS Plugins CSS -->
+    <link href="vendor/noUiSlider-12.1.0/distribute/nouislider.min.css" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" href="new.css">
 </head>
@@ -56,8 +76,15 @@ session_start();
 
     <section>
 
-        <div class="container" style="padding-bottom: 2vh;">
-            <h1>Hansard@Huddersfield</h1>
+        <div class="container title-header" style="padding-bottom: 2vh;">
+            <a class="d-md-inline-block pl-3" target="_blank" href="index.php" title="Home" style="
+	                text-decoration: none;
+    color: black;">
+                <h1 class="logo-1">
+                    <span class="hansard">HANSARD</span> at
+                    <span class="huddersfield">HUDDERSFIELD</span>
+                </h1>
+            </a>
         </div>
 
         <div class="container">
@@ -134,10 +161,11 @@ session_start();
 
 
                                         <div class="row">
-                                            <div class="form-check adv-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="advancedOptionCheck">
-                                                <label class="form-check-label" for="advancedOptionCheck">
+                                            <div class="form-check adv-check custom-control custom-switch">
+                                                <input class="form-check-input custom-control-input" type="checkbox"
+                                                    value="" id="advancedOptionCheck">
+                                                <label class="form-check-label custom-control-label"
+                                                    for="advancedOptionCheck">
                                                     Advanced Options
                                                 </label>
                                             </div>
@@ -176,8 +204,15 @@ session_start();
                                         </div>
 
 
-                                        <div class="row">
+                                        <div class="row terms-listed hide">
+                                            <div class="col">
+                                                Selected Terms:
+                                            </div>
+                                        </div>
 
+                                        <div class="row">
+                                            <div class="col terms-list">
+                                            </div>
                                         </div>
 
                                         <!-- SEARCH TERMS -->
@@ -199,6 +234,7 @@ session_start();
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                     <div class="col-6">Distribution</div>
+
                                     <div id="timeline-selected"></div>
                                 </button>
                             </h2>
@@ -206,6 +242,36 @@ session_start();
                                 data-bs-parent="#accordionExample">
                                 <div id="distribution-body" class="accordion-body">
                                     <div class="distribution-loader loader"></div>
+                                </div>
+
+                                <div class="row justify-content-between">
+                                    <div class="col-md-4 col-12">
+
+                                    </div>
+                                    <div class="col-md-4 col-12 d-flex justify-content-end">
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button id="tooltip_6_3" type="button"
+                                                class="btn btn-light btn-sm share-socials distribution help"
+                                                data-visual="compare-linechart" hidden>
+                                                Share
+                                            </button>
+                                            <button id="tooltip_6_3" type="button"
+                                                class="btn btn-light btn-sm export-png distribution help"
+                                                data-visual="compare-linechart">
+                                                Image
+                                            </button>
+                                            <button id="tooltip_6_4" type="button"
+                                                class="btn btn-light btn-sm export-excel distribution help"
+                                                data-visual="compare-linechart">
+                                                Excel
+                                            </button>
+                                            <button id="tooltip_6_5" type="button"
+                                                class="btn btn-light btn-sm export-csv distribution help"
+                                                data-visual="compare-linechart">
+                                                CSV
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -221,6 +287,10 @@ session_start();
                                 data-bs-parent="#accordionExample">
                                 <div id="contribution-body" class="accordion-body">
                                     <div class="contribution-loader loader"></div>
+
+                                    <?php include(__DIR__ . '/include/search/results-row_new.html'); ?>
+                                    <?php include(__DIR__ . '/include/search/compare-results-row_new.html'); ?>
+
                                 </div>
                             </div>
                         </div>
@@ -230,7 +300,7 @@ session_start();
                 </div>
 
 
-                <div class="col-2">
+                <div class="col-1">
                     <!--  -->
                     <div class="preview-window">
                     </div>
@@ -250,5 +320,6 @@ session_start();
 </body>
 
 <script src="src\js\search_new.js"></script>
+<script src="src\js\table-config.js?"></script>
 
 </html>

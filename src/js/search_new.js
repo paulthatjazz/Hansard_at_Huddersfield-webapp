@@ -31,6 +31,38 @@ var colours_queries = [
 
 var range_of_dates_distrib = [];
 
+var kwic_toggle = false;
+var search_rank = false;
+var selected_house = HOUSE_COMMONS;
+var context = 10;
+var count_of_documents = 0;
+var count_flag = false;
+
+$.xhrPool = [];
+
+$.xhrPool.abortAll = function() {
+  $(this).each(function(i, jqXHR) {
+    jqXHR.abort();
+    $.xhrPool.splice(i, 1);
+  });
+};
+
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+
+function getTotalDocuments(table, action, f_kwic) {
+    $(table).bootstrapTable("refresh", {
+      query: { count: 1, action: action, kwick: f_kwic }
+    });
+}
+
 $('#advancedOptionCheck').click(() => {
     advanced_mode = !advanced_mode;
 
@@ -59,6 +91,30 @@ $("#search-btn").click(()=>{
 
 $("#reset-btn").click(()=>{
     reset_parameters();
+})
+
+$(".context-word-container").hide();
+
+$(".convert-kwic-doc").click(
+    ()=>{
+        kwic_toggle = !kwic_toggle;
+
+        $(".convert-kwic-doc").prop('checked', kwic_toggle);
+
+        $(".context-word-container").slideToggle(200);
+    }
+);
+
+$(".context-word").change((e)=>{
+
+    $(".context-word").val($(e.target).val());
+
+    context = $(e.target).val()
+    
+})
+
+$(".term-clickable i").click(()=>{
+    console.log("?");
 })
 
 init();
@@ -262,7 +318,9 @@ function get_house(){
     let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
     let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
 
-    return (commons == true) && (lords == true) ? HOUSE_BOTH : (commons == true ? HOUSE_COMMONS : HOUSE_LORDS);
+    selected_house = (commons == true) && (lords == true) ? HOUSE_BOTH : (commons == true ? HOUSE_COMMONS : HOUSE_LORDS);
+
+    return selected_house;
 }
 
 function get_search_paras(){
@@ -382,7 +440,7 @@ function load_distribution_graph(d){
 
                 update_timeline(range_of_dates_distrib);
 
-                get_contribution(range_of_dates_distrib);
+                contribution(range_of_dates_distrib);
 
 
             }else{
@@ -409,12 +467,67 @@ function load_distribution_graph(d){
 
 }
 
-function get_contribution(dates){
-
-    accordion_control(".contribution");
+function contribution(dates){
 
     
+    accordion_control(".contribution");
+
+    $('.compare-results').hide();
+    $('.results').hide();
+    
     $('.contribution-loader').show();
+
+    if(num_queries == 1)
+    {
+        search_contribution();
+    }else
+    {
+        for (let x = 0; x < num_queries; x++)
+        {
+            get_contribution(dates, parameters[x], x);
+        }
+    }
+}
+
+function get_contribution(dates, parameter, num){
+
+    
+    let action = advanced_mode ? "contribution-advanced" : "contribution";
+
+    contribution_ajax = $.ajax({
+        url: "src/php/search_functions.php",
+        method: "get",
+        data: {
+            action : action,
+            dateFrom : dates[0],
+            dateTo : dates[1],
+            house: get_house(),
+            parameters: parameter,
+            limit : 10,
+            offset : 0,
+            order: "desc",
+            sort: "date",
+            count: 0,
+            context: context,
+            formatDate: "year"
+        },
+        success: (qXHR) =>{
+
+            $('.contribution-loader').hide();
+
+
+
+            num_queries > 1 ? $('.compare-results').show() : $('.results').show();
+
+            update_tables(num, qXHR);
+
+        }
+    })
+
+}
+
+function update_tables(n, data){
+    
 
 }
 
@@ -429,11 +542,25 @@ function update_timeline(dates){
 function update_para_tabs(paras){
 
     $("#tabs-terms").html("");
+    $('.terms-list').html("");
+
+    if(paras.length > 0){
+        $('.terms-listed').addClass("hide")
+    }else{
+        
+        $('.terms-listed').removeClass("hide")
+    }
+
 
     for (let x = 0; x < num_queries; x++) {
 
         let txt = "<div class='tab-term' style='background-color:" + paras[x].colour + "'>"+paras[x].term+"</div>";
-        $('#tabs-terms').append(txt)
+        $('#tabs-terms').append(txt);
+
+
+        let txt2 = "<div class='term-clickable' id='"+x+"-term' style='color:" + paras[x].colour + ";'>"+paras[x].term+"  <i class='fas fa-minus'></i></div>";
+        $('.terms-list').append(txt2);
+
     }
 }
 
@@ -469,5 +596,205 @@ function reset_parameters(){
 
     
     $('.distribution .nvd3-svg').remove()
+
+}
+
+function search_contribution(){
+
+    //count_flag = c_flag;
+
+    let action = advanced_mode ? "contribution-advanced" : "contribution";
+
+    let formatDate = advanced_mode ? "year" : "year";
+
+    if(kwic_toggle){action+="-kwic";}
+
+    $("html, body").animate(
+        {
+          scrollTop: $("#results_table").offset().top
+        },
+        500
+    );
+
+    
+    $("#results_table").bootstrapTable("removeAll");
+    
+    conf = getTableConfiguration(action, null);
+
+    columns_conf = conf["columns_conf"];
+    action_conf = conf["action"];
+    sort_name = conf["sort_name"];
+
+    $("#results_table")
+        .bootstrapTable("destroy")
+        .bootstrapTable({
+            columns: columns_conf,
+            formatLoadingMessage: ()=>{
+                return "Loading, please wait ... ";
+            },
+            sortName: sort_name,
+            formatShowingRows: function(pageFrom, pageTo, totalRows){
+                return (
+                    "Showing " +
+                    pageFrom +
+                    " to " +
+                    pageTo +
+                    " of " +
+                    totalRows +
+                    " contributions"
+                );
+            },
+            formatRecordsPerPage: function(pageNumber) {
+                return pageNumber + " contributions per page";
+            },
+            ajaxOptions: {
+                beforeSend: (jqXHR)=>{
+                    $.xhrPool.push(jqXHR);
+                },
+                complete: (jqXHR)=>{
+                    var index = $.inArray(jqXHR, $.xhrPool);
+
+                    if( index > -1){
+                        $.xhrPool.splice(index, 1);
+                    }
+                }
+            },
+            queryParams: (p)=>{
+                return{
+                    limit: p.limit,
+                    offset: p.offset,
+                    sort: p.sort,
+                    order: p.order,
+                    parameters: parameters[0],
+                    action: action_conf,
+                    dateFrom:  range_of_dates_distrib[0],
+                    dateTo:  range_of_dates_distrib[1],
+                    house: selected_house,
+                    context: context,
+                    count: count_of_documents,
+                    formatDate: formatDate
+                };
+            },
+            url: "src/php/search_functions.php",
+            method: "get",
+
+            onLoadSuccess: (data)=>{
+                func = "";
+
+                $('.contribution-loader').hide();
+
+                if ((data != null) & isJson('"' + data + '"')) {
+                  $(" .loader").css("display", "none");
+                  $(func + " .cancel-query").css("display", "none");
+        
+                  $(func + ' th[data-field="member"]').tooltip({
+                    delay: { show: 3000, hide: 500 },
+                    placement: "top",
+                    html: true,
+                    title:
+                      "Click on a member’s name to find more information about them."
+                  });
+        
+                  $(func + ' th[data-field="contribution"]').tooltip({
+                    delay: { show: 3000, hide: 500 },
+                    placement: "top",
+                    html: true,
+                    title:
+                      "This display shows the search term in the context of a single contribution from the current speaker. There may be more than one hit in the contribution and the additional number of hits is noted after the extract shown. If you want to see the whole contribution, you can click anywhere on the text."
+                  });
+        
+                  $(func + " .keep-open.btn-group").attr(
+                    "data-original-title",
+                    "Use this to exclude date, contribution,<br>\n\r Member and/or House <br>\n\rfrom the display."
+                  );
+                  $(func + " .keep-open.btn-group").tooltip({
+                    delay: { show: 3000, hide: 500 },
+                    placement: "left",
+                    html: true
+                  });
+        
+                  if (action.indexOf("kwic") != -1) {
+                    $(func + ' th[data-field="#document"]').tooltip({
+                      delay: { show: 3000, hide: 500 },
+                      placement: "top",
+                      html: true,
+                      title:
+                        "Hits are numbered to correspond to the number of the contribution that they occur in, which is why there is often more than one identical number in this column."
+                    });
+                  }
+        
+                  if ($(".tooltip-config").not(":checked").length == 1) {
+                    $(
+                      "[data-toggle='tooltip'], .help, th, .keep-open.btn-group"
+                    ).tooltip("disable");
+                  }
+        
+                  if (data.total == 0) {
+                    $(func + " #results_table")
+                      .bootstrapTable("destroy")
+                      .bootstrapTable({
+                        formatNoMatches: function() {
+                          return "Sorry, there are no results that match your search.";
+                        }
+                      });
+                  }
+        
+                  if (!count_flag) {
+                    if ($(".search .convert-kwic-doc").is(":checked")) {
+                      flag_kwic = true;
+                    } else {
+                      flag_kwic = false;
+                    }
+                    getTotalDocuments(
+                      func + " #results_table",
+                      parameters[0]["action"],
+                      flag_kwic
+                    );
+                    count_flag = true;
+                    $(func + " #results_table th div").prop("disabled", true);
+                    $(func + " #results_table th div").attr("data-disabled", true);
+        
+                    if (action.indexOf("kwic") != -1) {
+                      getTotalHits(false, 0);
+                    }
+                  }
+        
+                  if (data.total != 0) {
+                    if (data.total != "total") {
+                      if (count_of_documents == 0) {
+                        $(func + " #results_docs").html(data.total + " contributions");
+                        count_of_documents = data.total;
+                      }
+                      $(func + " #results_table th div").prop("disabled", false);
+                      $(func + " #results_table th div").attr("data-disabled", false);
+                    } else {
+                      $(func + " #results_docs").html(
+                        "Loading number of contributions"
+                      );
+                    }
+        
+                    $(".dropdown-toggle").click(function() {
+                      $(".tooltip").tooltip("hide");
+                    });
+        
+                    if ($(func + " .convert-title").prop("checked")) {
+                      $(func + " .table").bootstrapTable("showColumn", "description");
+                    } else {
+                      $(func + " .table").bootstrapTable("hideColumn", "description");
+                    }
+                  } else {
+                    $(func + " #compare_docs_" + (index + 1)).html("0 contributions");
+                  }
+                } else {
+                  $(".error-code").html("<b>Error code:</b> 1 - basic contribution");
+                  $("#error").modal("show");
+                }
+                
+                $('.results').show();
+              }
+              
+        })
+
+    
 
 }
