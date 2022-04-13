@@ -29,6 +29,15 @@ var colours_queries = [
     ["#FF9933", false]
 ];
 
+const func_ = [
+  "#compare_table_1",
+  "#compare_table_2",
+  "#compare_table_3",
+  "#compare_table_4"
+]
+
+var selected_table = 0;
+
 var range_of_dates_distrib = [];
 
 var kwic_toggle = false;
@@ -102,6 +111,8 @@ $(".convert-kwic-doc").click(
         $(".convert-kwic-doc").prop('checked', kwic_toggle);
 
         $(".context-word-container").slideToggle(200);
+
+        contribution(range_of_dates_distrib, true);
     }
 );
 
@@ -110,6 +121,8 @@ $(".context-word").change((e)=>{
     $(".context-word").val($(e.target).val());
 
     context = $(e.target).val()
+    
+    contribution(range_of_dates_distrib, true);
     
 })
 
@@ -308,10 +321,14 @@ function generateId(length){
     return id;
 }
 
-function accordion_control(target){
+function accordion_control(target, refresh){
     //opens accordion section (shows if hidden)
     $(target).show();
-    $(target + " .accordion-button").trigger("click");
+
+    if(!refresh){
+      $(target + " .accordion-button").trigger("click");
+    }
+    
 }
 
 function get_house(){
@@ -440,7 +457,7 @@ function load_distribution_graph(d){
 
                 update_timeline(range_of_dates_distrib);
 
-                contribution(range_of_dates_distrib);
+                contribution(range_of_dates_distrib, false);
 
 
             }else{
@@ -467,13 +484,14 @@ function load_distribution_graph(d){
 
 }
 
-function contribution(dates){
+function contribution(dates, refresh){
 
     
-    accordion_control(".contribution");
+    accordion_control(".contribution", refresh);
 
     $('.compare-results').hide();
     $('.results').hide();
+    $("#comp-1, #comp-2, #comp-3, #comp-4 ").hide();
     
     $('.contribution-loader').show();
 
@@ -482,46 +500,119 @@ function contribution(dates){
         search_contribution();
     }else
     {
+
         for (let x = 0; x < num_queries; x++)
         {
-            get_contribution(dates, parameters[x], x);
+            get_contribution_compare(dates, parameters[x], x);
+
+            if(!refresh){
+
+              let active = x == 0 ? " active " : "";
+
+              $('#contrib-tabs').append('<li class="nav-item"><a id="tab'+(x+1)+'" class="nav-link '+active+'" onclick="toggle_text('+x+')">'+parameters[x].term+'  <span style="background-color: '+parameters[x].colour+';" class="dot"></span></a></li>');
+
+            }
+
+
         }
+
+        $("#comp-"+(selected_table+1)).show();
     }
 }
 
-function get_contribution(dates, parameter, num){
+function toggle_text(n){
+
+  selected_table = n;
+
+  $("#comp-1, #comp-2, #comp-3, #comp-4 ").hide();
+
+  $(".nav-link").removeClass("active");
+
+  $("#tab"+(n+1)).addClass("active");
+
+  $("#comp-"+(n+1)).show();
+
+}
+
+function get_contribution_compare(dates, parameter, num){
 
     
     let action = advanced_mode ? "contribution-advanced" : "contribution";
 
-    contribution_ajax = $.ajax({
-        url: "src/php/search_functions.php",
-        method: "get",
-        data: {
-            action : action,
-            dateFrom : dates[0],
-            dateTo : dates[1],
-            house: get_house(),
-            parameters: parameter,
-            limit : 10,
-            offset : 0,
-            order: "desc",
-            sort: "date",
-            count: 0,
-            context: context,
-            formatDate: "year"
+    if(kwic_toggle){action+="-kwic";}
+
+    let formatDate = advanced_mode ? "year" : "year";
+
+    let func = func_[num];
+
+    conf = getTableConfiguration(action, null);
+
+    columns_conf = conf["columns_conf"];
+    action_conf = conf["action"];
+    sort_name = conf["sort_name"];
+
+    $(func).bootstrapTable("removeAll");
+
+    $(func)
+      .bootstrapTable("destroy")
+      .bootstrapTable({
+        columns: columns_conf,
+        formatLoadingMessage: ()=>{
+          return "Loading, please wait ...";
         },
-        success: (qXHR) =>{
+        sortName: sort_name,
+        formatShowingRows: function(pageFrom, pageTo, totalRows){
+          return (
+              "Showing " +
+              pageFrom +
+              " to " +
+              pageTo +
+              " of " +
+              totalRows +
+              " contributions"
+          );
+      },
+      formatRecordsPerPage: function(pageNumber) {
+          return pageNumber + " contributions per page";
+      },
+      ajaxOptions: {
+          beforeSend: (jqXHR)=>{
+              $.xhrPool.push(jqXHR);
+          },
+          complete: (jqXHR)=>{
+              var index = $.inArray(jqXHR, $.xhrPool);
 
-            $('.contribution-loader').hide();
+              if( index > -1){
+                  $.xhrPool.splice(index, 1);
+              }
+          }
+      },
+      queryParams: (p)=>{
+          return{
+              limit: p.limit,
+              offset: p.offset,
+              sort: p.sort,
+              order: p.order,
+              parameters: parameter,
+              action: action_conf,
+              dateFrom:  dates[0],
+              dateTo:  dates[1],
+              house: selected_house,
+              context: context,
+              count: count_of_documents,
+              formatDate: formatDate
+          };
+      },
+      url: "src/php/search_functions.php",
+      method: "get",
+      onLoadSuccess: (data)=>{
+        
+        $('.contribution-loader').hide();
 
+        
+        $('.compare-results').show();
 
-
-            num_queries > 1 ? $('.compare-results').show() : $('.results').show();
-
-            update_tables(num, qXHR);
-
-        }
+      }
     })
 
 }
@@ -586,6 +677,7 @@ function reset_parameters(){
 
     set_max_min_dates();
 
+    selected_table = 0;
     parameters = {};
     num_queries = 0;
     
@@ -593,6 +685,9 @@ function reset_parameters(){
 
 
     $('.distribution').hide();
+    $('.contribution').hide();
+
+    $('#contrib-tabs').html("");
 
     
     $('.distribution .nvd3-svg').remove()
@@ -684,50 +779,6 @@ function search_contribution(){
                 $('.contribution-loader').hide();
 
                 if ((data != null) & isJson('"' + data + '"')) {
-                  $(" .loader").css("display", "none");
-                  $(func + " .cancel-query").css("display", "none");
-        
-                  $(func + ' th[data-field="member"]').tooltip({
-                    delay: { show: 3000, hide: 500 },
-                    placement: "top",
-                    html: true,
-                    title:
-                      "Click on a member’s name to find more information about them."
-                  });
-        
-                  $(func + ' th[data-field="contribution"]').tooltip({
-                    delay: { show: 3000, hide: 500 },
-                    placement: "top",
-                    html: true,
-                    title:
-                      "This display shows the search term in the context of a single contribution from the current speaker. There may be more than one hit in the contribution and the additional number of hits is noted after the extract shown. If you want to see the whole contribution, you can click anywhere on the text."
-                  });
-        
-                  $(func + " .keep-open.btn-group").attr(
-                    "data-original-title",
-                    "Use this to exclude date, contribution,<br>\n\r Member and/or House <br>\n\rfrom the display."
-                  );
-                  $(func + " .keep-open.btn-group").tooltip({
-                    delay: { show: 3000, hide: 500 },
-                    placement: "left",
-                    html: true
-                  });
-        
-                  if (action.indexOf("kwic") != -1) {
-                    $(func + ' th[data-field="#document"]').tooltip({
-                      delay: { show: 3000, hide: 500 },
-                      placement: "top",
-                      html: true,
-                      title:
-                        "Hits are numbered to correspond to the number of the contribution that they occur in, which is why there is often more than one identical number in this column."
-                    });
-                  }
-        
-                  if ($(".tooltip-config").not(":checked").length == 1) {
-                    $(
-                      "[data-toggle='tooltip'], .help, th, .keep-open.btn-group"
-                    ).tooltip("disable");
-                  }
         
                   if (data.total == 0) {
                     $(func + " #results_table")
@@ -791,6 +842,84 @@ function search_contribution(){
                 }
                 
                 $('.results').show();
+              },
+              onLoadError: function(status) {
+                $("#results_table")
+                  .bootstrapTable("destroy")
+                  .bootstrapTable({
+                    formatNoMatches: function() {
+                      return 'Unexpected error, please contact us <a target="_blank" href="index.php?show=feedback">here</a>.';
+                    }
+                  });
+        
+                $(".error-code").html("<b>Error code:</b> 2 - basic contribution");
+                $("#error").modal("show");
+              },
+              onClickCell: function(field, value, row, $element) {
+                $("td").removeClass("text-info font-weight-bold");
+        
+                if(field != "date") $element.addClass("text-info font-weight-bold");
+        
+                identif = row.document_id;
+                date = row.date;
+                row_house = row.house.replace(/<(?:.|\n)*?>/gm, "").toLowerCase();
+        
+                member_span = $(row.member);
+                member = $(member_span).text();
+                url_member = $(member_span).data("url");
+        
+                switch (field) {
+                  case "member":
+                    window.open(url_member, "_blank");
+                    break;
+                  case "contribution":
+                    showContribution(
+                      date,
+                      member,
+                      identif,
+                      row_house,
+                      parameters[0],
+                      "." + selected_mode + " .contribution"
+                    );
+                    break;
+        
+                  case "left_context":
+                    showContribution(
+                      date,
+                      member,
+                      identif,
+                      row_house,
+                      parameters[0],
+                      "." + selected_mode + " .contribution"
+                    );
+                    break;
+        
+                  case "right_context":
+                    showContribution(
+                      date,
+                      member,
+                      identif,
+                      row_house,
+                      parameters[0],
+                      "." + selected_mode + " .contribution"
+                    );
+                    break;
+        
+                  case "hit":
+                    showContribution(
+                      date,
+                      member,
+                      identif,
+                      row_house,
+                      parameters[0],
+                      "." + selected_mode + " .contribution"
+                    );
+                    break;
+        
+                  case "date":
+                    searchContributionDate(identif, date, member, $element);
+                    break;
+                }
               }
               
         })

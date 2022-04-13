@@ -285,11 +285,36 @@ session_start();
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                                 data-bs-parent="#accordionExample">
+
+                                <?php include(__DIR__ . '/include/search/table-toolbar.html'); ?>
+
+
+                                <ul class="nav nav-tabs nav-justified" id="contrib-tabs">
+                                </ul>
+
+
                                 <div id="contribution-body" class="accordion-body">
                                     <div class="contribution-loader loader"></div>
 
                                     <?php include(__DIR__ . '/include/search/results-row_new.html'); ?>
                                     <?php include(__DIR__ . '/include/search/compare-results-row_new.html'); ?>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item text">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    <div class="col-6">Contribution</div>
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                                data-bs-parent="#accordionExample">
+                                <div id="contribution-body" class="accordion-body">
+
+                                    <div class="text-loader loader"></div>
 
                                 </div>
                             </div>
