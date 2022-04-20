@@ -493,11 +493,13 @@
 }
 
 .nav-tabs .nav-link {
-	background-color: #cad4cbe0;
 	font-weight: bolder;
 	color: black;
 	cursor: pointer;
 	font-size: large;
+	border-top-right-radius: 20px 20px;
+	border-top-left-radius: 20px 20px;
+	background-color: #ddf0dfe0;
 }
 
 .dot {
@@ -507,8 +509,18 @@
 	display: inline-block;
 }
 
+.nav-item {
+	background-color: #cad4cbe0;
+}
+
+.nav-tabs:hover {
+	background-color: #f7f7f7e0;
+}
+
 .nav-tabs .active {
 	display: inherit;
+	border-top-right-radius: 20px 20px;
+	border-top-left-radius: 20px 20px;
 }
 
 .table-toolbar {

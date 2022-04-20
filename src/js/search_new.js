@@ -47,6 +47,9 @@ var context = 10;
 var count_of_documents = 0;
 var count_flag = false;
 
+
+var contribution_ajax_complete = true;
+
 $.xhrPool = [];
 
 $.xhrPool.abortAll = function() {
@@ -612,6 +615,72 @@ function get_contribution_compare(dates, parameter, num){
         
         $('.compare-results').show();
 
+      },
+      onClickCell: function(field, value, row, $element) {
+        $("td").removeClass("text-info font-weight-bold");
+
+        if(field != "date") $element.addClass("text-info font-weight-bold");
+
+        identif = row.document_id;
+        date = row.date;
+        row_house = row.house.replace(/<(?:.|\n)*?>/gm, "").toLowerCase();
+
+        member_span = $(row.member);
+        member = $(member_span).text();
+        url_member = $(member_span).data("url");
+
+        switch (field) {
+          case "member":
+            window.open(url_member, "_blank");
+            break;
+          case "contribution":
+            showContribution(
+              date,
+              member,
+              identif,
+              row_house,
+              parameter,
+              ".text"
+            );
+            break;
+
+          case "left_context":
+            showContribution(
+              date,
+              member,
+              identif,
+              row_house,
+              parameter,
+              ".text"
+            );
+            break;
+
+          case "right_context":
+            showContribution(
+              date,
+              member,
+              identif,
+              row_house,
+              parameter,
+              ".text"
+            );
+            break;
+
+          case "hit":
+            showContribution(
+              date,
+              member,
+              identif,
+              row_house,
+              parameter,
+              ".text"
+            );
+            break;
+
+          case "date":
+            searchContributionDate(identif, date, member, $element);
+            break;
+        }
       }
     })
 
@@ -879,7 +948,7 @@ function search_contribution(){
                       identif,
                       row_house,
                       parameters[0],
-                      "." + selected_mode + " .contribution"
+                      ".text"
                     );
                     break;
         
@@ -890,7 +959,7 @@ function search_contribution(){
                       identif,
                       row_house,
                       parameters[0],
-                      "." + selected_mode + " .contribution"
+                      ".text"
                     );
                     break;
         
@@ -901,7 +970,7 @@ function search_contribution(){
                       identif,
                       row_house,
                       parameters[0],
-                      "." + selected_mode + " .contribution"
+                      ".text"
                     );
                     break;
         
@@ -912,7 +981,7 @@ function search_contribution(){
                       identif,
                       row_house,
                       parameters[0],
-                      "." + selected_mode + " .contribution"
+                      ".text"
                     );
                     break;
         
@@ -926,4 +995,82 @@ function search_contribution(){
 
     
 
+}
+
+function resetContribution() {
+    $("#contribution_original").html();
+}
+
+
+function showContribution(
+  date_table,
+  member_table,
+  id_table,
+  house_table,
+  query_table,
+  func
+) {
+  resetContribution();
+
+  $(" #contribution_original").html("");
+
+  SELECTED_ID = id_table;
+  SELECTED_QUERY = query_table["term"];
+
+  query_title = query_table["query"];
+
+  if (!contribution_ajax_complete) {
+    cancelSQLQuery("." + selected_mode + " .contribution");
+  }
+
+  contribution_ajax = $.ajax({
+    url: "src/php/search_functions.php",
+    type: "post",
+    data: {
+      id: SELECTED_ID,
+      action: "contribution-expand",
+      house: selected_house,
+      row_house: house_table,
+      query: query_table["term"]
+    },
+
+    beforeSend: function() {
+
+      accordion_control(".text", false);
+
+      
+      $('.text-loader').show();
+
+      contribution_ajax_complete = false;
+
+      $(func).show();
+    },
+
+    complete: function() {
+      contribution_ajax_complete = true;
+
+      $('.text-loader').hide();
+
+      $('#contribution_original').show();
+    },
+
+    success: function(data, status) {
+
+      if ((data != null) & isJson(data)) {
+        data_json = JSON.parse(data);
+        $("#contribution_original").html(data_json.contributiontext);
+      } else {
+        $(".error-code").html("<b>Error code:</b> 1 - show contribution");
+        $("#error").modal("show");
+      }
+    },
+    error: function(xhr, desc, err) {
+      if (err != "abort") {
+        console.log(xhr);
+        console.log("Details: " + desc + "\nError:" + err);
+        $(".error-code").html("<b>Error code:</b> 2 - show contribution");
+        $("#error").modal("show");
+      }
+    }
+  });
 }

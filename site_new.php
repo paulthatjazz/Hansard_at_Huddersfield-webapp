@@ -316,6 +316,9 @@ session_start();
 
                                     <div class="text-loader loader"></div>
 
+
+                                    <div id="contribution_original"></div>
+
                                 </div>
                             </div>
                         </div>
