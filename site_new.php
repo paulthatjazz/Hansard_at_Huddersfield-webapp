@@ -20,6 +20,7 @@ session_start();
 
 
     <script src="lib/jquery/jquery.3.3.1.min.js"></script>
+    <script src="vendor/saveSvgAsPng/src/saveSvgAsPng.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
         integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
@@ -108,6 +109,8 @@ session_start();
                                         <div class="form-group">
                                             <input autocomplete="off" id="term" class="form-control form-control-lg"
                                                 type="text" placeholder="Search term...">
+                                            <div id="validation-text" class="validation">
+                                            </div>
 
                                         </div>
 
@@ -119,11 +122,17 @@ session_start();
                                                     <label>From:</label>
                                                     <input type="number" value=2000 class="form-control"
                                                         id="basic-dp-from" />
+                                                    <div class="validation validation-date-from">
+                                                    </div>
                                                 </div>
+
+
                                                 <div class="col-lg-6 col-md-auto">
                                                     <label>To:</label>
                                                     <input type="number" value=2022 class="form-control"
                                                         id="basic-dp-to" />
+                                                    <div class="validation validation-date-to">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -133,11 +142,17 @@ session_start();
                                                     <label>From:</label>
                                                     <input id="adv-dp-from"
                                                         class="form-control datepicker datepicker-from" />
+
+                                                    <div class="validation validation-date-from">
+                                                    </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-auto">
                                                     <label>To:</label>
                                                     <input id="adv-dp-to"
                                                         class="form-control datepicker datepicker-to" />
+
+                                                    <div class="validation validation-date-to">
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -153,6 +168,7 @@ session_start();
                                                 <label class="form-check-label" for="lords-ch">
                                                     Lords
                                                 </label>
+                                                <div id="validation-house" class="validation"></div>
                                             </div>
 
 
@@ -179,8 +195,7 @@ session_start();
                                                         title:</label>
                                                     <input id="desc" type="text" class="form-control"
                                                         placeholder="Debate title" />
-                                                    <div class="invalid-feedback">
-                                                        Please insert a valid query.
+                                                    <div class="text-validate validation">
                                                     </div>
 
                                                 </div>
@@ -193,8 +208,7 @@ session_start();
                                                         placeholder="Member" />
                                                     <input id="commons-member" type="text" class="member form-control"
                                                         placeholder="Member" />
-                                                    <div class="invalid-feedback">
-                                                        Please insert a valid query.
+                                                    <div class="text-validate validation">
                                                     </div>
 
                                                 </div>
@@ -240,14 +254,11 @@ session_start();
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                                 data-bs-parent="#accordionExample">
-                                <div id="distribution-body" class="accordion-body">
-                                    <div class="distribution-loader loader"></div>
-                                </div>
-
                                 <div class="row justify-content-between">
                                     <div class="col-md-4 col-12">
 
                                     </div>
+
                                     <div class="col-md-4 col-12 d-flex justify-content-end">
                                         <div class="btn-group" role="group" aria-label="Basic example">
                                             <button id="tooltip_6_3" type="button"
@@ -272,7 +283,14 @@ session_start();
                                             </button>
                                         </div>
                                     </div>
+
                                 </div>
+
+                                <div id="distribution-body" class="accordion-body">
+                                    <div class="distribution-loader loader"></div>
+                                </div>
+
+
                             </div>
                         </div>
 
@@ -328,7 +346,7 @@ session_start();
                 </div>
 
 
-                <div class="col-1">
+                <div class="col-1" hidden>
                     <!--  -->
                     <div class="preview-window">
                     </div>

@@ -46,6 +46,7 @@ var selected_house = HOUSE_COMMONS;
 var context = 10;
 var count_of_documents = 0;
 var count_flag = false;
+var keys = {};
 
 
 var contribution_ajax_complete = true;
@@ -84,6 +85,31 @@ $('#advancedOptionCheck').click(() => {
     updateDates();
 
     $('.advanced-options').toggle(200);
+})
+
+$(".export-png").click(()=>{
+  saveSvgAsPng($("#distribution-body svg")[0], "line_chart.png", {
+    backgroundColor: "white"
+  });
+})
+
+$(document).keydown(function(e) {
+  keys[e.which] = true;
+
+  if (keys[16] && keys[65]) { //shift + A
+    console.log("advanced toggle");
+    $('#advancedOptionCheck').trigger('click');
+  }
+});
+
+$(document).keyup(function(e) {
+  delete keys[e.which];
+});
+
+$('#term').keyup((event)=>{
+  if(event.which == 13){
+    get_distribution();
+  }
 })
 
 $('input[name="commons-check"]').change(()=>{
@@ -140,6 +166,54 @@ function init(){
     update_autofill();
     updateDates();
 }
+
+function isValidParameters(advanced){
+
+  if(!advanced){
+    let l_t = $("#term").val().length;
+    if(l_t == 0){
+        text_validation = "Search term is required!" 
+    }else{
+        text_validation = ""
+    }
+  }else{
+
+    let l_t = $("#term").val().length;
+    let dt_t = $("#desc").val().length;
+    let m_t = $("#"+selected_house+"-member").val().length;
+
+    if((l_t+dt_t+m_t) == 0){
+        text_validation = "Search term, Debate title, or Member is required!" 
+    }else{
+        text_validation = ""
+    }
+
+  }
+  
+  let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
+  let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
+
+
+  var house_validation = "";
+
+  if((commons == lords) && lords == false){
+    house_validation = "A house must be selected!";
+  }else{
+    house_validation = "";
+  }
+
+
+  $("#validation-house").html(house_validation);
+  if(advanced){
+    $(".text-validate").html(text_validation);
+  }
+  $("#validation-text").html(text_validation);
+
+
+  return (text_validation.length + house_validation.length + $(".validation-date-from").html().length + $(".validation-date-to").html().length) == 0;
+
+}
+
 
 function update_autofill(){
 
@@ -227,6 +301,7 @@ function set_max_min_dates(){
             complete: (status)=>{
 
                 maxDate = typeof(maxDate) == "undefined" ? "2021-02-25" : maxDate;
+                minDate = "1803-01-01";
 
                 $("#basic-dp-from").change(()=>{
                     let d = $("#basic-dp-from").val() + "-01-01";
@@ -311,8 +386,24 @@ function checkParas(){
   }
 
 function updateDates(){
+
     dateFrom = advanced_mode ? $("#adv-dp-from").val() : $("#basic-dp-from").val();
+
+    let x = advanced_mode ? 10 : 4;
+
+    if(dateFrom < minDate || dateFrom > maxDate){
+      $(".validation-date-from").html("Please enter a date between " + minDate.substring(0,x) + " and " + maxDate.substring(0,x) + ".");
+    }else{
+      $(".validation-date-from").html("")
+    }
+
     dateTo = advanced_mode ? $("#adv-dp-to").val() : $("#basic-dp-to").val();
+
+    if(dateTo < minDate || dateTo > maxDate){
+      $(".validation-date-to").html("Please enter a date between " + minDate.substring(0,x) + " and " + maxDate.substring(0,x) + ".");
+    }else{
+      $(".validation-date-to").html("")
+    }
 }
 
 function generateId(length){
@@ -368,6 +459,10 @@ function prepare_parameters(){
 
 function get_distribution(){
 
+    if(!isValidParameters(advanced_mode)){
+      return;
+    }
+
     let paras = prepare_parameters();
 
     update_para_tabs(paras)
@@ -377,6 +472,16 @@ function get_distribution(){
     let flag_monthly_based = (dateTo.substring(0, 4) - dateFrom.substring(0, 4) <= 5);
 
     let flag_normalised = true; // if terms are blank
+
+    console.log({
+      action: action,
+      dateTo: dateTo,
+      dateFrom: dateFrom,
+      house: get_house(),
+      parameters: paras,
+      flag_normalised: flag_normalised,
+      flag_monthly_based: flag_monthly_based
+  });
 
     distribution_ajax = $.ajax({
         url: "src/php/search_functions.php",
@@ -489,7 +594,6 @@ function load_distribution_graph(d){
 
 function contribution(dates, refresh){
 
-    
     accordion_control(".contribution", refresh);
 
     $('.compare-results').hide();

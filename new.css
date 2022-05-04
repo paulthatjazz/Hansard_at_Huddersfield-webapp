@@ -526,3 +526,50 @@
 .table-toolbar {
 	background-color: #cad4cbe0;
 }
+
+.fixed-table-body{
+	max-height: 60vh;
+	overflow-x: auto;
+}
+
+#contribution_original{
+	max-height: 65vh;
+	overflow-x: auto;
+}
+
+/* width */
+#contribution_original::-webkit-scrollbar, 
+.fixed-table-body::-webkit-scrollbar {
+	width: 15px;
+  }
+  
+  /* Track */
+  #contribution_original::-webkit-scrollbar-track,
+  .fixed-table-body::-webkit-scrollbar-track {
+	background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  #contribution_original::-webkit-scrollbar-thumb,
+  .fixed-table-body::-webkit-scrollbar-thumb {
+	background: #44795b; 
+  }
+  
+  /* Handle on hover */
+  #contribution_original::-webkit-scrollbar-thumb:hover,
+  .fixed-table-body::-webkit-scrollbar-thumb:hover {
+	background: #5ea77d; 
+  }
+
+  #validation-house{
+	  margin-left: 18px;
+  }
+
+  .validation{
+	  color: red;
+  }
+
+  .validation-date-from,
+  .validation-date-to{
+	  font-size:0.8em;
+  }
