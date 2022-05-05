@@ -667,10 +667,12 @@ function get_distribution(){
         error: (xhr, desc, err)=>{
 
           if(err == "Gateway Time-out"){
-            console.log("?");
+            error_handler("Time-out error", "Your request to the server has timed out. Please note that this search tool is experimental and complex queries or larger date ranges might be prone to timeout. ")
+          }else{
+            error_handler("Distribution", "");
           }
 
-          error_handler("distribution 1", "");
+          
         }
 
     });
