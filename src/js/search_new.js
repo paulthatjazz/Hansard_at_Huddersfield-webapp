@@ -665,7 +665,11 @@ function get_distribution(){
             
         },
         error: (xhr, desc, err)=>{
-          console.log(err, desc);
+
+          if(err == "Gateway Time-out"){
+            console.log("?");
+          }
+
           error_handler("distribution 1", "");
         }
 
