@@ -2829,6 +2829,7 @@ function getDistribution() {
         data_json = JSON.parse(data);
         freq_line_data = data_json;
 
+
         nv.addGraph(function() {
           chart = nv.models.lineChart().options({
             transitionDuration: 2000,
@@ -3406,6 +3407,8 @@ function searchContribution(data_point, c_flag, func) {
       selected_submode = "basic"
     }
   }
+
+  console.log({c_flag, func});
 
   count_flag = c_flag;
 
