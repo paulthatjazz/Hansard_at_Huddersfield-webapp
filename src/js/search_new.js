@@ -10,6 +10,13 @@ var maxDate;
 var dateFrom;
 var dateTo;
 
+var freq_line_data;
+var flag_normalised;
+
+const ERROR_MODAL = $('#ErrorModal');
+const ERROR_MODAL_DESC = ERROR_MODAL.find("#error-desc");
+const ERROR_MODAL_CODE = ERROR_MODAL.find("#error-code");
+
 const HOUSE_LORDS = "lords";
 const HOUSE_COMMONS = "commons";
 const HOUSE_BOTH = "both";
@@ -93,6 +100,16 @@ $(".export-png").click(()=>{
   });
 })
 
+
+$(".export-excel").click(()=> {
+  saveLineChartAsExcel();
+});
+
+$(".export-csv").click(()=> {
+  saveLineChartAsCSV();
+});
+
+
 $(document).keydown(function(e) {
   keys[e.which] = true;
 
@@ -159,7 +176,117 @@ $(".term-clickable i").click(()=>{
     console.log("?");
 })
 
+$("#close-modal").click(()=>{
+  ERROR_MODAL.modal("hide");
+})
+
 init();
+
+function error_handler(code, desc){
+  ERROR_MODAL_CODE.html(code);
+  ERROR_MODAL_DESC.html(desc);
+
+  ERROR_MODAL.modal('show');
+}
+
+function s2ab(s) {
+  var buf = new ArrayBuffer(s.length);
+  var view = new Uint8Array(buf);
+  for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+  return buf;
+}
+
+function saveLineChartAsExcel() {
+  var wb = XLSX.utils.book_new();
+
+  for (i = 0; i < freq_line_data.length; i++) {
+    x = "";
+    y = "";
+
+    object = new Array();
+    object.push([
+      freq_line_data[i]["key"],
+      selected_house.charAt(0).toUpperCase() + selected_house.slice(1)
+    ]);
+
+    if (flag_normalised) {
+      object.push(["Date", "Frequency (number of documents)"]);
+    } else {
+      object.push(["Date", "Frequency (hits per million of words)"]);
+    }
+
+    $.each(freq_line_data[i]["values"], function() {
+      $.each($(this)[0], function(index, value) {
+        if (index == "x") {
+          if (x != "") {
+            object.push([x, y]);
+          }
+          x = value;
+        } else if (index == "y") {
+          y = value;
+        }
+      });
+    });
+
+    object.push([x, y]);
+
+    var ws = XLSX.utils.json_to_sheet(object, { skipHeader: true });
+
+    XLSX.utils.book_append_sheet(
+      wb,
+      ws,
+      freq_line_data[i]["key"]
+        .replace(":", "_")
+        .replace("\\", "_")
+        .replace("/", "_")
+        .replace("?", "_")
+        .replace("[", "_")
+        .replace("]", "_")
+    );
+
+    var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+  }
+  saveAs(
+    new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+    "line_chart.xlsx"
+  );
+  //$("#downloadFile").modal("show");
+}
+
+function saveLineChartAsCSV() {
+  csv_content = new Array();
+  csv_keys = new Array();
+
+  for (i = 0; i < freq_line_data.length; i++) {
+    if (flag_normalised) {
+      csv_content[i] = "Date,Frequency (hits per million of words)\n";
+    } else {
+      csv_content[i] = "Date,Frequency (number of documents)\n";
+    }
+
+    csv_keys[i] = freq_line_data[i]["key"];
+
+    x = "";
+    y = "";
+
+    $.each(freq_line_data[i]["values"], function() {
+      $.each($(this)[0], function(index, value) {
+        if (index == "x") {
+          csv_content[i] += value + ",";
+        } else if (index == "y") {
+          csv_content[i] += value + "\n";
+        }
+      });
+    });
+  }
+  for (i = 0; i < freq_line_data.length; i++) {
+    saveAs(
+      new Blob([csv_content[i]], { type: "text/csv" }),
+      "line_chart_" + csv_keys[i] + ".csv"
+    );
+  }
+  $("#downloadFile").modal("show");
+}
 
 function init(){
     set_max_min_dates();
@@ -287,7 +414,13 @@ function set_max_min_dates(){
             },
             success: (data)=>{
                 if (data != null) {
-                    maxDate = JSON.parse(data)[0]["upperdate"];
+
+                    try {
+                      maxDate = JSON.parse(data)[0]["upperdate"];
+                    } catch (error) {
+                      error_handler("database connection error", "Unable to establish a connection to the database. This might be due to a server maintenance or other related issues. <br> <br> Please check our <a href=\"https://twitter.com/HansardHuds\">Twitter Profile</a> for updates:")
+                    }
+                    
                     
                     maxDateAsDate = new Date(maxDate);
 
@@ -471,7 +604,14 @@ function get_distribution(){
 
     let flag_monthly_based = (dateTo.substring(0, 4) - dateFrom.substring(0, 4) <= 5);
 
-    let flag_normalised = true; // if terms are blank
+    flag_normalised = true; 
+
+    $.each(paras, (index, value)=> {
+      //if a term is blank (member, debate title)
+      if (value["term"] == "") {
+        flag_normalised = false;
+      }
+    });
 
     console.log({
       action: action,
@@ -516,11 +656,19 @@ function get_distribution(){
 
                 data_json = JSON.parse(data);
 
+                
+                freq_line_data = data_json;
+
                 load_distribution_graph(data_json);
 
             }
             
+        },
+        error: (xhr, desc, err)=>{
+          console.log(err, desc);
+          error_handler("distribution 1", "");
         }
+
     });
 
 
@@ -596,6 +744,7 @@ function contribution(dates, refresh){
 
     accordion_control(".contribution", refresh);
 
+    $("#contrib-tabs").html("");
     $('.compare-results').hide();
     $('.results').hide();
     $("#comp-1, #comp-2, #comp-3, #comp-4 ").hide();
@@ -604,7 +753,7 @@ function contribution(dates, refresh){
 
     if(num_queries == 1)
     {
-        search_contribution();
+      get_contribution();
     }else
     {
 
@@ -719,6 +868,9 @@ function get_contribution_compare(dates, parameter, num){
         
         $('.compare-results').show();
 
+      },
+      onLoadError: (xhr, desc, err)=>{
+        error_handler("contribution-compare 1", "");
       },
       onClickCell: function(field, value, row, $element) {
         $("td").removeClass("text-info font-weight-bold");
@@ -867,7 +1019,7 @@ function reset_parameters(){
 
 }
 
-function search_contribution(){
+function get_contribution(){
 
     //count_flag = c_flag;
 
@@ -1010,8 +1162,7 @@ function search_contribution(){
                     $(func + " #compare_docs_" + (index + 1)).html("0 contributions");
                   }
                 } else {
-                  $(".error-code").html("<b>Error code:</b> 1 - basic contribution");
-                  $("#error").modal("show");
+                    error_handler("1 - contribution", "")
                 }
                 
                 $('.results').show();
@@ -1024,9 +1175,8 @@ function search_contribution(){
                       return 'Unexpected error, please contact us <a target="_blank" href="index.php?show=feedback">here</a>.';
                     }
                   });
-        
-                $(".error-code").html("<b>Error code:</b> 2 - basic contribution");
-                $("#error").modal("show");
+
+                  error_handler("2 - contribution", "")
               },
               onClickCell: function(field, value, row, $element) {
                 $("td").removeClass("text-info font-weight-bold");

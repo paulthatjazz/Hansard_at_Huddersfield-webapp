@@ -573,3 +573,16 @@
   .validation-date-to{
 	  font-size:0.8em;
   }
+
+  #modal-msg{
+	padding-top: 45px;
+  }
+
+  .modal-header{
+	color: white;
+    background-color: darkred;
+  }
+
+  .modal-body{
+	text-align: center;
+  }

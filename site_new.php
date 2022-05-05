@@ -20,7 +20,11 @@ session_start();
 
 
     <script src="lib/jquery/jquery.3.3.1.min.js"></script>
+    <script src="vendor/tableexport/js-xlsx/dist/xlsx.core.min.js"></script>
+    <script src="vendor/tableexport/FileSaver.js/FileSaver.min.js"></script>
+    <script src="vendor/tableexport/tableexport.5.0.0.min.js"></script>
     <script src="vendor/saveSvgAsPng/src/saveSvgAsPng.js"></script>
+    <script src="vendor/noUiSlider-12.1.0/distribute/nouislider.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
         integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
@@ -344,6 +348,9 @@ session_start();
 
                     </div>
                 </div>
+
+
+                <?php include(__DIR__ . '/include/modals_new.html'); ?>
 
 
                 <div class="col-1" hidden>
