@@ -75,6 +75,7 @@ session_start();
     <link href="vendor/noUiSlider-12.1.0/distribute/nouislider.min.css" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" href="new.css">
+
 </head>
 
 <body>
@@ -206,11 +207,14 @@ session_start();
                                                 <div class="col-md-6 col-12">
                                                     <label class="mr-3" style="visibility: hidden;">Debate
                                                         title:</label>
-                                                    <input id="both-member" type="text" class="member form-control"
+                                                    <input id="both-member" type="text"
+                                                        class="member form-control inactive-member-search"
                                                         placeholder="Member" />
-                                                    <input id="lords-member" type="text" class="member form-control"
+                                                    <input id="lords-member" type="text"
+                                                        class="member form-control inactive-member-search"
                                                         placeholder="Member" />
-                                                    <input id="commons-member" type="text" class="member form-control"
+                                                    <input id="commons-member" type="text"
+                                                        class="member form-control active-member-search"
                                                         placeholder="Member" />
                                                     <div class="text-validate validation">
                                                     </div>

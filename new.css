@@ -115,14 +115,6 @@
 	}
 }
 
-.member {
-	display: none;
-}
-
-#commons-member {
-	display: inline-block;
-}
-
 .members-title-commons {
 	color: green;
 }
@@ -585,4 +577,8 @@
 
   .modal-body{
 	text-align: center;
+  }
+
+  .member-inactive{
+	  display: none !important;
   }

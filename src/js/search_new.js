@@ -130,14 +130,22 @@ $('#term').keyup((event)=>{
 })
 
 $('input[name="commons-check"]').change(()=>{
-    $('.member').hide();
+
     let house = get_house();
-    $('#'+house+'-member').show();
+    
+    $(".twitter-typeahead").addClass("member-inactive");
+    
+    $("#"+house+"-member").parent().removeClass("member-inactive")
+    
 })
 $('input[name="lords-check"]').change(()=>{
-    $('.member').hide();
+
     let house = get_house();
-    $('#'+house+'-member').show();
+    
+    $(".twitter-typeahead").addClass("member-inactive");
+
+    $("#"+house+"-member").parent().removeClass("member-inactive")
+
 })
 
 $("#search-btn").click(()=>{
@@ -400,6 +408,9 @@ function update_autofill(){
         
         
     });
+
+    $(".twitter-typeahead").addClass("member-inactive");
+    $("#commons-member").parent().removeClass("member-inactive")
 
     
 }
