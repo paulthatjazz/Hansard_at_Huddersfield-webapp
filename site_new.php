@@ -68,9 +68,6 @@ session_start();
     <link href="vendor/bootstrap4-typeahead.js/typeaheadjs.css" rel="stylesheet" />
     <link href="vendor/tableexport/tableexport.5.0.0.min.css" rel="stylesheet" />
 
-
-    <!-- CSS styles for this site -->
-    <link href="src/css/site.css?<?php echo $v; ?>" rel="stylesheet">
     <!-- JS Plugins CSS -->
     <link href="vendor/noUiSlider-12.1.0/distribute/nouislider.min.css" rel="stylesheet" type="text/css">
 
