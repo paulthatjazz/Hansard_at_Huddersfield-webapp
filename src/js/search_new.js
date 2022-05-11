@@ -1059,10 +1059,19 @@ function update_para_tabs(paras){
         $('#tabs-terms').append(txt);
 
 
-        let txt2 = "<div class='term-clickable' id='"+x+"-term' style='color:" + paras[x].colour + ";'>"+paras[x].query+"  <i class='fas fa-minus' onclick='remove_term("+ x +")'></i></div>";
+        let txt2 = "<div class='term-clickable' id='"+x+"-term' style='color:" + paras[x].colour + ";'></i><input onchange=\"change_colour(this, " + x + ")\" type=\"color\" class=\"color-picker-box\" value=\""+  paras[x].colour + "\">"+paras[x].query+"  <i class='fas fa-minus' onclick='remove_term("+ x +")'></div>";
         $('.terms-list').append(txt2);
 
     }
+}
+
+function change_colour(source, x){
+
+  parameters[x].colour = source.value;
+  colours_queries[x][0] = source.value;
+
+  get_distribution(true);
+
 }
 
 function reset_comparasion(){
