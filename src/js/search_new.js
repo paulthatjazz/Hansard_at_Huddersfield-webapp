@@ -125,7 +125,7 @@ $(document).keyup(function(e) {
 
 $('#term').keyup((event)=>{
   if(event.which == 13){
-    get_distribution();
+    get_distribution(false);
   }
 })
 
@@ -136,7 +136,7 @@ $('input[name="commons-check"]').change(()=>{
     $(".twitter-typeahead").addClass("member-inactive");
     
     $("#"+house+"-member").parent().removeClass("member-inactive")
-    
+
 })
 $('input[name="lords-check"]').change(()=>{
 
@@ -149,7 +149,7 @@ $('input[name="lords-check"]').change(()=>{
 })
 
 $("#search-btn").click(()=>{
-    get_distribution();
+    get_distribution(false);
 })
 
 $("#reset-btn").click(()=>{
@@ -178,10 +178,6 @@ $(".context-word").change((e)=>{
     
     contribution(range_of_dates_distrib, true);
     
-})
-
-$(".term-clickable i").click(()=>{
-    console.log("?");
 })
 
 $("#close-modal").click(()=>{
@@ -348,7 +344,6 @@ function isValidParameters(advanced){
   return (text_validation.length + house_validation.length + $(".validation-date-from").html().length + $(".validation-date-to").html().length) == 0;
 
 }
-
 
 function update_autofill(){
 
@@ -582,10 +577,35 @@ function get_search_paras(){
 
     let house = get_house();
 
+    let query = "";
+
+    if(advanced_mode){
+      if($("#desc").val() != "" || $("#"+house+"-member").val() != ""){
+
+        if($("#term").val() != ""){
+          query += "Term: "+$("#term").val() +"; ";
+        }
+
+        if($("#desc").val() != ""){
+          query += "Title: "+$("#desc").val()+"; ";
+        }
+
+        if($("#"+house+"-member").val() != ""){
+          query += "Member: "+$("#"+house+"-member").val()+"; ";
+        }
+
+      }else{
+        query = $("#term").val();
+      }
+    }else{
+      query = $("#term").val();
+    }
+
     return {
         term : $("#term").val(),
         searchId: searchId,
         sessionId: sessionId,
+        query: query,
         colour: colours_queries[num_queries][0],
         description : advanced_mode ? $("#desc").val() : null,
         member : advanced_mode ? $("#"+house+"-member").val() : null
@@ -601,13 +621,17 @@ function prepare_parameters(){
 
 }
 
-function get_distribution(){
+function get_distribution(refresh){
 
-    if(!isValidParameters(advanced_mode)){
-      return;
+    if(!refresh){
+      if(!isValidParameters(advanced_mode)){
+        return;
+      }
     }
 
-    let paras = prepare_parameters();
+    let paras;
+
+    !refresh ? paras = prepare_parameters() : paras = parameters;
 
     update_para_tabs(paras)
 
@@ -623,16 +647,6 @@ function get_distribution(){
         flag_normalised = false;
       }
     });
-
-    console.log({
-      action: action,
-      dateTo: dateTo,
-      dateFrom: dateFrom,
-      house: get_house(),
-      parameters: paras,
-      flag_normalised: flag_normalised,
-      flag_monthly_based: flag_monthly_based
-  });
 
     distribution_ajax = $.ajax({
         url: "src/php/search_functions.php",
@@ -972,6 +986,60 @@ function update_timeline(dates){
 
 }
 
+function update_colours(paras){
+  
+  col_1 = null;
+
+  for (let x = 0; x < colours_queries.length; x++) {
+
+    if(col_1 != null){
+      colours_queries[x][0] = col_1;
+      col_1 = null;
+    }
+
+    if(paras[x] !== undefined){
+      if(paras[x].colour != colours_queries[x][0]){
+
+        col_1 = colours_queries[x][0];
+
+        colours_queries[x][0] = paras[x].colour;
+
+      }
+    }
+
+  }
+}
+
+function remove_term(n){
+  
+  delete parameters[n];
+
+  var i = 0;
+  var paras_temp = [];
+
+  for (let x = 0; x < num_queries; x++) {
+
+    if(parameters[x] == undefined){
+      x++;
+    }
+
+    paras_temp[i] = parameters[x];
+    
+    i++;
+  }
+
+  num_queries--;
+
+  parameters = paras_temp;
+  
+  update_colours(parameters);
+
+  update_para_tabs(parameters);
+
+  get_distribution(true);
+
+}
+
 function update_para_tabs(paras){
 
     $("#tabs-terms").html("");
@@ -987,11 +1055,11 @@ function update_para_tabs(paras){
 
     for (let x = 0; x < num_queries; x++) {
 
-        let txt = "<div class='tab-term' style='background-color:" + paras[x].colour + "'>"+paras[x].term+"</div>";
+        let txt = "<div class='tab-term' style='background-color:" + paras[x].colour + "'>"+paras[x].query+"</div>";
         $('#tabs-terms').append(txt);
 
 
-        let txt2 = "<div class='term-clickable' id='"+x+"-term' style='color:" + paras[x].colour + ";'>"+paras[x].term+"  <i class='fas fa-minus'></i></div>";
+        let txt2 = "<div class='term-clickable' id='"+x+"-term' style='color:" + paras[x].colour + ";'>"+paras[x].query+"  <i class='fas fa-minus' onclick='remove_term("+ x +")'></i></div>";
         $('.terms-list').append(txt2);
 
     }
@@ -1272,7 +1340,6 @@ function resetContribution() {
     $("#contribution_original").html();
 }
 
-
 function showContribution(
   date_table,
   member_table,
@@ -1331,17 +1398,15 @@ function showContribution(
         data_json = JSON.parse(data);
         $("#contribution_original").html(data_json.contributiontext);
       } else {
-        $(".error-code").html("<b>Error code:</b> 1 - show contribution");
-        $("#error").modal("show");
+        error_handler("1 - show contribution", "");
       }
     },
     error: function(xhr, desc, err) {
-      if (err != "abort") {
-        console.log(xhr);
-        console.log("Details: " + desc + "\nError:" + err);
-        $(".error-code").html("<b>Error code:</b> 2 - show contribution");
-        $("#error").modal("show");
-      }
+
+      error_handler("2 - show contribution", "");
+      console.log(xhr);
+      console.log("Details: " + desc + "\nError:" + err);
+
     }
   });
 }

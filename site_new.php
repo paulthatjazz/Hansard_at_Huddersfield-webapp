@@ -240,9 +240,9 @@ session_start();
                                         <!-- SEARCH TERMS -->
 
                                         <div style="padding-top: 2vh;">
-                                            <button type="button" class="btn btn-outline-dark btn-lg"
+                                            <button type="button" class="btn btn-success btn-lg"
                                                 id="search-btn">Search</button>
-                                            <button type="button" class="btn btn-outline-dark btn-lg"
+                                            <button type="button" class="btn btn-warning btn-lg"
                                                 id="reset-btn">Reset</button>
                                         </div>
                                     </form>
