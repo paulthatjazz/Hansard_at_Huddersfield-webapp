@@ -76,17 +76,28 @@ session_start();
 </head>
 
 <body>
+    <nav class="site-header sticky-top ">
+        <div class="header-container">
+            <div class="container header-1 d-flex flex-md-row
+      justify-content-between py-1">
+                <a class="py-2 d-inline-block" target="_blank" href="index.php?show=feedback" title="Email"><span
+                        class="far fa-envelope"></span></a>
+                <a class="py-2 d-inline-block" target="_blank" href="https://twitter.com/HansardHuds" title="Twitter">
+                    <span class="fab fa-twitter"></span></a>
+                <a class="py-2 d-inline-block" target="_blank" href="https://facebook.com/hansardhud"
+                    title="Facebook"><span class="fab fa-facebook-square"></span></a>
+            </div>
+        </div>
+    </nav>
 
     <section>
 
         <div class="container title-header" style="padding-bottom: 2vh;">
-            <a class="d-md-inline-block pl-3" target="_blank" href="index.php" title="Home" style="
-	                text-decoration: none;
-    color: black;">
-                <h1 class="logo-1">
-                    <span class="hansard">HANSARD</span> at
-                    <span class="huddersfield">HUDDERSFIELD</span>
-                </h1>
+
+            <h1 class="logo-1">
+                <span class="hansard">HANSARD</span> at
+                <span class="huddersfield">HUDDERSFIELD</span>
+            </h1>
             </a>
         </div>
 
@@ -187,7 +198,10 @@ session_start();
                                                     Advanced Options
                                                 </label>
                                             </div>
+
                                         </div>
+
+
 
                                         <div class="advanced-options">
 
@@ -220,8 +234,42 @@ session_start();
                                             </div>
 
 
+
+
                                         </div>
 
+                                        <div class="row">
+                                            <div class="form-check adv-check custom-control custom-switch">
+                                                <input class="form-check-input custom-control-input" type="checkbox"
+                                                    value="" id="searchTipsCheck">
+                                                <label class="form-check-label custom-control-label"
+                                                    for="searchTipsCheck">
+                                                    Search Tips
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div id="search-tips" class="search-tips">
+                                            Search for individual words by typing in the search box and setting relevant
+                                            parameters.
+                                            <ul>
+                                                <li>You can compare up to four terms (for the same period and house) by
+                                                    submitting individual search terms.</li>
+                                                <li>Use + to find contributions that include ALL of the search terms
+                                                    specified.</li>
+                                                <li>Use | to find contributions that include EITHER one or another of
+                                                    the search terms specified.</li>
+                                                <li>Use – to eliminate from search results those contributions that
+                                                    contain the specified search term.</li>
+                                                <li>Use * (wildcard) to allow for different forms of the search term
+                                                    (e.g. ‘war*’ finds contributions that use ‘war’/’wars’/’warring’)
+                                                </li>
+                                                <li>Enclose exact phrases between quotation marks (“) to search only for
+                                                    mentions of the entire phrase</li>
+                                            </ul>
+                                            <strong>Please be aware that combining the above search features may lead to
+                                                a time out.</strong>
+                                        </div>
 
                                         <div class="row terms-listed hide">
                                             <div class="col">
@@ -241,6 +289,10 @@ session_start();
                                                 id="search-btn">Search</button>
                                             <button type="button" class="btn btn-warning btn-lg"
                                                 id="reset-btn">Reset</button>
+
+                                            <span class="records-desc">
+                                                Hansard records until ...
+                                            </span>
                                         </div>
                                     </form>
                                 </div>
@@ -348,6 +400,7 @@ session_start();
 
 
                     </div>
+
                 </div>
 
 
@@ -368,6 +421,10 @@ session_start();
         </div>
 
     </section>
+
+    <footer class="mt-5 mb-3 text-muted text-center text-small">
+        <p>© 2022 Hansard at Huddersfield</p>
+    </footer>
 
 
 

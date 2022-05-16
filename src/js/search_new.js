@@ -36,6 +36,10 @@ var colours_queries = [
     ["#FF9933", false]
 ];
 
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 const func_ = [
   "#compare_table_1",
   "#compare_table_2",
@@ -92,6 +96,10 @@ $('#advancedOptionCheck').click(() => {
     updateDates();
 
     $('.advanced-options').toggle(200);
+})
+
+$('#searchTipsCheck').click(()=>{
+  $('.search-tips').toggle(200);
 })
 
 $(".export-png").click(()=>{
@@ -179,6 +187,12 @@ $(".context-word").change((e)=>{
     contribution(range_of_dates_distrib, true);
     
 })
+
+$(".convert-title").click(
+  ()=>{
+    contribution(range_of_dates_distrib, true);
+  }
+)
 
 $("#close-modal").click(()=>{
   ERROR_MODAL.modal("hide");
@@ -486,6 +500,12 @@ function set_max_min_dates(){
                 $(".datepicker-to").val(preMaxDate);
                 $("#basic-dp-from").val(preMinDate.substring(0,4));
                 $("#basic-dp-to").val(preMaxDate.substring(0,4));
+
+                
+  
+                maxDateAsDate = new Date(maxDate)
+
+                $(".records-desc").html(`Hansard records until ${maxDateAsDate.getDate()} ${monthNames[maxDateAsDate.getMonth()]} ${maxDateAsDate.getFullYear()}.`);
 
                 updateDates();
                 
@@ -835,7 +855,7 @@ function get_contribution_compare(dates, parameter, num){
     conf = getTableConfiguration(action, null);
 
     columns_conf = conf["columns_conf"];
-    action_conf = conf["action"];
+    action_conf = advanced_mode ? "contribution-advanced" : conf["action"];
     sort_name = conf["sort_name"];
 
     $(func).bootstrapTable("removeAll");
@@ -887,7 +907,8 @@ function get_contribution_compare(dates, parameter, num){
               house: selected_house,
               context: context,
               count: count_of_documents,
-              formatDate: formatDate
+              formatDate: formatDate,
+              kwic: (kwic_toggle ? "true" : "false")
           };
       },
       url: "src/php/search_functions.php",
@@ -1136,7 +1157,7 @@ function get_contribution(){
     conf = getTableConfiguration(action, null);
 
     columns_conf = conf["columns_conf"];
-    action_conf = conf["action"];
+    action_conf = advanced_mode ? "contribution-advanced" : conf["action"];
     sort_name = conf["sort_name"];
 
     $("#results_table")
@@ -1186,7 +1207,8 @@ function get_contribution(){
                     house: selected_house,
                     context: context,
                     count: count_of_documents,
-                    formatDate: formatDate
+                    formatDate: formatDate,
+                    kwic: (kwic_toggle ? "true" : "false")
                 };
             },
             url: "src/php/search_functions.php",
