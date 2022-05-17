@@ -117,6 +117,12 @@ $(".export-csv").click(()=> {
   saveLineChartAsCSV();
 });
 
+$(".convert-rank").click(()=>{
+  search_rank = !search_rank;
+  
+  contribution(range_of_dates_distrib, true);
+
+})
 
 $(document).keydown(function(e) {
   keys[e.which] = true;
@@ -198,7 +204,234 @@ $("#close-modal").click(()=>{
   ERROR_MODAL.modal("hide");
 })
 
+
+$(".excel-selections").click(function() {
+  saveResultsAsExcel();
+});
+
+$(".tsv-selections").click(function() {
+  saveResultsAsTSV();
+});
+
+$(".selections").click((x)=>{
+
+  if (num_queries > 1){
+    table_num = $(x.target).data("table-num")
+
+    target_table = "#compare_table_"+table_num;
+  }else{
+    target_table = "#results_table";
+  }
+
+  if(!kwic_toggle){
+    data = $(target_table).bootstrapTable("getSelections");
+    offset =
+      ($(target_table).bootstrapTable("getOptions").pageNumber -
+        1) *
+      $(target_table).bootstrapTable("getOptions").pageSize;
+
+    if(data.length>0){
+      saveResultsAsZip(data, offset);
+    }
+
+  }else{
+
+    $("#tsv-excel").attr(
+      "table",
+      target_table
+    );
+    $("#tsv-excel").modal("show");
+
+  }
+
+})
+
 init();
+
+function saveResultsAsExcel() {
+  data = $($("#tsv-excel").attr("table")).bootstrapTable("getSelections");
+
+  var wb = XLSX.utils.book_new();
+  object = new Array();
+
+  for (i = 0; i < data.length; i++) {
+    element = new Array();
+
+    $.each(data[i], function(index, value) {
+      if (index == "date") {
+        element["Date"] = value;
+      } else if (index == "left_context") {
+        element["Left Context"] = value;
+      } else if (index == "hit") {
+        value = value.replace("<b>", "");
+        value = value.replace("</b>", "");
+
+        element["Hit"] = value;
+      } else if (index == "right_context") {
+        element["Right Context"] = value;
+      } else if (index == "member") {
+        member_span = $(value);
+        member = $(member_span).text();
+        element["Member"] = member;
+      } else if (index == "house") {
+        if (value == "-") {
+          value =
+            selected_house.charAt(0).toUpperCase() + selected_house.slice(1);
+        }
+        element["House"] = $("<div/>")
+          .html(value)
+          .text();
+      } else if (index == "description") {
+        element["Debate title"] = value;
+      } else if (index == "relevance") {
+        if (value != "-") {
+          element["Relevance"] = value;
+        }
+      }
+    });
+
+    object.push(element);
+  }
+
+  var ws = XLSX.utils.json_to_sheet(object);
+  var colWidth = [
+    { wch: 10 },
+    { wch: 50 },
+    { wch: 10 },
+    { wch: 50 },
+    { wch: 20 },
+    { wch: 50 },
+    { wch: 10 },
+    { wch: 10 }
+  ];
+
+  ws["!cols"] = colWidth;
+  XLSX.utils.book_append_sheet(wb, ws, "Concordances", { cellStyles: true });
+  var wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+
+  saveAs(
+    new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+    "Concordances.xlsx"
+  );
+  $("#downloadFile").modal("show");
+}
+
+function saveResultsAsTSV() {
+  data = $($("#tsv-excel").attr("table")).bootstrapTable("getSelections");
+  var wb = XLSX.utils.book_new();
+  object = new Array();
+
+  tsv_content = "";
+  relevance_flag = false;
+
+  for (i = 0; i < data.length; i++) {
+    element = new Array();
+
+    $.each(data[i], function(index, value) {
+      if (index == "date") {
+        tsv_content += value;
+      } else if (index == "left_context") {
+        tsv_content += "\t" + value;
+      } else if (index == "hit") {
+        value = value.replace("<b>", "");
+        value = value.replace("</b>", "");
+
+        tsv_content += "\t" + value;
+      } else if (index == "right_context") {
+        tsv_content += "\t" + value;
+      } else if (index == "member") {
+        member_span = $(value);
+        member = $(member_span).text();
+        tsv_content += "\t" + member;
+      } else if (index == "house") {
+        if (value == "-") {
+          tsv_content +=
+            "\t" +
+            selected_house.charAt(0).toUpperCase() +
+            selected_house.slice(1);
+        }
+        tsv_content +=
+          "\t" +
+          $("<div/>")
+            .html(value)
+            .text();
+      } else if (index == "description") {
+        tsv_content += "\t" + value;
+      } else if (index == "relevance") {
+        if (value != "-") {
+          relevance_flag = true;
+          tsv_content += "\t" + value;
+        }
+      }
+    });
+    tsv_content += "\n";
+  }
+
+  if (relevance_flag) {
+    tsv_content =
+      "Date\tLeft Context\tRight Context\tMember\tHouse\tDebate\tTitle\tRelevance\n" +
+      tsv_content;
+  } else {
+    tsv_content =
+      "Date\tLeft Context\tRight Context\tMember\tHouse\tDebate\tTitle\n" +
+      tsv_content;
+  }
+
+  saveAs(new Blob([tsv_content], { type: "text/tsv" }), "Concordances.tsv");
+  $("#downloadFile").modal("show");
+}
+
+function saveResultsAsZip(data, offset) {
+  ids_str_query = "";
+
+  for (i = 0; i < data.length; i++) {
+    $.each(data[i], function(index, value) {
+      if (index == "document_id") {
+        if (ids_str_query == "") {
+          ids_str_query = "'" + value + "'";
+        } else {
+          ids_str_query += ",'" + value + "'";
+        }
+      }
+    });
+  }
+  $.ajax({
+    url: "src/php/search_functions.php",
+    type: "post",
+    data: {
+      query: ids_str_query,
+      action: "save_documents",
+      house: selected_house,
+      offset: offset
+    },
+
+    beforeSend: function() {},
+
+    complete: function() {
+      //updateSearchButtonOff();
+    },
+
+    success: function(data, status) {
+      if (data != null) {
+        window.location = "tmp/" + data;
+        $("#downloadFile").modal("show");
+      } else {
+        error_handler("1 - download", "")
+      }
+    },
+    error: function(xhr, desc, err) {
+      if (err != "abort") {
+        console.log(xhr);
+        console.log("Details: " + desc + "\nError:" + err);
+        error_handler("2 - download", "");
+      }
+    }
+  });
+}
+
+function notification(title, desc){
+
+}
 
 function error_handler(code, desc){
   ERROR_MODAL_CODE.html(code);
@@ -505,7 +738,7 @@ function set_max_min_dates(){
   
                 maxDateAsDate = new Date(maxDate)
 
-                $(".records-desc").html(`Hansard records until ${maxDateAsDate.getDate()} ${monthNames[maxDateAsDate.getMonth()]} ${maxDateAsDate.getFullYear()}.`);
+                $(".records-desc").html(`Hansard records until ${maxDateAsDate.getDate()} ${monthNames[maxDateAsDate.getMonth()]} ${maxDateAsDate.getFullYear()}`);
 
                 updateDates();
                 
@@ -795,10 +1028,11 @@ function contribution(dates, refresh){
 
     accordion_control(".contribution", refresh);
 
-    $("#contrib-tabs").html("");
+    if(!refresh) $("#contrib-tabs").html("");
     $('.compare-results').hide();
     $('.results').hide();
     $("#comp-1, #comp-2, #comp-3, #comp-4 ").hide();
+    $('#contrib-results, #hits-results').html(null);
     
     $('.contribution-loader').show();
 
@@ -914,6 +1148,18 @@ function get_contribution_compare(dates, parameter, num){
       url: "src/php/search_functions.php",
       method: "get",
       onLoadSuccess: (data)=>{
+
+        if ($(" .convert-title").prop("checked")) {
+          $(".table-striped").bootstrapTable(
+            "showColumn",
+            "description"
+          );
+        } else {
+          $(".table-striped").bootstrapTable(
+            "hideColumn",
+            "description"
+          );
+        }
         
         $('.contribution-loader').hide();
 

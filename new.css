@@ -628,3 +628,21 @@
 	padding: 10px;
 	display: none;
 }
+
+.modal-title-neutral{
+	background-color: #44795b;
+}
+
+.contribution-hits span{
+    background-color: #495057;
+    color: white;
+    border-radius: 5px;
+    padding: 3px;
+    font-weight: bold;
+    margin-left: 5px;
+	float: right;
+}
+
+.contribution-hits span:empty {
+	display: none;
+}
