@@ -862,6 +862,8 @@ function get_search_paras(){
       query = $("#term").val();
     }
 
+    query = query.replaceAll('"', '');
+
     return {
         term : $("#term").val(),
         searchId: searchId,
