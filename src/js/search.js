@@ -3016,7 +3016,7 @@ function addCompareTerm(term) {
   var selected_colour;
 
   for (var i = 0; i < num_queries; i++) {
-    if (parameter_basic[i]["query"] == term.replaceAll('"','')) {
+    if (parameter_basic[i]["query"] == term) {
       flag_repeated = true;
     }
   }
@@ -3035,7 +3035,7 @@ function addCompareTerm(term) {
 
     parameter_basic[num_queries] = {
       term: term,
-      query: term,
+      query: term.replaceAll('"',''),
       searchId: searchId,
       sessionId: sessionId,
       colour: selected_colour
