@@ -3016,7 +3016,7 @@ function addCompareTerm(term) {
   var selected_colour;
 
   for (var i = 0; i < num_queries; i++) {
-    if (parameter_basic[i]["query"] == term) {
+    if (parameter_basic[i]["query"] == term.replaceAll('"','')) {
       flag_repeated = true;
     }
   }
@@ -3067,7 +3067,7 @@ function addCompareTermAdvanced(query) {
       flag_repeated = false;
 
       for (var i = 0; i < num_queries; i++) {
-        if (parameter_advanced[i]["query"] == query) {
+        if (parameter_advanced[i]["query"] == query.replaceAll('"','')) {
           flag_repeated = true;
         }
       }
