@@ -1293,7 +1293,7 @@ function prepareAdvancedQuery() {
 
     if (parameters_count == 1) {
       if (parameter_term) {
-        parameters_vars = "Term: " + term;
+        parameters_vars = "Term: " + term.replaceAll('"','');
 
         if (
           selected_semantic_tags.length > 0 &&
@@ -1388,7 +1388,7 @@ function prepareAdvancedQuery() {
       parameters_vars = "";
 
       if (parameter_term) {
-        parameters_vars = "Term: " + term;
+        parameters_vars = "Term: " + term.replaceAll('"','');
       }
 
       if (parameter_description) {
