@@ -643,6 +643,14 @@
 	float: right;
 }
 
+.inline-hits{
+	display: inline-flex;
+    float: right;
+    font-size: .8em;
+
+}
+
 .contribution-hits span:empty {
 	display: none;
 }
+

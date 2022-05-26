@@ -47,6 +47,14 @@ const func_ = [
   "#compare_table_4"
 ]
 
+
+count_flag = false;
+count_of_documents = 0;
+
+count_of_documents_compare = [0, 0, 0, 0];
+count_flag_compare = [false, false, false, false];
+
+
 var selected_table = 0;
 
 var range_of_dates_distrib = [];
@@ -1024,11 +1032,61 @@ function load_distribution_graph(d){
 
 }
 
+function get_total_hits(paras, i){
+
+  if(num_queries > 1){
+    target = "#hits-";
+  }else{
+    target = "#hit-result";
+  }
+
+  $.ajax({
+    url: "src/php/search_functions.php",
+    type: "post",
+    data: {
+      type: advanced_mode ? "advanced" : "basic",
+      parameters: paras,
+      action : "hits",
+      house: selected_house,
+      dateFrom: dateFrom,
+      dateTo: dateTo
+    },
+    beforeSend: ()=>{
+      $(target + i).html("Loading hits...");
+    },
+    success: (data, status)=>{
+      data_json = JSON.parse(data)
+      if(data_json != null){
+        $(target + i).html(data_json[0].count + " hits");
+      }else{
+        $(target + i).html("Error loading hits...");
+      }
+    },
+    error: ()=>{
+      $(target + i).html("Error loading hits...");
+    }
+  })
+
+
+}
+
 function contribution(dates, refresh){
+
+      
+    count_of_documents_compare = [0, 0, 0, 0];
+    count_flag_compare = [false, false, false, false];
+
+    count_of_documents = 0;
+    count_flag = false;
 
     accordion_control(".contribution", refresh);
 
     if(!refresh) $("#contrib-tabs").html("");
+
+    if(!kwic_toggle) $(".hits-count").html("");
+
+    if(!refresh) $(".contrib-count").html("");
+
     $('.compare-results').hide();
     $('.results').hide();
     $("#comp-1, #comp-2, #comp-3, #comp-4 ").hide();
@@ -1039,21 +1097,26 @@ function contribution(dates, refresh){
     if(num_queries == 1)
     {
       get_contribution();
+
     }else
     {
 
         for (let x = 0; x < num_queries; x++)
         {
-            get_contribution_compare(dates, parameters[x], x);
 
             if(!refresh){
 
               let active = x == 0 ? " active " : "";
 
-              $('#contrib-tabs').append('<li class="nav-item"><a id="tab'+(x+1)+'" class="nav-link '+active+'" onclick="toggle_text('+x+')">'+parameters[x].term+'  <span style="background-color: '+parameters[x].colour+';" class="dot"></span></a></li>');
+              $('#contrib-tabs').append('<li class="nav-item"><a id="tab'+(x+1)+'" class="nav-link '+
+              active+'" onclick="toggle_text('+x+')">'+
+              parameters[x].term+'  <span style="background-color: '+parameters[x].colour+';" class="dot"></span>'
+              +'<div class="contribution-hits inline-hits"><span class="contrib-count" id="contrib-'+ x +'"></span><span class="hits-count" id="hits-'+ x +'"></span></div></a></li>');
 
             }
 
+
+            get_contribution_compare(dates, parameters[x], x);
 
         }
 
@@ -1076,6 +1139,8 @@ function toggle_text(n){
 }
 
 function get_contribution_compare(dates, parameter, num){
+
+    count_flag_compare[num] = false;
 
     
     let action = advanced_mode ? "contribution-advanced" : "contribution";
@@ -1140,7 +1205,7 @@ function get_contribution_compare(dates, parameter, num){
               dateTo:  dates[1],
               house: selected_house,
               context: context,
-              count: count_of_documents,
+              count: count_of_documents_compare[num],
               formatDate: formatDate,
               kwic: (kwic_toggle ? "true" : "false")
           };
@@ -1149,22 +1214,63 @@ function get_contribution_compare(dates, parameter, num){
       method: "get",
       onLoadSuccess: (data)=>{
 
-        if ($(" .convert-title").prop("checked")) {
-          $(".table-striped").bootstrapTable(
-            "showColumn",
-            "description"
-          );
-        } else {
-          $(".table-striped").bootstrapTable(
-            "hideColumn",
-            "description"
-          );
+        if ((data != null) & isJson('"' + data + '"')) {
+
+          if(data.total == 0){
+            $(func).bootstrapTable("destroy")
+            .bootstrapTable( ()=>{
+              return "Sorry, there are no results that match your search.";
+            })
+          }
+
+          if(!count_flag_compare[num]){
+
+            getTotalDocuments(func, action_conf, kwic_toggle);
+            count_flag_compare[num] = true;
+
+          }
+
+          if(kwic_toggle && parameter.term != "") get_total_hits(parameter, num);
+
+          if(data.total != 0){
+
+            if(data.total != "total"){
+              if(count_of_documents_compare[num] == 0){
+                $("#contrib-"+num).html(data.total + " contributions");
+                count_of_documents_compare[num] = data.total;
+              }
+            }else{
+              
+              $("#contrib-"+num).html("Loading number of contributions");
+            }
+
+          }else{
+            
+            $("#contrib-"+num).html("0 contributions");
+          }
+
+        }else{
+          error_handler("contribution-compare 2", "");
         }
-        
+
         $('.contribution-loader').hide();
 
         
         $('.compare-results').show();
+
+        
+
+        if ($(".convert-title").prop("checked")) {
+          $(func).bootstrapTable(
+            "showColumn",
+            "description"
+          );
+        } else {
+          $(func).bootstrapTable(
+            "hideColumn",
+            "description"
+          );
+        }
 
       },
       onLoadError: (xhr, desc, err)=>{
@@ -1461,73 +1567,62 @@ function get_contribution(){
             method: "get",
 
             onLoadSuccess: (data)=>{
-                func = "";
+              
+              func = "";
 
-                $('.contribution-loader').hide();
+              $('.contribution-loader').hide();
 
-                if ((data != null) & isJson('"' + data + '"')) {
-        
-                  if (data.total == 0) {
-                    $(func + " #results_table")
-                      .bootstrapTable("destroy")
-                      .bootstrapTable({
-                        formatNoMatches: function() {
-                          return "Sorry, there are no results that match your search.";
-                        }
-                      });
-                  }
-        
-                  if (!count_flag) {
-                    if ($(".search .convert-kwic-doc").is(":checked")) {
-                      flag_kwic = true;
-                    } else {
-                      flag_kwic = false;
-                    }
-                    getTotalDocuments(
-                      func + " #results_table",
-                      parameters[0]["action"],
-                      flag_kwic
-                    );
-                    count_flag = true;
-                    $(func + " #results_table th div").prop("disabled", true);
-                    $(func + " #results_table th div").attr("data-disabled", true);
-        
-                    if (action.indexOf("kwic") != -1) {
-                      getTotalHits(false, 0);
-                    }
-                  }
-        
-                  if (data.total != 0) {
-                    if (data.total != "total") {
-                      if (count_of_documents == 0) {
-                        $(func + " #results_docs").html(data.total + " contributions");
-                        count_of_documents = data.total;
+              if ((data != null) & isJson('"' + data + '"')) {
+      
+                if (data.total == 0) {
+                  $(func + " #results_table")
+                    .bootstrapTable("destroy")
+                    .bootstrapTable({
+                      formatNoMatches: function() {
+                        return "Sorry, there are no results that match your search.";
                       }
-                      $(func + " #results_table th div").prop("disabled", false);
-                      $(func + " #results_table th div").attr("data-disabled", false);
-                    } else {
-                      $(func + " #results_docs").html(
-                        "Loading number of contributions"
-                      );
-                    }
-        
-                    $(".dropdown-toggle").click(function() {
-                      $(".tooltip").tooltip("hide");
                     });
-        
-                    if ($(func + " .convert-title").prop("checked")) {
-                      $(func + " .table").bootstrapTable("showColumn", "description");
-                    } else {
-                      $(func + " .table").bootstrapTable("hideColumn", "description");
+                }
+      
+                if (!count_flag) {
+                  getTotalDocuments(
+                    func + " #results_table",
+                    parameters[0]["action"],
+                    kwic_toggle
+                  );
+                  count_flag = true;
+                  $(func + " #results_table th div").prop("disabled", true);
+                  $(func + " #results_table th div").attr("data-disabled", true);
+                }
+      
+                if (data.total != 0) {
+                  if (data.total != "total") {
+                    if (count_of_documents == 0) {
+                      $("#contrib-result").html(data.total + " contributions");
+                      count_of_documents = data.total;
                     }
+                    $(func + " #results_table th div").prop("disabled", false);
+                    $(func + " #results_table th div").attr("data-disabled", false);
                   } else {
-                    $(func + " #compare_docs_" + (index + 1)).html("0 contributions");
+                    $("#contrib-result").html("Loading number of contributions");
+                  }
+      
+                  if ($(func + " .convert-title").prop("checked")) {
+                    $(func + " .table").bootstrapTable("showColumn", "description");
+                  } else {
+                    $(func + " .table").bootstrapTable("hideColumn", "description");
                   }
                 } else {
-                    error_handler("1 - contribution", "")
+                  $("#contrib-result").html(data.total + " contributions");
                 }
-                
-                $('.results').show();
+              } else {
+                  error_handler("1 - contribution", "")
+              }
+
+              
+              if(kwic_toggle && parameters[0].term != "") get_total_hits(parameters[0], "");
+              
+              $('.results').show();
               },
               onLoadError: function(status) {
                 $("#results_table")
