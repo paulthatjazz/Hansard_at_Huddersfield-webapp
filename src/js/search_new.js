@@ -66,6 +66,7 @@ var context = 10;
 var count_of_documents = 0;
 var count_flag = false;
 var keys = {};
+var update_mode = false;
 
 
 var contribution_ajax_complete = true;
@@ -153,25 +154,53 @@ $('#term').keyup((event)=>{
 
 $('input[name="commons-check"]').change(()=>{
 
+
+  let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
+  let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
+
+  if (commons == false && lords == false) $('input[name="lords-check"]').trigger('click');
+
     let house = get_house();
     
     $(".twitter-typeahead").addClass("member-inactive");
     
     $("#"+house+"-member").parent().removeClass("member-inactive")
+
+    if(num_queries >0){
+      get_distribution(true);
+    }
 
 })
 $('input[name="lords-check"]').change(()=>{
 
+    
+    let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
+    let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
+
+    if (commons == false && lords == false) $('input[name="commons-check"]').trigger('click');
+
     let house = get_house();
     
     $(".twitter-typeahead").addClass("member-inactive");
 
     $("#"+house+"-member").parent().removeClass("member-inactive")
 
+    if(num_queries >0){
+      get_distribution(true);
+    }
+
 })
 
 $("#search-btn").click(()=>{
-    get_distribution(false);
+
+  get_distribution(update_mode);
+
+  if(update_mode){
+    update_mode = false;
+    $("#search-btn").html("Search");
+  }
+
+
 })
 
 $("#reset-btn").click(()=>{
@@ -787,12 +816,16 @@ function checkParas(){
 
 function updateDates(){
 
+    let validated = true;
+
     dateFrom = advanced_mode ? $("#adv-dp-from").val() : $("#basic-dp-from").val();
 
     let x = advanced_mode ? 10 : 4;
 
     if(dateFrom < minDate || dateFrom > maxDate){
       $(".validation-date-from").html("Please enter a date between " + minDate.substring(0,x) + " and " + maxDate.substring(0,x) + ".");
+
+      validated = false;
     }else{
       $(".validation-date-from").html("")
     }
@@ -801,8 +834,14 @@ function updateDates(){
 
     if(dateTo < minDate || dateTo > maxDate){
       $(".validation-date-to").html("Please enter a date between " + minDate.substring(0,x) + " and " + maxDate.substring(0,x) + ".");
+      validated = false
     }else{
       $(".validation-date-to").html("")
+    }
+
+    if(validated && num_queries > 0){
+      update_mode = true;
+      $("#search-btn").html("Update");
     }
 }
 
@@ -828,6 +867,7 @@ function accordion_control(target, refresh){
 function get_house(){
     let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
     let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
+
 
     selected_house = (commons == true) && (lords == true) ? HOUSE_BOTH : (commons == true ? HOUSE_COMMONS : HOUSE_LORDS);
 
@@ -937,6 +977,7 @@ function get_distribution(refresh){
             clear_forms();
         },
         success: (data, status) =>{
+
             if(data != null)
             {
                 
@@ -947,7 +988,7 @@ function get_distribution(refresh){
                 
                 freq_line_data = data_json;
 
-                load_distribution_graph(data_json);
+                load_distribution_graph(data_json, flag_monthly_based);
 
             }
             
@@ -968,20 +1009,43 @@ function get_distribution(refresh){
 
 }
 
-function load_distribution_graph(d){
+function load_distribution_graph(data, monthly){
+
 
     let label_y = "Frequency (hits per million words)";
-    let label_x = "Year";
+    let label_x = advanced_mode &&  monthly? "Month" : "Year";
 
     nv.addGraph(()=>{
-        chart = nv.models.lineChart().options({
+
+        if(monthly){
+          chart = nv.models
+          .lineChart()
+          .x(function(d) {
+            return new Date(d.x);
+          })
+          .options({
             transitionDuration: 2000,
             useInteractiveGuideline: true
-        });
-        chart.xAxis
+          });
+
+         chart.xAxis
+          .axisLabel(label_x)
+          .tickFormat(function(d) {
+            return d3.time.format("%Y-%m")(new Date(d));
+          })
+          .staggerLabels(false);
+        }else{
+          chart = nv.models.lineChart().options({
+            transitionDuration: 2000,
+            useInteractiveGuideline: true
+          });
+          chart.xAxis
             .axisLabel(label_x)
             .tickFormat(d3.format("d"))
             .staggerLabels(false);
+        }
+
+        
         chart.yAxis
             .axisLabel(label_y)
             .tickFormat(d3.format(".2f"))
@@ -1005,6 +1069,8 @@ function load_distribution_graph(d){
                     "selected"
                 );
 
+                range_of_dates_distrib.sort();
+
                 update_timeline(range_of_dates_distrib);
 
                 contribution(range_of_dates_distrib, false);
@@ -1026,7 +1092,7 @@ function load_distribution_graph(d){
         });
         d3.select("#distribution-body")
             .append("svg")
-            .datum(d)
+            .datum(data)
             .call(chart);
         nv.utils.windowResize(chart.update);
         return chart;

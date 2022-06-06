@@ -494,6 +494,14 @@
 	background-color: #ddf0dfe0;
 }
 
+.active-mode{
+	display: none;
+}
+
+.nav-link{
+	height: 100%;
+}
+
 .dot {
 	height: 10px;
 	width: 10px;
@@ -520,12 +528,12 @@
 }
 
 .fixed-table-body{
-	max-height: 60vh;
+	max-height: 50vh;
 	overflow-x: auto;
 }
 
 #contribution_original{
-	max-height: 65vh;
+	max-height: 50vh;
 	overflow-x: auto;
 }
 

@@ -403,19 +403,32 @@ session_start();
 
                 </div>
 
+                <div class="col-1">
+                    <!--  -->
+                    <div class="preview-window active-mode" id="line-graph">
+                        <h2>DISTRIBUTION</h2>
+                    </div>
+                    <div class="preview-window" id="word-cloud">
+                        <h2>WORD CLOUD</h2>
+
+                        Under construction
+                    </div>
+                    <div class="preview-window" id="keywords">
+                        <h2>KEYWORDS</h2>
+
+                        Under construction
+                    </div>
+                    <div class="preview-window" id="collocation">
+                        <h2>COLLOCATION</h2>
+
+                        Under construction
+                    </div>
+                </div>
 
                 <?php include(__DIR__ . '/include/modals_new.html'); ?>
 
 
-                <div class="col-1" hidden>
-                    <!--  -->
-                    <div class="preview-window">
-                    </div>
-                    <div class="preview-window">
-                    </div>
-                    <div class="preview-window">
-                    </div>
-                </div>
+
 
             </div>
         </div>
