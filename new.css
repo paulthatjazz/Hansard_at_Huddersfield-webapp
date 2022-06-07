@@ -38,14 +38,14 @@
 .preview-window {
 	height: 12vw;
 	width: 12vw;
-	border: rgb(224, 224, 224) solid 2px;
+    border: 1px solid rgba(0,0,0,.125);
 	border-radius: 1.4pt;
 	margin-bottom: 10px;
 	cursor: pointer;
 }
 
 .preview-window:hover {
-	border: rgb(115, 199, 255) solid 2px;
+	border: #44795b solid 2px;
 }
 
 .adv-check {
@@ -662,3 +662,24 @@
 	display: none;
 }
 
+.preview-window h2 {
+	font-weight: bold;
+    background: #44795b;
+    color: white;
+    text-align: center;
+    font-size: 1.2vw;
+    padding: 8px;
+}
+
+@media screen and (min-width: 1001px) {
+	.preview-window h2{
+		font-size: .6vw;
+		padding: 12px;
+	}
+}
+
+.preview-message{
+	color: red;
+	font-weight: bold;
+	padding: 10px;
+}

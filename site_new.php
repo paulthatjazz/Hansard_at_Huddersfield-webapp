@@ -406,22 +406,25 @@ session_start();
                 <div class="col-1">
                     <!--  -->
                     <div class="preview-window active-mode" id="line-graph">
-                        <h2>DISTRIBUTION</h2>
+                        <h2>Distribution</h2>
+
+
+                        <span class="preview-message"></span>
                     </div>
                     <div class="preview-window" id="word-cloud">
-                        <h2>WORD CLOUD</h2>
+                        <h2>Word Cloud</h2>
 
-                        Under construction
+                        <span class="preview-message">Under construction</span>
                     </div>
                     <div class="preview-window" id="keywords">
-                        <h2>KEYWORDS</h2>
+                        <h2>Keywords</h2>
 
-                        Under construction
+                        <span class="preview-message">Under construction</span>
                     </div>
                     <div class="preview-window" id="collocation">
-                        <h2>COLLOCATION</h2>
+                        <h2>Collocation</h2>
 
-                        Under construction
+                        <span class="preview-message">Under construction</span>
                     </div>
                 </div>
 

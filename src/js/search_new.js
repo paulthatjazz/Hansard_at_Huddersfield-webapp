@@ -22,6 +22,13 @@ const HOUSE_COMMONS = "commons";
 const HOUSE_BOTH = "both";
 const STATE_ON = "on";
 
+const MODE_LINE_GRAPH = "line-graph";
+const MODE_WORD_CLOUD = "word-cloud";
+const MODE_KEYWORDS = "keywords";
+const MODE_COLLOCATION = "collocation";
+
+var SELECTED_MODE = MODE_LINE_GRAPH;
+
 var parameters = {};
 
 var shared = false;
@@ -283,7 +290,34 @@ $(".selections").click((x)=>{
 
 })
 
+$(".preview-window").click((target)=>{
+  let source = target.target.id;
+
+  change_mode(source);
+
+})
+
 init();
+
+function change_mode(active_mode){
+
+  //modes under construction are blocked for now.
+  if(active_mode == "" || active_mode == MODE_KEYWORDS || active_mode == MODE_COLLOCATION) return;
+
+  SELECTED_MODE = active_mode;
+
+  $(".preview-window").removeClass("active-mode");
+  $("#"+active_mode).addClass("active-mode");
+
+  update_searchbox();
+
+}
+
+function update_searchbox(){
+
+  console.log(SELECTED_MODE);
+
+}
 
 function saveResultsAsExcel() {
   data = $($("#tsv-excel").attr("table")).bootstrapTable("getSelections");
@@ -1486,10 +1520,9 @@ function update_para_tabs(paras){
     $("#tabs-terms").html("");
     $('.terms-list').html("");
 
-    if(paras.length > 0){
+    if(num_queries == 0){
         $('.terms-listed').addClass("hide")
     }else{
-        
         $('.terms-listed').removeClass("hide")
     }
 
@@ -1546,6 +1579,7 @@ function reset_parameters(){
 
     $('.distribution').hide();
     $('.contribution').hide();
+    $('.text').hide();
 
     $('#contrib-tabs').html("");
 
