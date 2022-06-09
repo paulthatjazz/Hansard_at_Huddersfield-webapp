@@ -42,10 +42,11 @@
 	border-radius: 1.4pt;
 	margin-bottom: 10px;
 	cursor: pointer;
+	overflow: hidden;
 }
 
 .preview-window:hover {
-	border: #44795b solid 2px;
+	border: #44795b solid 1px;
 }
 
 .adv-check {
@@ -669,6 +670,8 @@
     text-align: center;
     font-size: 1.2vw;
     padding: 8px;
+	position: relative;
+	z-index: 3;
 }
 
 @media screen and (min-width: 1001px) {
@@ -683,3 +686,30 @@
 	font-weight: bold;
 	padding: 10px;
 }
+
+
+.mini-loader {
+	border: 16px solid #f3f3f3; /* Light grey */
+	border-top: 16px solid #7dba97; 
+	border-radius: 50%;
+	width: 5vw;
+	height: 5vw;
+	animation: spin 3s linear infinite;
+
+	margin-left: 27%;
+	margin-top: 15%;
+}
+
+#wc-preview{
+	width: 100%;
+	height: 100%;
+	
+    margin: -50%;
+	display: none;
+}
+
+.wordcloud{
+	display: none;
+}
+
+

@@ -140,7 +140,7 @@ if (isset($_GET['action'])) {
         "SELECT word, sum(hits) as freq " .
         "FROM ( " .
         "SELECT word, hits " .
-        "from hansard_" . $house . "_single_word_year_500 " .
+        "from hansard_precomp.hansard_" . $house . "_single_word_year_500 " .
         "where year in (" . $years . ") " .
         "and word not in (" . $stopwords_list . ")" .
         ") x group by word order by freq desc limit 500";
@@ -151,12 +151,12 @@ if (isset($_GET['action'])) {
         "SELECT word, sum(hits) as freq " .
         "FROM ( " .
         "SELECT word, hits " .
-        "from hansard_commons_single_word_year_500 " .
+        "from hansard_precomp.hansard_commons_single_word_year_500 " .
         "where year in (" . $years . ") " .
         "and word not in (" . $stopwords_list . ")" .
         "UNION ALL " .
         "SELECT word, hits " .
-        "from hansard_lords_single_word_year_500 " .
+        "from hansard_precomp.hansard_lords_single_word_year_500 " .
         "where year in (" . $years . ") " .
         "and word not in (" . $stopwords_list . ")" .
         ") x group by word order by freq desc limit 500";
@@ -182,12 +182,12 @@ if (isset($_GET['action'])) {
 
           "select frequency, x.year as myear, total from (" .
           "select sum(hits) as frequency, year " .
-          "from hansard_" . $house . "_single_word_year " .
+          "from hansard_precomp.hansard_" . $house . "_single_word_year " .
           "where word like '" . $cleaned_term . "' " .
           "AND year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
           "group by year " .
           "order by year ) x " .
-          "JOIN (select year, total from hansard_" . $house . "_total_word_year) as y ON y.year = x.year " .
+          "JOIN (select year, total from hansard_precomp.hansard_" . $house . "_total_word_year) as y ON y.year = x.year " .
           "order by x.year asc";
       } else {
 
@@ -195,13 +195,13 @@ if (isset($_GET['action'])) {
           "SELECT sum(frequency) as frequency, total as 0, myear " .
           "FROM ( " .
           "select sum(hits) as frequency, year as myear, total " .
-          "from hansard_commons_single_word_year " .
+          "from hansard_precomp.hansard_commons_single_word_year " .
           "where word like '" . $cleaned_term . "' " .
           "AND year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
           "group by year " .
           "UNION ALL " .
           "select sum(hits) as frequency, year as myear " .
-          "from hansard_lords_single_word_year " .
+          "from hansard_precomp.hansard_lords_single_word_year " .
           "where word like '" . $cleaned_term . "' " .
           "AND year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
           "group by year " .
@@ -218,9 +218,9 @@ if (isset($_GET['action'])) {
         "SELECT sum(total) as total, year " .
         "FROM " .
         "( " .
-        "select total, year from hansard_commons_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
+        "select total, year from hansard_precomp.hansard_commons_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
         "UNION ALL " .
-        "select total, year from hansard_lords_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
+        "select total, year from hansard_precomp.hansard_lords_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
         ") " .
         "x " .
         "group by year ORDER BY year";

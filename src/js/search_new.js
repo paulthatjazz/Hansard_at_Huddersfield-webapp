@@ -177,6 +177,8 @@ $('input[name="commons-check"]').change(()=>{
       get_distribution(true);
     }
 
+    generate_wc()
+
 })
 $('input[name="lords-check"]').change(()=>{
 
@@ -195,6 +197,8 @@ $('input[name="lords-check"]').change(()=>{
     if(num_queries >0){
       get_distribution(true);
     }
+
+    generate_wc()
 
 })
 
@@ -291,7 +295,7 @@ $(".selections").click((x)=>{
 })
 
 $(".preview-window").click((target)=>{
-  let source = target.target.id;
+  let source = target.currentTarget.id; 
 
   change_mode(source);
 
@@ -315,7 +319,22 @@ function change_mode(active_mode){
 
 function update_searchbox(){
 
-  console.log(SELECTED_MODE);
+  switch (SELECTED_MODE) {
+    case MODE_WORD_CLOUD:
+      $(".sb-accordion").hide();
+      $(".wordcloud").show();
+      accordion_control(".wordcloud", false)
+      break;
+    
+    case MODE_LINE_GRAPH:
+      $(".sb-accordion").show();
+      $(".wordcloud").hide();
+      accordion_control(".sb-accordion", false)
+
+  
+    default:
+      break;
+  }
 
 }
 
@@ -877,6 +896,8 @@ function updateDates(){
       update_mode = true;
       $("#search-btn").html("Update");
     }
+
+    if(validated) generate_wc();
 }
 
 function generateId(length){
@@ -901,7 +922,6 @@ function accordion_control(target, refresh){
 function get_house(){
     let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
     let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
-
 
     selected_house = (commons == true) && (lords == true) ? HOUSE_BOTH : (commons == true ? HOUSE_COMMONS : HOUSE_LORDS);
 
@@ -1001,7 +1021,7 @@ function get_distribution(refresh){
 
             $('.distribution .nvd3-svg').remove()
 
-            accordion_control(".distribution");
+            accordion_control(".distribution", false);
 
             $('.distribution-loader').show();
 

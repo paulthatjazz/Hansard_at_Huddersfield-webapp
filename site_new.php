@@ -107,7 +107,7 @@ session_start();
                     <div class="accordion" id="accordionExample">
 
                         <!--  Search Box  -->
-                        <div class="accordion-item">
+                        <div class="accordion-item sb-accordion">
                             <h2 class="accordion-header">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -118,12 +118,15 @@ session_start();
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body search-box">
-                                    <form>
+
+                                    <form id="line-graph-sb">
+
                                         <div class="form-group">
                                             <input autocomplete="off" id="term" class="form-control form-control-lg"
                                                 type="text" placeholder="Search term...">
                                             <div id="validation-text" class="validation">
                                             </div>
+
 
                                         </div>
 
@@ -295,9 +298,29 @@ session_start();
                                             </span>
                                         </div>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
+
+                        <div class="accordion-item wordcloud">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    <div class="col-6">Word Cloud</div>
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div id="wc-full">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                         <!--  Distribution Box  -->
                         <div class="accordion-item distribution">
@@ -409,22 +432,27 @@ session_start();
                         <h2>Distribution</h2>
 
 
-                        <span class="preview-message"></span>
+                        <div class="mini-loader"></div>
                     </div>
                     <div class="preview-window" id="word-cloud">
                         <h2>Word Cloud</h2>
+                        <div id="wc-preview"></div>
+                        <div class="mini-loader wc-loader"></div>
 
-                        <span class="preview-message">Under construction</span>
                     </div>
                     <div class="preview-window" id="keywords">
                         <h2>Keywords</h2>
 
-                        <span class="preview-message">Under construction</span>
+                        <div class="mini-loader" hidden></div>
+                        <span class="preview-message"> Under Construction</span>
+
                     </div>
                     <div class="preview-window" id="collocation">
                         <h2>Collocation</h2>
 
-                        <span class="preview-message">Under construction</span>
+                        <div class="mini-loader" hidden></div>
+                        <span class="preview-message"> Under Construction</span>
+
                     </div>
                 </div>
 
@@ -446,6 +474,7 @@ session_start();
 
 </body>
 
+<script src="src\js\explore_new.js"></script>
 <script src="src\js\search_new.js"></script>
 <script src="src\js\table-config.js?"></script>
 
