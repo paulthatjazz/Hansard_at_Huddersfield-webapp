@@ -50,6 +50,7 @@ if (isset($_GET['action'])) {
     $rows = search::contribution($dateFrom, $dateTo, $_GET['parameters'], $house, $_GET['action'], $_GET['count'], $_GET['offset'], $sort, $_GET['order'], $_GET['limit'], $_GET['context']);
 
     $var2 = json_encode($rows);
+
     echo $var2;
 
   } else if ($_GET['action'] == "contribution-advanced") {
@@ -84,6 +85,10 @@ if (isset($_GET['action'])) {
     $rows = search::contribution($dateFrom, $dateTo, $_GET['parameters'], $house, $_GET['kwic'], $_GET['count'], $_GET['offset'], $sort, $_GET['order'], $_GET['limit'], $_GET['context'], TRUE);
     
     $var2 = json_encode($rows);
+
+    error_log(serialize($rows));
+
+
     echo $var2;
   }
 } else if ($_POST['action'] == "contribution-expand") {
@@ -204,8 +209,9 @@ if (isset($_GET['action'])) {
   
 } else if ($_POST['action'] == "save_documents") {
 
+  $q = str_replace("#345", "'", $_POST['query']);
 
-  $sql = search::getDocumentsById($house, $_POST['query']);
+  $sql = search::getDocumentsById($house, $q);
 
   $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
 

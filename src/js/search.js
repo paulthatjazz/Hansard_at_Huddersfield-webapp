@@ -3317,9 +3317,9 @@ function saveResultsAsZip(data, offset) {
     $.each(data[i], function(index, value) {
       if (index == "document_id") {
         if (ids_str_query == "") {
-          ids_str_query = "'" + value + "'";
+          ids_str_query = "#345" + value + "#345";
         } else {
-          ids_str_query += ",'" + value + "'";
+          ids_str_query += ",#345" + value + "#345";
         }
       }
     });
