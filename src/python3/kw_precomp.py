@@ -93,7 +93,7 @@ conn = psycopg2.connect(
     database = "hansard",
     user= "hansard",
     password = "hansard",
-    port = "5433")
+    port = "5432")
 
 
 curs = conn.cursor()
