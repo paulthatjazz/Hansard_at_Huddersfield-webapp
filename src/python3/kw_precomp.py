@@ -104,9 +104,9 @@ for period in periods:
 
     print("{0} gov, {1} to {2}".format(period["title"], period["dateFrom"], period["dateTo"]))
 
-    sql = "SELECT contributiontext FROM hansard_commons.commons WHERE sittingday BETWEEN '{0}'::DATE AND '{1}'::DATE LIMIT 20".format(period["dateFrom"], period["dateTo"])
+    sql = "SELECT contributiontext FROM hansard_commons.commons WHERE sittingday BETWEEN '{0}'::DATE AND '{1}'::DATE".format(period["dateFrom"], period["dateTo"])
     
-    sql2 = "SELECT contributiontext FROM hansard_lords.lords WHERE sittingday BETWEEN '{0}'::DATE AND '{1}'::DATE LIMIT 20".format(period["dateFrom"], period["dateTo"])
+    sql2 = "SELECT contributiontext FROM hansard_lords.lords WHERE sittingday BETWEEN '{0}'::DATE AND '{1}'::DATE".format(period["dateFrom"], period["dateTo"])
 
     curs.execute(sql)
 
