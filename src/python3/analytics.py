@@ -25,18 +25,20 @@ curs = conn.cursor()
 
 for f in fields:
 
-    curs.execute("SELECT * FROM (SELECT x."+f+", sum(x.n) as count FROM (SELECT " + f + ", count(*) as n FROM hansard_analytics.query WHERE searchdate BETWEEN '" +  dateFrom + "'::DATE AND '" + dateTo + "'::DATE AND "+f+" is not null GROUP BY id, "+f+") as x GROUP BY "+f+") as y ORDER BY count desc")
+    print("SELECT * FROM (SELECT x."+f+", sum(x.n) as count FROM (SELECT " + f + ", count(*) as n FROM hansard_analytics.query WHERE searchdate BETWEEN '" +  dateFrom + "'::DATE AND '" + dateTo + "'::DATE AND "+f+" is not null GROUP BY id, "+f+") as x GROUP BY "+f+") as y ORDER BY count desc")
 
-    rows = curs.fetchall()
+    #curs.execute("SELECT * FROM (SELECT x."+f+", sum(x.n) as count FROM (SELECT " + f + ", count(*) as n FROM hansard_analytics.query WHERE searchdate BETWEEN '" +  dateFrom + "'::DATE AND '" + dateTo + "'::DATE AND "+f+" is not null GROUP BY id, "+f+") as x GROUP BY "+f+") as y ORDER BY count desc")
+    
+    #rows = curs.fetchall()
 
-    with open(f+"s_"+target+"_"+dateFrom+"-"+dateTo+".csv", mode='w', newline='') as csvfile:
-        fieldNames = [f, "count"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
-
-        writer.writeheader()
-        for r in rows:
-            row = {f: str(r[0]), "count": int(r[1])}
-            writer.writerow(row)
+    #with open(f+"s_"+target+"_"+dateFrom+"-"+dateTo+".csv", mode='w', newline='') as csvfile:
+     #   fieldNames = [f, "count"]
+      #  writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
+#
+ #       writer.writeheader()
+   #     for r in rows:
+  #          row = {f: str(r[0]), "count": int(r[1])}
+    #        writer.writerow(row)
 
 
 conn.close()

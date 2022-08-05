@@ -6,14 +6,16 @@
  */
 class DBCxn {
    // What DSN to connect to?
-   public static $dsn = 'pgsql:host=localhost;';
+   public static $dsn = 'pgsql:host=localhost;port=5433';
    public static $user = "hansard";
    public static $pass = "hansard";
    public static $driverOpts = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
    );
 
+   //turn off search recording, recommended False in test environment
    public static $analytics = True;
+
     // Internal variable to hold the connection
     private static $db;
     // No cloning or instantiating allowed

@@ -701,15 +701,105 @@
 }
 
 #wc-preview{
-	width: 100%;
-	height: 100%;
-	
     margin: -50%;
 	display: none;
 }
 
-.wordcloud{
+#lg-preview{
+	background-image: url("img/no-data-linechart.png");
+	height: 100%;
+    width: 100%;
+    background-size: cover;
+	margin-top: -5%;
+}
+
+#kw-preview{
+	
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+.wordcloud,
+.keyword{
 	display: none;
 }
 
+.corpus-col{
+	text-align: center;
+}
 
+.corpus-col i{
+	padding-top: 10%;
+	font-size: 32px;
+	cursor: pointer;
+}
+
+.corpus-col i:hover{
+	color: #44795b;
+}
+
+.house-kw{
+	padding-top: 5%;
+}
+
+.dropdown-toggle{
+	background-color: #44795b;
+}
+
+.node{
+	cursor: pointer;
+}
+
+.kw_paras,
+.wc_paras{
+    padding-top: 5%;
+}
+
+.kw_paras_tl,
+.wc_paras_tl{
+	
+    height: 12vh;
+}
+
+#refresh-wc{
+	cursor: pointer;
+	font-size: 24px;
+	background-color: #5c636a;
+	color: white;
+	border-radius: 4px;
+	padding: 6px;
+}
+
+.wc-toolbar{
+	padding-bottom: 1%;
+}
+
+.Conservative{
+	color: blue;
+}
+
+.Labour{
+	color: red;
+}
+
+.LibDem,
+.Liberal{
+	color: goldenrod;
+}
+
+.Whig{
+	color: rgb(255, 184, 53);
+}
+
+.Coalition{
+	color: #495057;
+}
+
+.Tory{
+	color: lightskyblue;
+}
+
+.dropdown-menu {
+    max-height: 280px;
+    overflow-y: auto;
+}

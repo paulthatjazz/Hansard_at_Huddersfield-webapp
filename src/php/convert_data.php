@@ -1291,8 +1291,6 @@ class convert_data
 		}
 
 
-
-
 		$o = (object)[
 			'booleanOperaton' => $isBoolOp,
 			'term' => $cq,
@@ -1302,6 +1300,7 @@ class convert_data
 			'highlightterm' => $regHighlight,
 			'n' => sizeof(explode(" ", $cq))
 		];
+
 
 		return $o;
 	}

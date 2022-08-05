@@ -53,11 +53,11 @@
 
             $sql .= " ORDER BY c." . $sort . " " . $order . " LIMIT " . $limit . " OFFSET " . $offset . ";";
 
-
-
+            
             $total = self::contributionTotal($count, $offset, $house, $termdata, $dateFrom, $dateTo, $desc, $member);
             
             $rows = self::query_no_parameters($sql, "dbname=hansard");
+            
 
             if ($kwic == "contribution" || $kwic == "contribution_nonRank" || $kwic == "false") 
             {
@@ -299,7 +299,7 @@
                     if($monthly == TRUE)
                     {
                        // might require a table for monthly contributions if computation time becomes a problem 
-                        $totalcontrib = "select year, 0 as frequency, total from "
+                        $totalcontrib = "select cast(year as text), 0 as frequency, total from "
                         . "( "
                         . " SELECT substring(sittingday::TEXT,0,8) as year, count(*) as total "
                         . " FROM hansard_" . $house . "." . $house
@@ -307,7 +307,7 @@
                         . " group by year ) s ) x ";
 
                     }else{
-                        $totalcontrib = "select year, 0 as frequency, total from hansard_precomp.hansard_" 
+                        $totalcontrib = "select cast(year as text), 0 as frequency, total from hansard_precomp.hansard_" 
                         . $house . "_total_contributions_year WHERE year BETWEEN cast(substring('" . $dateFrom . "'::text,0,5) as integer) AND cast(substring('" 
                         . $dateTo . "'::text,0,5) as integer)	" 
                         . ") x "; 

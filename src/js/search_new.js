@@ -177,12 +177,13 @@ $('input[name="commons-check"]').change(()=>{
       get_distribution(true);
     }
 
+    update_house_wc();
+
     generate_wc()
 
 })
 $('input[name="lords-check"]').change(()=>{
 
-    
     let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
     let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
 
@@ -197,6 +198,8 @@ $('input[name="lords-check"]').change(()=>{
     if(num_queries >0){
       get_distribution(true);
     }
+
+    update_house_wc();
 
     generate_wc()
 
@@ -271,7 +274,7 @@ $(".selections").click((x)=>{
     target_table = "#results_table";
   }
 
-  if(!kwic_toggle){
+  if(!kwic_toggle || parameters[table_num-1].term == ""){
     data = $(target_table).bootstrapTable("getSelections");
     offset =
       ($(target_table).bootstrapTable("getOptions").pageNumber -
@@ -295,6 +298,7 @@ $(".selections").click((x)=>{
 })
 
 $(".preview-window").click((target)=>{
+
   let source = target.currentTarget.id; 
 
   change_mode(source);
@@ -306,7 +310,7 @@ init();
 function change_mode(active_mode){
 
   //modes under construction are blocked for now.
-  if(active_mode == "" || active_mode == MODE_KEYWORDS || active_mode == MODE_COLLOCATION) return;
+  if(active_mode == "" || active_mode == MODE_COLLOCATION) return;
 
   SELECTED_MODE = active_mode;
 
@@ -317,19 +321,53 @@ function change_mode(active_mode){
 
 }
 
+function update_house_wc(){
+  switch (selected_house) {
+      case "commons":
+          $('input[name="commons-check-wc"]').prop('checked', true)
+          $('input[name="lords-check-wc"]').prop('checked', false)
+          break;
+      case "lords":
+          $('input[name="commons-check-wc"]').prop('checked', false)
+          $('input[name="lords-check-wc"]').prop('checked', true)
+          break;
+      case "both":
+          $('input[name="commons-check-wc"]').prop('checked', true)
+          $('input[name="lords-check-wc"]').prop('checked', true)
+          break;
+      default:
+          break;
+  }
+}
+
+
 function update_searchbox(){
 
   switch (SELECTED_MODE) {
     case MODE_WORD_CLOUD:
       $(".sb-accordion").hide();
       $(".wordcloud").show();
+      $(".keyword").hide();
+
       accordion_control(".wordcloud", false)
       break;
     
     case MODE_LINE_GRAPH:
       $(".sb-accordion").show();
       $(".wordcloud").hide();
+      $(".keyword").hide();
+
       accordion_control(".sb-accordion", false)
+      break;
+
+    case MODE_KEYWORDS:
+      $(".sb-accordion").hide();
+      $(".wordcloud").hide();
+      $(".keyword").show();
+
+      
+      accordion_control(".keyword", false)
+      break;
 
   
     default:
@@ -769,9 +807,6 @@ function set_max_min_dates(){
 
                     maxDateY = maxDateAsDate.getFullYear();
 
-                    //TO DO - ERROR MSG
-
-                    //TO DO - UPDATE MSG
                 }
             },
             complete: (status)=>{
@@ -994,7 +1029,7 @@ function get_distribution(refresh){
 
     let action = advanced_mode ? "distribution-advanced" : "distribution";
 
-    let flag_monthly_based = (dateTo.substring(0, 4) - dateFrom.substring(0, 4) <= 5);
+    let flag_monthly_based = (dateTo.substring(0, 4) - dateFrom.substring(0, 4) <= 5 && advanced_mode);
 
     flag_normalised = true; 
 
@@ -1032,7 +1067,7 @@ function get_distribution(refresh){
         },
         success: (data, status) =>{
 
-            if(data != null)
+            if(data != null && isJson(data))
             {
                 
                 $('.distribution-loader').hide();
@@ -1044,6 +1079,10 @@ function get_distribution(refresh){
 
                 load_distribution_graph(data_json, flag_monthly_based);
 
+            }else{
+              error_handler("Distribution", "An error has occurred and the query has returned invalid data. If this issue persists, please contact us with reference to this error message.")
+
+              reset_parameters();
             }
             
         },
@@ -1223,8 +1262,12 @@ function contribution(dates, refresh){
     }else
     {
 
+      var showToggleKwic = false;
+
         for (let x = 0; x < num_queries; x++)
         {
+
+            showToggleKwic = ((parameters[x] != "") || (showToggleKwic == true))
 
             if(!refresh){
 
@@ -1232,7 +1275,7 @@ function contribution(dates, refresh){
 
               $('#contrib-tabs').append('<li class="nav-item"><a id="tab'+(x+1)+'" class="nav-link '+
               active+'" onclick="toggle_text('+x+')">'+
-              parameters[x].term+'  <span style="background-color: '+parameters[x].colour+';" class="dot"></span>'
+              parameters[x].query+'  <span style="background-color: '+parameters[x].colour+';" class="dot"></span>'
               +'<div class="contribution-hits inline-hits"><span class="contrib-count" id="contrib-'+ x +'"></span><span class="hits-count" id="hits-'+ x +'"></span></div></a></li>');
 
             }
@@ -1243,6 +1286,13 @@ function contribution(dates, refresh){
         }
 
         $("#comp-"+(selected_table+1)).show();
+
+        
+      if(showToggleKwic){
+        $('.kwic-button').show();
+      }else{
+        $('.kwic-button').hide();
+      }
     }
 }
 
@@ -1267,7 +1317,7 @@ function get_contribution_compare(dates, parameter, num){
     
     let action = advanced_mode ? "contribution-advanced" : "contribution";
 
-    if(kwic_toggle){action+="-kwic";}
+    if(kwic_toggle && parameter.term != ""){action+="-kwic";}
 
     let formatDate = advanced_mode ? "year" : "year";
 
@@ -1329,7 +1379,7 @@ function get_contribution_compare(dates, parameter, num){
               context: context,
               count: count_of_documents_compare[num],
               formatDate: formatDate,
-              kwic: (kwic_toggle ? "true" : "false")
+              kwic: ((kwic_toggle && parameter.term != "") ? "true" : "false")
           };
       },
       url: "src/php/search_functions.php",
@@ -1616,7 +1666,13 @@ function get_contribution(){
 
     let formatDate = advanced_mode ? "year" : "year";
 
-    if(kwic_toggle){action+="-kwic";}
+    if(parameters[0].term == ''){
+      $('.kwic-button').hide();
+    }else{
+      $('.kwic-button').show();
+    }
+
+    if(kwic_toggle && parameters[0].term != ""){action+="-kwic";}
 
     $("html, body").animate(
         {
@@ -1682,7 +1738,7 @@ function get_contribution(){
                     context: context,
                     count: count_of_documents,
                     formatDate: formatDate,
-                    kwic: (kwic_toggle ? "true" : "false")
+                    kwic: ((kwic_toggle && parameters[0].term != "") ? "true" : "false")
                 };
             },
             url: "src/php/search_functions.php",
