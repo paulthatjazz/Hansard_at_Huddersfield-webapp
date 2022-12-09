@@ -7,8 +7,8 @@
 class DBCxn {
    // What DSN to connect to?
    public static $dsn = 'pgsql:host=localhost;port=5432';
-   public static $user = "hansard";
-   public static $pass = "hansard";
+   //public static $user = "hansard";
+   //public static $pass = "hansard";
    public static $driverOpts = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
    );
@@ -27,7 +27,8 @@ class DBCxn {
       try {
         // Connect if not already connected
            if (is_null(self::$db)) {
-              self::$db = new PDO($dsn_new, self::$user, self::$pass,
+              $parsed_ini = parse_ini_file("dbconfig.ini");
+              self::$db = new PDO($dsn_new, $parsed_ini['user'], $parsed_ini['password'],
                                 self::$driverOpts);
               self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
            }

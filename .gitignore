@@ -1,0 +1,6 @@
+/bin/
+/src/php/db/dbconfig.ini
+/.settings/
+/.classpath
+/.project
+/.pydevproject
