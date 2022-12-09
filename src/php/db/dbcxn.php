@@ -7,8 +7,6 @@
 class DBCxn {
    // What DSN to connect to?
    public static $dsn = 'pgsql:host=localhost;port=5432';
-   //public static $user = "hansard";
-   //public static $pass = "hansard";
    public static $driverOpts = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
    );
