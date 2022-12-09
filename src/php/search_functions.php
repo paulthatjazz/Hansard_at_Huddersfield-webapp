@@ -50,6 +50,7 @@ if (isset($_GET['action'])) {
     $rows = search::contribution($dateFrom, $dateTo, $_GET['parameters'], $house, $_GET['action'], $_GET['count'], $_GET['offset'], $sort, $_GET['order'], $_GET['limit'], $_GET['context']);
 
     $var2 = json_encode($rows);
+
     echo $var2;
 
   } else if ($_GET['action'] == "contribution-advanced") {
@@ -84,12 +85,19 @@ if (isset($_GET['action'])) {
     $rows = search::contribution($dateFrom, $dateTo, $_GET['parameters'], $house, $_GET['kwic'], $_GET['count'], $_GET['offset'], $sort, $_GET['order'], $_GET['limit'], $_GET['context'], TRUE);
     
     $var2 = json_encode($rows);
+
     echo $var2;
   }
 } else if ($_POST['action'] == "contribution-expand") {
 
-  $sql = "SELECT id, sittingday, contributiontext, member, href as url FROM hansard_" . $_POST['row_house'] . "." . $_POST['row_house'] . " WHERE id='" . $_POST['id'] . "'";
-
+  if($_POST['row_house'] == "-"){
+    $sql = "SELECT id, sittingday, contributiontext, member, href as url FROM hansard_commons.commons WHERE id='" . $_POST['id'] . "' 
+    UNION
+    SELECT id, sittingday, contributiontext, member, href as url FROM hansard_lords.lords WHERE id='" . $_POST['id'] . "'";
+  }else{
+    $sql = "SELECT id, sittingday, contributiontext, member, href as url FROM hansard_" . $_POST['row_house'] . "." . $_POST['row_house'] . " WHERE id='" . $_POST['id'] . "'";
+  }
+  
   $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
 
   $var = convert_data::format_contributionOne($rows, $_POST['query']);
@@ -204,8 +212,9 @@ if (isset($_GET['action'])) {
   
 } else if ($_POST['action'] == "save_documents") {
 
+  $q = str_replace("#345", "'", $_POST['query']);
 
-  $sql = search::getDocumentsById($house, $_POST['query']);
+  $sql = search::getDocumentsById($house, $q);
 
   $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
 

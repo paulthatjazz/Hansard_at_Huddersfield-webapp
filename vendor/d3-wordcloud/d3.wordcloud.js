@@ -2,8 +2,9 @@
 // requires https://github.com/jasondavies/d3-cloud
 // based on https://github.com/shprink/d3js-wordcloud
 (function() {
-  function wordcloud() {
-    var selector = "#word_cloud",
+  function wordcloud(target) {
+    
+    var selector = target,
       element = d3.select(selector),
       transitionDuration = 200,
       scale = "sqrt",
@@ -16,7 +17,7 @@
 
     wordcloud.element = function(x) {
       if (!arguments.length) return element;
-      element = x == null ? "#word_cloud" : x;
+      element = x == null ? target : x;
       return wordcloud;
     };
 

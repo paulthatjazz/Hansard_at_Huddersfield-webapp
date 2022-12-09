@@ -1293,7 +1293,7 @@ function prepareAdvancedQuery() {
 
     if (parameters_count == 1) {
       if (parameter_term) {
-        parameters_vars = "Term: " + term;
+        parameters_vars = "Term: " + term.replaceAll('"','');
 
         if (
           selected_semantic_tags.length > 0 &&
@@ -1388,7 +1388,7 @@ function prepareAdvancedQuery() {
       parameters_vars = "";
 
       if (parameter_term) {
-        parameters_vars = "Term: " + term;
+        parameters_vars = "Term: " + term.replaceAll('"','');
       }
 
       if (parameter_description) {
@@ -2829,6 +2829,7 @@ function getDistribution() {
         data_json = JSON.parse(data);
         freq_line_data = data_json;
 
+
         nv.addGraph(function() {
           chart = nv.models.lineChart().options({
             transitionDuration: 2000,
@@ -3034,7 +3035,7 @@ function addCompareTerm(term) {
 
     parameter_basic[num_queries] = {
       term: term,
-      query: term,
+      query: term.replaceAll('"',''),
       searchId: searchId,
       sessionId: sessionId,
       colour: selected_colour
@@ -3066,7 +3067,7 @@ function addCompareTermAdvanced(query) {
       flag_repeated = false;
 
       for (var i = 0; i < num_queries; i++) {
-        if (parameter_advanced[i]["query"] == query) {
+        if (parameter_advanced[i]["query"] == query.replaceAll('"','')) {
           flag_repeated = true;
         }
       }
@@ -3316,9 +3317,9 @@ function saveResultsAsZip(data, offset) {
     $.each(data[i], function(index, value) {
       if (index == "document_id") {
         if (ids_str_query == "") {
-          ids_str_query = "'" + value + "'";
+          ids_str_query = "#345" + value + "#345";
         } else {
-          ids_str_query += ",'" + value + "'";
+          ids_str_query += ",#345" + value + "#345";
         }
       }
     });
@@ -3406,6 +3407,8 @@ function searchContribution(data_point, c_flag, func) {
       selected_submode = "basic"
     }
   }
+
+  console.log({c_flag, func});
 
   count_flag = c_flag;
 

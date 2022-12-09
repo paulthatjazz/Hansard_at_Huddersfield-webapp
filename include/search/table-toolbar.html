@@ -1,0 +1,71 @@
+
+        <div class="form-row align-items-center table-toolbar">
+          
+            <div class="col-3"
+            style="height: 50px;"></div>
+            <div class="col-2 my-1">
+              <div class="custom-control custom-switch help" id="tooltip_1_12">
+                <input
+                  type="checkbox"
+                  class="custom-control-input convert-rank compare"
+                  id="compareRank"
+                />
+                <label class="custom-control-label" for="compareRank"
+                  >Order by relevance</label
+                >
+              </div>
+            </div>
+            <div class="col-2 my-1">
+              <div class="custom-control custom-switch help" id="tooltip_7_1">
+                <input
+                  type="checkbox"
+                  class="custom-control-input convert-title compare"
+                  id="compareTitle"
+                />
+                <label class="custom-control-label" for="compareTitle"
+                  >Show debate title</label
+                >
+              </div>
+            </div>
+  
+            <div class="col-2 my-1 kwic-button">
+              <div class="custom-control custom-switch help" id="tooltip_1_11">
+                <input
+                  type="checkbox"
+                  class="custom-control-input convert-kwic-doc compare"
+                  id="compareKwic"
+                />
+                <label class="custom-control-label" for="compareKwic"
+                  >KWIC format</label
+                >
+              </div>
+            </div>
+  
+            <div class="col-1.5 my-1">
+              <form
+                id="tooltip_2_1c"
+                class="form-inline help context-word-container"
+              >
+                <div class="input-group">
+                  <input
+                    type="number"
+                    min="10"
+                    max="300"
+                    class="form-control context-word"
+                    data-provide="typeahead"
+                    value="10"
+                  />
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">words</div>
+                  </div>
+                  <span class="update-kwic compare mx-2 invisible"
+                    ><i
+                      class="fas
+                      fa-sync-alt fa-lg"
+                      style="color: #339af0;"
+                    ></i
+                  ></span>
+                </div>
+              </form>
+            </div>
+          </div>

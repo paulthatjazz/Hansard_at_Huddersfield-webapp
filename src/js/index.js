@@ -109,7 +109,7 @@ $(function() {
     } else if ($(this).data("function") == "brochure-teach") {
       window.open("https://cloud.3dissue.com/18743/41457/106040/TEACHERS/index.html?r=59", "_blank");
     }else if ($(this).data("function") == "user-guide"){
-      window.open("pdf/Hansard at Huddersfield User Guide - Version May 2020_Final.pdf", "_blank");
+      window.open("pdf/Hansard at Huddersfield User Guide - Version February 2022.pdf", "_blank");
     } else {
 
       $("#" + $(this).data("function")).show();

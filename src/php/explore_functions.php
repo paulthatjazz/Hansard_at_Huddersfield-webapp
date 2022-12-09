@@ -102,6 +102,32 @@ if (isset($_GET['action'])) {
     $var = convert_data::gen_json_documents($rows, $_GET['word'], $total);
     $var2 = json_encode($var);
     echo $var2;
+  }else if($_GET['action'] == "periods"){
+
+    $sql = "SELECT * FROM hansard_precomp.hansard_kw_period ORDER BY id";
+
+    $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+    
+    echo json_encode($rows);
+
+  }else if($_GET['action'] == "bubble_new"){
+
+    $parameters = $_GET['params'];
+
+    $N = [1, 100, 1000];  // change N to change ranking order: 1000 -> common, middling, obscure; 100 -> middling, common, obscure; 1 -> obsecure, middling, common
+
+    $sql = "SELECT compkw.word, ((targkw.freq_" . $parameters['target_house'] .  " + " . $N[2] . ") / (compkw.freq_" . $parameters['comp_house']. " + " . $N[2] . ")) as score FROM
+    hansard_precomp.hansard_kw_period compkwp 
+    INNER JOIN hansard_precomp.hansard_kw_period targkwp ON targkwp.id = " . $parameters['target'] . "
+    INNER JOIN hansard_precomp.hansard_kw_word compkw ON compkw.period_id = compkwp.id
+    INNER JOIN hansard_precomp.hansard_kw_word targkw ON targkw.period_id = targkwp.id AND targkw.word = compkw.word
+    WHERE compkwp.id = " . $parameters['comp'] .
+    "  ORDER BY score desc";
+
+    $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+
+    echo json_encode($rows);
+
   }
 } else {
 
@@ -140,7 +166,7 @@ if (isset($_GET['action'])) {
         "SELECT word, sum(hits) as freq " .
         "FROM ( " .
         "SELECT word, hits " .
-        "from hansard_" . $house . "_single_word_year_500 " .
+        "from hansard_precomp.hansard_" . $house . "_single_word_year_500 " .
         "where year in (" . $years . ") " .
         "and word not in (" . $stopwords_list . ")" .
         ") x group by word order by freq desc limit 500";
@@ -151,12 +177,12 @@ if (isset($_GET['action'])) {
         "SELECT word, sum(hits) as freq " .
         "FROM ( " .
         "SELECT word, hits " .
-        "from hansard_commons_single_word_year_500 " .
+        "from hansard_precomp.hansard_commons_single_word_year_500 " .
         "where year in (" . $years . ") " .
         "and word not in (" . $stopwords_list . ")" .
         "UNION ALL " .
         "SELECT word, hits " .
-        "from hansard_lords_single_word_year_500 " .
+        "from hansard_precomp.hansard_lords_single_word_year_500 " .
         "where year in (" . $years . ") " .
         "and word not in (" . $stopwords_list . ")" .
         ") x group by word order by freq desc limit 500";
@@ -182,12 +208,12 @@ if (isset($_GET['action'])) {
 
           "select frequency, x.year as myear, total from (" .
           "select sum(hits) as frequency, year " .
-          "from hansard_" . $house . "_single_word_year " .
+          "from hansard_precomp.hansard_" . $house . "_single_word_year " .
           "where word like '" . $cleaned_term . "' " .
           "AND year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
           "group by year " .
           "order by year ) x " .
-          "JOIN (select year, total from hansard_" . $house . "_total_word_year) as y ON y.year = x.year " .
+          "JOIN (select year, total from hansard_precomp.hansard_" . $house . "_total_word_year) as y ON y.year = x.year " .
           "order by x.year asc";
       } else {
 
@@ -195,13 +221,13 @@ if (isset($_GET['action'])) {
           "SELECT sum(frequency) as frequency, total as 0, myear " .
           "FROM ( " .
           "select sum(hits) as frequency, year as myear, total " .
-          "from hansard_commons_single_word_year " .
+          "from hansard_precomp.hansard_commons_single_word_year " .
           "where word like '" . $cleaned_term . "' " .
           "AND year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
           "group by year " .
           "UNION ALL " .
           "select sum(hits) as frequency, year as myear " .
-          "from hansard_lords_single_word_year " .
+          "from hansard_precomp.hansard_lords_single_word_year " .
           "where word like '" . $cleaned_term . "' " .
           "AND year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
           "group by year " .
@@ -218,9 +244,9 @@ if (isset($_GET['action'])) {
         "SELECT sum(total) as total, year " .
         "FROM " .
         "( " .
-        "select total, year from hansard_commons_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
+        "select total, year from hansard_precomp.hansard_commons_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
         "UNION ALL " .
-        "select total, year from hansard_lords_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
+        "select total, year from hansard_precomp.hansard_lords_total_word_year where year BETWEEN '" . $_POST['dateFrom'] . "' AND '" . $_POST['dateTo'] . "' " .
         ") " .
         "x " .
         "group by year ORDER BY year";
@@ -237,7 +263,6 @@ if (isset($_GET['action'])) {
   } else if ($_POST['action'] == "bubble") {
 
     $parameters = $_POST['params'];
-
 
     if ($parameters['comparisonCorpus']['preCalculated'][0] == "false") {
 
@@ -270,6 +295,7 @@ if (isset($_GET['action'])) {
         . $sql_term_2;
 
       $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+      
       $comparison_path = convert_data::gen_kw_documents($rows,  session_id() . "_comparison");
       $pre_calculated_data_comparison = "null";
     } else {
