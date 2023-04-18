@@ -36,7 +36,7 @@
                 <img src=".\img\icon.jpg" width="24" height="24">
             </a>
             <a class="py-2 d-none d-md-inline-block" target="_blank" href="index.php?show=feedback" title="Email"><span
-                    class="far fa-envelope"></span< /a> <a class="py-2 d-none d-md-inline-block" target="_blank"
+                    class="far fa-envelope"></span></a> <a class="py-2 d-none d-md-inline-block" target="_blank"
                         href="https://twitter.com/HansardHuds" title="Twitter">
                         <span class="fab fa-twitter"></span></a>
                     <a class="py-2 d-none d-md-inline-block" target="_blank"
@@ -197,7 +197,7 @@
                                 ?>. The search functions present their results using clear visualisations that aid
                             straightforward interpretation. These tools enable the uncomplicated exploration of, for
                             example, the importance of a particular topic in parliamentary debate or the framing of a
-                            speaker’s stance towards a debate topic. Exploration of these kinds of patterns benefits
+                            speakerâ€™s stance towards a debate topic. Exploration of these kinds of patterns benefits
                             research by readily providing empirical evidence for the way UK MPs and Peers engage in
                             parliamentary debate.
                         </p>
@@ -215,7 +215,7 @@
                                 padding-top: 10px;">
                                 Brochure
                             </h5>
-                            <p class="card-text">A short, illustrative description of Hansard at Huddersfield’s aims and
+                            <p class="card-text">A short, illustrative description of Hansard at Huddersfieldâ€™s aims and
                                 search functions.</p>
                         </div>
                     </div>
@@ -544,7 +544,7 @@
                                 <div class="pub" data-url="pdf/Article Preprint for website.pdf" title="See more">
                                     <h6 class="my-0">Pre-print journal article</h6>
                                     <small class="text-muted">
-                                        Lunen, A. von, Sanjurjo González, H., Jeffries, L. & Stradling, F.
+                                        Lunen, A. von, Sanjurjo GonzÃ¡lez, H., Jeffries, L. & Stradling, F.
                                         (Forthcoming). Hansard at Huddersfield: Adapting Corpus Linguistic Methods for
                                         Non-Specialist Use.
                                     </small>
@@ -558,7 +558,7 @@
                                         Jeffries, L., Stradling, F., Lunen von, A. & Sanjurjo Gonzalez, H.
                                         (Forthcoming). Hansard at Huddersfield: streamlined corpus methods and
                                         interactive visualisations to pursue research aims beyond corpus linguistics. In
-                                        M. Korhonen, H. Kotze & J. Tyrkkö (Eds.), Exploring Language and Society with
+                                        M. Korhonen, H. Kotze & J. TyrkkÃ¶ (Eds.), Exploring Language and Society with
                                         Big Data: Parliamentary discourse across time and space (pp. XX-XX). Amsterdam:
                                         John Benjamins.
                                     </small>
@@ -570,13 +570,13 @@
                                     title="See more">
                                     <h6 class="my-0">Conference Presentation</h6>
                                     <small class="text-muted">Jeffries, L. &
-                                        Sanjurjo-González, H. (2019). Making
+                                        Sanjurjo-GonzÃ¡lez, H. (2019). Making
                                         Hansard accessible
                                         to
                                         non-expert users through data
                                         visualisation. Talk presented at
                                         ICAME40 conference.
-                                        Neuchâtel, Switzerland.</small>
+                                        NeuchÃ¢tel, Switzerland.</small>
                                 </div>
                             </li>
                             <li class="list-group-item d-flex
@@ -586,7 +586,7 @@
                                     title="See more">
                                     <h6 class="my-0">Conference Presentation</h6>
                                     <small class="text-muted">Jeffries, L. &
-                                        Sanjurjo-González, H. (2019). Making
+                                        Sanjurjo-GonzÃ¡lez, H. (2019). Making
                                         corpus-based
                                         searching
                                         accessible for non-expert users: the
@@ -891,7 +891,7 @@
                                 padding-top: 10px;">
                                 Brochure for Teachers and Researchers
                             </h5>
-                            <p class="card-text">Hansard at Huddersfield’s search functions illustrated for purposes of
+                            <p class="card-text">Hansard at Huddersfieldâ€™s search functions illustrated for purposes of
                                 teaching and researching socio-political topics.</p>
                         </div>
                     </div>
@@ -922,7 +922,7 @@
 
                                 <h6 style="text-align: center;">Coming Soon</h6>
                             </h5>
-                            <p class="card-text">Video descriptions guiding the user through Hansard at Huddersfield’s
+                            <p class="card-text">Video descriptions guiding the user through Hansard at Huddersfieldâ€™s
                                 search functions.</p>
                         </div>
                     </div>
@@ -1004,7 +1004,7 @@
 
                         <div class="row mb-3 d-flex justify-content-end">
                             <div class="col-md-11">
-                                <p> – If you would like to use a <b> figure
+                                <p> â€“ If you would like to use a <b> figure
                                     </b> or <b>other data</b> that you have
                                     downloaded from
                                     our site, please use the following
@@ -1014,8 +1014,8 @@
                                 <div class="d-flex justify-content-center">
                                     <div class="col-md-11">
                                         <p class="text-monospace">
-                                            Author (Date). “Search word(s),
-                                            years” [Figure]. Publisher.
+                                            Author (Date). â€œSearch word(s),
+                                            yearsâ€� [Figure]. Publisher.
                                             Available online at: Website
                                             Title.
                                         </p>
@@ -1033,8 +1033,8 @@
                                     <div class="col-md-9 mt-2">
                                         <p class="text-monospace
                                             text-center">Hansard at
-                                            Huddersfield (2019). “Charity,
-                                            1803-2004”
+                                            Huddersfield (2019). â€œCharity,
+                                            1803-2004â€�
                                             [Figure]. University of
                                             Huddersfield. Available from: <a
                                                 href="https://hansard.hud.ac.uk">https://hansard.hud.ac.uk</a>.</p>
@@ -1045,7 +1045,7 @@
 
                         <div class="row mb-3 d-flex justify-content-end">
                             <div class="col-md-11">
-                                <p> – When citing the <b>entire website</b>
+                                <p> â€“ When citing the <b>entire website</b>
                                     in-text, please give the whole address
                                     of our site:</p>
 
@@ -1067,7 +1067,7 @@
 
                         <div class="row mb-3 d-flex justify-content-end">
                             <div class="col-md-11">
-                                <p> – The citation format for <b>footnotes</b>
+                                <p> â€“ The citation format for <b>footnotes</b>
                                     or the <b>reference section</b> of
                                     publications is:
                                 </p>
@@ -1087,8 +1087,8 @@
                                         <p class="text-monospace
                                             text-center">Hansard at
                                             Huddersfield Project (2018).
-                                            ‘Hansard at
-                                            Huddersfield’. University of
+                                            â€˜Hansard at
+                                            Huddersfieldâ€™. University of
                                             Huddersfield.
                                             Available online at: <a
                                                 href="https://hansard.hud.ac.uk">https://hansard.hud.ac.uk</a>
@@ -1154,7 +1154,7 @@
                             </h4>
                             <p>
                                 Download here a number of sample case studies that exemplify the different ways this
-                                site’s
+                                siteâ€™s
                                 tools may be used and their results interpreted to help answer research questions about
                                 the
                                 way parliamentarians discuss topics relevant to their governance of the UK.
@@ -1242,7 +1242,7 @@
                                     <h6 class="my-0">Journal Article</h6>
                                     <small class="text-muted">
                                         Brinkley, L. (2018). Innovation versus Tradition in Historical Research Methods:
-                                        The ‘Digital Turn’. Emergence X, 34-48
+                                        The â€˜Digital Turnâ€™. Emergence X, 34-48
                                     </small>
                                 </div>
                             </li>
@@ -1294,7 +1294,7 @@
                                     data-url="http://alsatia.org.uk/site/2019/10/resource-cobbetts-parliamentary-history/"
                                     title="See more">
                                     <h6 class="my-0">Blog Post</h6>
-                                    <small class="text-muted">Levin, J. (2019, October 8). Resource: Cobbett’s
+                                    <small class="text-muted">Levin, J. (2019, October 8). Resource: Cobbettâ€™s
                                         Parliamentary History. Alsatia.</small>
                                 </div>
                             </li>
@@ -1389,7 +1389,7 @@
                             interpretation of overarching trends and patterns in Hansard. We adapted expert software to
                             study
                             language patterns in large databases of text by combining some of its most common tools with
-                            interactive visualisations, aiming to help non-linguists mine the data’s potential without
+                            interactive visualisations, aiming to help non-linguists mine the dataâ€™s potential without
                             needing
                             to master complex software packages
                         </p>
@@ -1433,7 +1433,7 @@
                                     justify-content-between lh-condensed">
                                 <div>
                                     <h6 class="my-0">Hugo
-                                        Sanjurjo-González</h6>
+                                        Sanjurjo-GonzÃ¡lez</h6>
                                     <small class="text-muted">Research
                                         Fellow (Programmer) <br>(2018-2020)</small>
                                 </div>
@@ -1670,7 +1670,7 @@
                                             justify-content-between
                                             lh-condensed ack" data-url="https://phm.org.uk/">
                                         <div>
-                                            <h6 class="my-0">People’s
+                                            <h6 class="my-0">Peopleâ€™s
                                                 History Museum</h6>
                                             <small class="text-muted">End-user</small>
                                         </div>
@@ -2102,7 +2102,7 @@
                                             justify-content-between
                                             lh-condensed ack" data-url="https://phm.org.uk/">
                                     <div>
-                                        <h6 class="my-0">People’s
+                                        <h6 class="my-0">Peopleâ€™s
                                             History Museum</h6>
                                         <small class="text-muted">End-user</small>
                                     </div>
@@ -2307,7 +2307,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label=""><span>×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label=""><span>Ã—</span></button>
                 </div>
 
                 <div class="modal-body">
