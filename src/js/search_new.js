@@ -1,4 +1,6 @@
 
+var debug = true;
+
 var advanced_mode = false;
 
 var preMinDate = '2000-01-01';
@@ -81,6 +83,8 @@ var contribution_ajax_complete = true;
 $.xhrPool = [];
 
 $.xhrPool.abortAll = function() {
+	if(debug) console.log("abortAll");
+	
   $(this).each(function(i, jqXHR) {
     jqXHR.abort();
     $.xhrPool.splice(i, 1);
@@ -88,9 +92,12 @@ $.xhrPool.abortAll = function() {
 };
 
 function isJson(str) {
+	if(debug) console.log("isJSON");
+	
     try {
         JSON.parse(str);
-    } catch (e) {
+    }
+    catch (e) {
         return false;
     }
     return true;
@@ -98,12 +105,16 @@ function isJson(str) {
 
 
 function getTotalDocuments(table, action, f_kwic) {
+	if(debug) console.log("getTotalDocuments");
+	
     $(table).bootstrapTable("refresh", {
       query: { count: 1, action: action, kwick: f_kwic }
     });
 }
 
 $('#advancedOptionCheck').click(() => {
+	if(debug) console.log("advancedOption click");
+	
     advanced_mode = !advanced_mode;
 
     $('.adv-date').toggleClass('active');
@@ -115,10 +126,14 @@ $('#advancedOptionCheck').click(() => {
 })
 
 $('#searchTipsCheck').click(()=>{
+	if(debug) console.log("searchTips click");
+	
   $('.search-tips').toggle(200);
 })
 
 $(".export-png").click(()=>{
+	if(debug) console.log("exportPNG click");
+	
   saveSvgAsPng($("#distribution-body svg")[0], "line_chart.png", {
     backgroundColor: "white"
   });
@@ -126,14 +141,20 @@ $(".export-png").click(()=>{
 
 
 $(".export-excel").click(()=> {
+	if(debug) console.log("exportExcel click");
+	
   saveLineChartAsExcel();
 });
 
 $(".export-csv").click(()=> {
+	if(debug) console.log("exportCSV click");
+	
   saveLineChartAsCSV();
 });
 
 $(".convert-rank").click(()=>{
+	if(debug) console.log("convertRank click");
+	
   search_rank = !search_rank;
   
   contribution(range_of_dates_distrib, true);
@@ -144,23 +165,27 @@ $(document).keydown(function(e) {
   keys[e.which] = true;
 
   if (keys[16] && keys[65]) { //shift + A
-    console.log("advanced toggle");
+    if(debug) console.log("advanced toggle");
     $('#advancedOptionCheck').trigger('click');
   }
 });
 
 $(document).keyup(function(e) {
+	if(debug) console.log("KeyUp document");
+	
   delete keys[e.which];
 });
 
 $('#term').keyup((event)=>{
+	if(debug) console.log("KeyUp #term");
+	
   if(event.which == 13){
     get_distribution(false);
   }
 })
 
 $('input[name="commons-check"]').change(()=>{
-
+   if(debug) console.log("commons-check change");
 
   let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
   let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
@@ -183,7 +208,8 @@ $('input[name="commons-check"]').change(()=>{
 
 })
 $('input[name="lords-check"]').change(()=>{
-
+   if(debug) console.log("lords-check change");
+   
     let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
     let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
 
@@ -206,6 +232,7 @@ $('input[name="lords-check"]').change(()=>{
 })
 
 $("#search-btn").click(()=>{
+	if(debug) console.log("search button click");
 
   get_distribution(update_mode);
 
@@ -218,6 +245,8 @@ $("#search-btn").click(()=>{
 })
 
 $("#reset-btn").click(()=>{
+	if(debug) console.log("reset button click");
+	
     reset_parameters();
 })
 
@@ -225,6 +254,7 @@ $(".context-word-container").hide();
 
 $(".convert-kwic-doc").click(
     ()=>{
+		if(debug) console.log("convert kwik click");
         kwic_toggle = !kwic_toggle;
 
         $(".convert-kwic-doc").prop('checked', kwic_toggle);
@@ -236,6 +266,7 @@ $(".convert-kwic-doc").click(
 );
 
 $(".context-word").change((e)=>{
+   if(debug) console.log("context word change");
 
     $(".context-word").val($(e.target).val());
 
@@ -247,11 +278,13 @@ $(".context-word").change((e)=>{
 
 $(".convert-title").click(
   ()=>{
+	  if(debug) console.log("convert title click");
     contribution(range_of_dates_distrib, true);
   }
 )
 
 $("#close-modal").click(()=>{
+	if(debug) console.log("close modal click");
   ERROR_MODAL.modal("hide");
 })
 
@@ -265,12 +298,14 @@ $(".tsv-selections").click(function() {
 });
 
 $(".selections").click((x)=>{
-
+   if(debug) console.log("selections click");
+   
   if (num_queries > 1){
     table_num = $(x.target).data("table-num")
 
     target_table = "#compare_table_"+table_num;
-  }else{
+  }
+  else {
     target_table = "#results_table";
   }
 
@@ -285,7 +320,8 @@ $(".selections").click((x)=>{
       saveResultsAsZip(data, offset);
     }
 
-  }else{
+  }
+  else {
 
     $("#tsv-excel").attr(
       "table",
@@ -298,7 +334,8 @@ $(".selections").click((x)=>{
 })
 
 $(".preview-window").click((target)=>{
-
+  if(debug) console.log("preview window click");
+  
   let source = target.currentTarget.id; 
 
   change_mode(source);
@@ -308,7 +345,8 @@ $(".preview-window").click((target)=>{
 init();
 
 function change_mode(active_mode){
-
+  if(debug) console.log("change_mode");
+  
   //modes under construction are blocked for now.
   if(active_mode == "" || active_mode == MODE_COLLOCATION) return;
 
@@ -322,6 +360,8 @@ function change_mode(active_mode){
 }
 
 function update_house_wc(){
+	if(debug) console.log("update_house_wc");
+	
   switch (selected_house) {
       case "commons":
           $('input[name="commons-check-wc"]').prop('checked', true)
@@ -342,7 +382,8 @@ function update_house_wc(){
 
 
 function update_searchbox(){
-
+  if(debug) console.log("update_searchbox");
+  
   switch (SELECTED_MODE) {
     case MODE_WORD_CLOUD:
       $(".sb-accordion").hide();
@@ -377,6 +418,8 @@ function update_searchbox(){
 }
 
 function saveResultsAsExcel() {
+	if(debug) console.log("saveResultAsExcel");
+	
   data = $($("#tsv-excel").attr("table")).bootstrapTable("getSelections");
 
   var wb = XLSX.utils.book_new();
@@ -445,6 +488,8 @@ function saveResultsAsExcel() {
 }
 
 function saveResultsAsTSV() {
+	if(debug) console.log("saveResultAsTSV");
+	
   data = $($("#tsv-excel").attr("table")).bootstrapTable("getSelections");
   var wb = XLSX.utils.book_new();
   object = new Array();
@@ -510,6 +555,8 @@ function saveResultsAsTSV() {
 }
 
 function saveResultsAsZip(data, offset) {
+	if(debug) console.log("saveResultsAsZIP");
+	
   ids_str_query = "";
 
   for (i = 0; i < data.length; i++) {
@@ -558,10 +605,12 @@ function saveResultsAsZip(data, offset) {
 }
 
 function notification(title, desc){
-
+   if(debug) console.log("notification");
 }
 
 function error_handler(code, desc){
+	if(debug) console.log("error_handler");
+	
   ERROR_MODAL_CODE.html(code);
   ERROR_MODAL_DESC.html(desc);
 
@@ -569,6 +618,8 @@ function error_handler(code, desc){
 }
 
 function s2ab(s) {
+	if(debug) console.log("s2ab");
+	
   var buf = new ArrayBuffer(s.length);
   var view = new Uint8Array(buf);
   for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
@@ -576,6 +627,8 @@ function s2ab(s) {
 }
 
 function saveLineChartAsExcel() {
+	if(debug) console.log("saveLineChartAsExcel");
+	
   var wb = XLSX.utils.book_new();
 
   for (i = 0; i < freq_line_data.length; i++) {
@@ -633,6 +686,8 @@ function saveLineChartAsExcel() {
 }
 
 function saveLineChartAsCSV() {
+	if(debug) console.log("saveLineChartAsCSV");
+	
   csv_content = new Array();
   csv_keys = new Array();
 
@@ -668,21 +723,26 @@ function saveLineChartAsCSV() {
 }
 
 function init(){
+	if(debug) console.log("init");
+	
     set_max_min_dates();
     update_autofill();
     updateDates();
 }
 
 function isValidParameters(advanced){
-
+  if(debug) console.log("isValidParameters");
+  
   if(!advanced){
     let l_t = $("#term").val().length;
     if(l_t == 0){
         text_validation = "Search term is required!" 
-    }else{
+    }
+    else {
         text_validation = ""
     }
-  }else{
+  }
+  else {
 
     let l_t = $("#term").val().length;
     let dt_t = $("#desc").val().length;
@@ -690,7 +750,8 @@ function isValidParameters(advanced){
 
     if((l_t+dt_t+m_t) == 0){
         text_validation = "Search term, Debate title, or Member is required!" 
-    }else{
+    }
+    else {
         text_validation = ""
     }
 
@@ -704,7 +765,8 @@ function isValidParameters(advanced){
 
   if((commons == lords) && lords == false){
     house_validation = "A house must be selected!";
-  }else{
+  }
+  else {
     house_validation = "";
   }
 
@@ -721,7 +783,8 @@ function isValidParameters(advanced){
 }
 
 function update_autofill(){
-
+   if(debug) console.log("update_autofill");
+   
     let houses = ["both", "commons", "lords"];
 
     houses.forEach(h => {
@@ -741,8 +804,8 @@ function update_autofill(){
                 name: 'members',
                 source: members
             });
-        }else{
-
+        }
+        else {
             let lords = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -775,8 +838,6 @@ function update_autofill(){
                 }
             )
         }
-        
-        
     });
 
     $(".twitter-typeahead").addClass("member-inactive");
@@ -786,6 +847,8 @@ function update_autofill(){
 }
 
 function set_max_min_dates(){
+	if(debug) console.log("set_max_min_dates");
+	
     $.ajax(
         {
             url:"src/php/search_functions.php",
@@ -798,11 +861,11 @@ function set_max_min_dates(){
 
                     try {
                       maxDate = JSON.parse(data)[0]["upperdate"];
-                    } catch (error) {
+                    }
+                    catch (error) {
                       error_handler("database connection error", "Unable to establish a connection to the database. This might be due to a server maintenance or other related issues. <br> <br> Please check our <a href=\"https://twitter.com/HansardHuds\">Twitter Profile</a> for updates:")
                     }
-                    
-                    
+
                     maxDateAsDate = new Date(maxDate);
 
                     maxDateY = maxDateAsDate.getFullYear();
@@ -810,7 +873,6 @@ function set_max_min_dates(){
                 }
             },
             complete: (status)=>{
-
                 maxDate = typeof(maxDate) == "undefined" ? "2021-02-25" : maxDate;
                 minDate = "1803-01-01";
 
@@ -858,26 +920,25 @@ function set_max_min_dates(){
                 $(".datepicker-to").val(preMaxDate);
                 $("#basic-dp-from").val(preMinDate.substring(0,4));
                 $("#basic-dp-to").val(preMaxDate.substring(0,4));
-
-                
   
                 maxDateAsDate = new Date(maxDate)
 
                 $(".records-desc").html(`Hansard records until ${maxDateAsDate.getDate()} ${monthNames[maxDateAsDate.getMonth()]} ${maxDateAsDate.getFullYear()}`);
 
-                updateDates();
-                
+                updateDates();              
             }
         }
     )
 }
 
-function checkParas(){
+function checkParas() {
+	if(debug) console.log("checkParas");
+	
     let q = window.location.search;
     let p = new URLSearchParams(q);
     let id = p.get("q");
   
-    if(id){
+    if(id) {
       $.ajax({
         url:"src/php/search_functions.php",
         type:"post",
@@ -890,44 +951,46 @@ function checkParas(){
   
           if(sharedQueryData){
             shared = true;
-          }else{
+          }
+          else {
             shared = false;
           }
-  
         }
       })
     }
-    //
   
     return generateId(10);
-  }
+}
 
-function updateDates(){
-
+function updateDates() {
+   if(debug) console.log("updateDates");
+   
     let validated = true;
 
     dateFrom = advanced_mode ? $("#adv-dp-from").val() : $("#basic-dp-from").val();
 
     let x = advanced_mode ? 10 : 4;
 
-    if(dateFrom < minDate || dateFrom > maxDate){
+    if(dateFrom < minDate || dateFrom > maxDate) {
       $(".validation-date-from").html("Please enter a date between " + minDate.substring(0,x) + " and " + maxDate.substring(0,x) + ".");
 
       validated = false;
-    }else{
+    }
+    else {
       $(".validation-date-from").html("")
     }
 
     dateTo = advanced_mode ? $("#adv-dp-to").val() : $("#basic-dp-to").val();
 
-    if(dateTo < minDate || dateTo > maxDate){
+    if(dateTo < minDate || dateTo > maxDate) {
       $(".validation-date-to").html("Please enter a date between " + minDate.substring(0,x) + " and " + maxDate.substring(0,x) + ".");
       validated = false
-    }else{
+    }
+    else {
       $(".validation-date-to").html("")
     }
 
-    if(validated && num_queries > 0){
+    if(validated && num_queries > 0) {
       update_mode = true;
       $("#search-btn").html("Update");
     }
@@ -935,7 +998,9 @@ function updateDates(){
     if(validated) generate_wc();
 }
 
-function generateId(length){
+function generateId(length) {
+	if(debug) console.log("generateId");
+	
     let id = "";
     let characters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
   
@@ -944,17 +1009,20 @@ function generateId(length){
     return id;
 }
 
-function accordion_control(target, refresh){
+function accordion_control(target, refresh) {
+	if(debug) console.log("accordion_control");
+	
     //opens accordion section (shows if hidden)
     $(target).show();
 
-    if(!refresh){
+    if(!refresh) {
       $(target + " .accordion-button").trigger("click");
     }
-    
 }
 
-function get_house(){
+function get_house() {
+	if(debug) console.log("get_house");
+	
     let commons = ($('input[name="commons-check"]:checked').val() == STATE_ON);
     let lords = ($('input[name="lords-check"]:checked').val() == STATE_ON);
 
@@ -963,31 +1031,34 @@ function get_house(){
     return selected_house;
 }
 
-function get_search_paras(){
+function get_search_paras() {
+	if(debug) console.log("search_paras");
 
     let house = get_house();
 
     let query = "";
 
-    if(advanced_mode){
-      if($("#desc").val() != "" || $("#"+house+"-member").val() != ""){
+    if(advanced_mode) {
+      if($("#desc").val() != "" || $("#"+house+"-member").val() != "") {
 
-        if($("#term").val() != ""){
+        if($("#term").val() != "") {
           query += "Term: "+$("#term").val() +"; ";
         }
 
-        if($("#desc").val() != ""){
+        if($("#desc").val() != "") {
           query += "Title: "+$("#desc").val()+"; ";
         }
 
-        if($("#"+house+"-member").val() != ""){
+        if($("#"+house+"-member").val() != "") {
           query += "Member: "+$("#"+house+"-member").val()+"; ";
         }
 
-      }else{
+      }
+      else {
         query = $("#term").val();
       }
-    }else{
+    }
+    else {
       query = $("#term").val();
     }
 
@@ -1004,19 +1075,20 @@ function get_search_paras(){
     };
 }
 
-function prepare_parameters(){
-
+function prepare_parameters() {
+   if(debug) console.log("prepare_parameters");
+   
     parameters[num_queries] = get_search_paras();
     num_queries += 1;
 
     return parameters;
-
 }
 
-function get_distribution(refresh){
-
-    if(!refresh){
-      if(!isValidParameters(advanced_mode)){
+function get_distribution(refresh) {
+   if(debug) console.log("get_distribution");
+   
+    if(!refresh) {
+      if(!isValidParameters(advanced_mode)) {
         return;
       }
     }
@@ -1067,49 +1139,40 @@ function get_distribution(refresh){
         },
         success: (data, status) =>{
 
-            if(data != null && isJson(data))
-            {
-                
+            if(data != null && isJson(data)) {               
                 $('.distribution-loader').hide();
 
                 data_json = JSON.parse(data);
-
                 
                 freq_line_data = data_json;
 
                 load_distribution_graph(data_json, flag_monthly_based);
-
-            }else{
+            }
+            else {
               error_handler("Distribution", "An error has occurred and the query has returned invalid data. If this issue persists, please contact us with reference to this error message.")
 
               reset_parameters();
             }
-            
         },
         error: (xhr, desc, err)=>{
 
-          if(err == "Gateway Time-out"){
+          if(err == "Gateway Time-out") {
             error_handler("Time-out error", "Your request to the server has timed out. Please note that this search tool is experimental and complex queries or larger date ranges might be prone to timeout. ")
-          }else{
+          }
+          else {
             error_handler("Distribution", "");
           }
-
-          
         }
-
     });
-
-
 }
 
-function load_distribution_graph(data, monthly){
-
+function load_distribution_graph(data, monthly) {
+   if(debug) console.log("load_distribution_graph");
 
     let label_y = "Frequency (hits per million words)";
     let label_x = advanced_mode &&  monthly? "Month" : "Year";
 
     nv.addGraph(()=>{
-
         if(monthly){
           chart = nv.models
           .lineChart()
@@ -1127,7 +1190,8 @@ function load_distribution_graph(data, monthly){
             return d3.time.format("%Y-%m")(new Date(d));
           })
           .staggerLabels(false);
-        }else{
+        }
+        else {
           chart = nv.models.lineChart().options({
             transitionDuration: 2000,
             useInteractiveGuideline: true
@@ -1137,15 +1201,13 @@ function load_distribution_graph(data, monthly){
             .tickFormat(d3.format("d"))
             .staggerLabels(false);
         }
-
         
         chart.yAxis
             .axisLabel(label_y)
             .tickFormat(d3.format(".2f"))
             .staggerLabels(false);
         chart.lines.dispatch.on("elementClick", (e)=>{
-            if(range_of_dates_distrib.length == 0){
-
+            if(range_of_dates_distrib.length == 0) {
                 range_of_dates_distrib.push(e[0].point.x);
 
                 $("#distribution-body .nv-point.nv-point-" + e[0].pointIndex).addClass(
@@ -1153,9 +1215,8 @@ function load_distribution_graph(data, monthly){
                 );
                 
                 update_timeline(range_of_dates_distrib);
-
-            }else if(range_of_dates_distrib.length == 1){
-
+            }
+            else if(range_of_dates_distrib.length == 1) {
                 range_of_dates_distrib.push(e[0].point.x);
 
                 $("#distribution-body .nv-point.nv-point-" + e[0].pointIndex).addClass(
@@ -1167,9 +1228,8 @@ function load_distribution_graph(data, monthly){
                 update_timeline(range_of_dates_distrib);
 
                 contribution(range_of_dates_distrib, false);
-
-
-            }else{
+            }
+            else {
                 reset_comparasion();
 
                 range_of_dates_distrib.push(e[0].point.x);
@@ -1179,8 +1239,6 @@ function load_distribution_graph(data, monthly){
                 );
                 
                 update_timeline(range_of_dates_distrib);
-
-
             }
         });
         d3.select("#distribution-body")
@@ -1190,14 +1248,15 @@ function load_distribution_graph(data, monthly){
         nv.utils.windowResize(chart.update);
         return chart;
     })
-
 }
 
-function get_total_hits(paras, i){
-
-  if(num_queries > 1){
+function get_total_hits(paras, i) {
+   if(debug) console.log("get_total_hits");
+   
+  if(num_queries > 1) {
     target = "#hits-";
-  }else{
+  }
+  else {
     target = "#hit-result";
   }
 
@@ -1227,12 +1286,10 @@ function get_total_hits(paras, i){
       $(target + i).html("Error loading hits...");
     }
   })
-
-
 }
 
-function contribution(dates, refresh){
-
+function contribution(dates, refresh) {
+   if(debug) console.log("contribution");
       
     count_of_documents_compare = [0, 0, 0, 0];
     count_flag_compare = [false, false, false, false];
@@ -1255,17 +1312,13 @@ function contribution(dates, refresh){
     
     $('.contribution-loader').show();
 
-    if(num_queries == 1)
-    {
+    if(num_queries == 1) {
       get_contribution();
-
-    }else
-    {
-
+    }
+    else {
       var showToggleKwic = false;
 
-        for (let x = 0; x < num_queries; x++)
-        {
+        for (let x = 0; x < num_queries; x++) {
 
             showToggleKwic = ((parameters[x] != "") || (showToggleKwic == true))
 
@@ -1277,27 +1330,25 @@ function contribution(dates, refresh){
               active+'" onclick="toggle_text('+x+')">'+
               parameters[x].query+'  <span style="background-color: '+parameters[x].colour+';" class="dot"></span>'
               +'<div class="contribution-hits inline-hits"><span class="contrib-count" id="contrib-'+ x +'"></span><span class="hits-count" id="hits-'+ x +'"></span></div></a></li>');
-
             }
 
-
             get_contribution_compare(dates, parameters[x], x);
-
         }
 
         $("#comp-"+(selected_table+1)).show();
-
         
-      if(showToggleKwic){
+      if(showToggleKwic) {
         $('.kwic-button').show();
-      }else{
+      }
+      else {
         $('.kwic-button').hide();
       }
     }
 }
 
 function toggle_text(n){
-
+   if(debug) console.log("toggle_text");
+   
   selected_table = n;
 
   $("#comp-1, #comp-2, #comp-3, #comp-4 ").hide();
@@ -1307,13 +1358,12 @@ function toggle_text(n){
   $("#tab"+(n+1)).addClass("active");
 
   $("#comp-"+(n+1)).show();
-
 }
 
 function get_contribution_compare(dates, parameter, num){
-
+   if(debug) console.log("get_contribution_compare");
+   
     count_flag_compare[num] = false;
-
     
     let action = advanced_mode ? "contribution-advanced" : "contribution";
 
@@ -1396,48 +1446,42 @@ function get_contribution_compare(dates, parameter, num){
           }
 
           if(!count_flag_compare[num]){
-
             getTotalDocuments(func, action_conf, kwic_toggle);
             count_flag_compare[num] = true;
-
           }
 
           if(kwic_toggle && parameter.term != "") get_total_hits(parameter, num);
 
-          if(data.total != 0){
-
-            if(data.total != "total"){
-              if(count_of_documents_compare[num] == 0){
+          if(data.total != 0) {
+            if(data.total != "total") {
+              if(count_of_documents_compare[num] == 0) {
                 $("#contrib-"+num).html(data.total + " contributions");
                 count_of_documents_compare[num] = data.total;
               }
-            }else{
-              
+            }
+            else {
               $("#contrib-"+num).html("Loading number of contributions");
             }
-
-          }else{
-            
+          }
+          else {
             $("#contrib-"+num).html("0 contributions");
           }
-
-        }else{
+        }
+        else {
           error_handler("contribution-compare 2", "");
         }
 
         $('.contribution-loader').hide();
-
         
         $('.compare-results').show();
-
-        
 
         if ($(".convert-title").prop("checked")) {
           $(func).bootstrapTable(
             "showColumn",
             "description"
           );
-        } else {
+        }
+        else {
           $(func).bootstrapTable(
             "hideColumn",
             "description"
@@ -1515,23 +1559,22 @@ function get_contribution_compare(dates, parameter, num){
         }
       }
     })
-
 }
 
 function update_tables(n, data){
-    
-
+   if(debug) console.log("update_tables");    
 }
 
 function update_timeline(dates){
+   if(debug) console.log("update_timeline");
 
     let txt = "Selected Timeline : " + dates[0] + " - " + (dates.length > 1 ? dates[1] : " ") ;
 
     $('#timeline-selected').html(txt);
-
 }
 
 function update_colours(paras){
+   if(debug) console.log("update_colours");
   
   col_1 = null;
 
@@ -1556,6 +1599,7 @@ function update_colours(paras){
 }
 
 function remove_term(n){
+  if(debug) console.log("remove_term");
   
   delete parameters[n];
 
@@ -1586,55 +1630,55 @@ function remove_term(n){
 }
 
 function update_para_tabs(paras){
-
+   if(debug) console.log("update_para_tabs");
+   
     $("#tabs-terms").html("");
     $('.terms-list').html("");
 
-    if(num_queries == 0){
+    if(num_queries == 0) {
         $('.terms-listed').addClass("hide")
-    }else{
+    }
+    else {
         $('.terms-listed').removeClass("hide")
     }
 
 
     for (let x = 0; x < num_queries; x++) {
-
         let txt = "<div class='tab-term' style='background-color:" + paras[x].colour + "'>"+paras[x].query+"</div>";
         $('#tabs-terms').append(txt);
 
-
         let txt2 = "<div class='term-clickable' id='"+x+"-term' style='color:" + paras[x].colour + ";'></i><input onchange=\"change_colour(this, " + x + ")\" type=\"color\" class=\"color-picker-box\" value=\""+  paras[x].colour + "\">"+paras[x].query+"  <i class='fas fa-minus' onclick='remove_term("+ x +")'></div>";
         $('.terms-list').append(txt2);
-
     }
 }
 
-function change_colour(source, x){
-
+function change_colour(source, x) {
+  if(debug) console.log("change_colour");
+  
   parameters[x].colour = source.value;
   colours_queries[x][0] = source.value;
 
   get_distribution(true);
-
 }
 
-function reset_comparasion(){
+function reset_comparasion() {
+	if(debug) console.log("reset_comparison");
+	
     range_of_dates_distrib = [];
     $(".nv-point").removeClass("selected");
-    $(
-      "#distribution-body .timeline-one, #distribution-body .timeline-two"
-    ).html("");
+    $("#distribution-body .timeline-one, #distribution-body .timeline-two").html("");
 }
 
-function clear_forms(){
+function clear_forms() {
+   if(debug) console.log("clear_forms");
 
     $('#term').val('')
     $('.member').val('')
     $('#desc').val('')
-
 }
 
-function reset_parameters(){
+function reset_parameters() {
+   if(debug) console.log("reset_parameters");
 
     clear_forms();
 
@@ -1646,29 +1690,25 @@ function reset_parameters(){
     
     update_para_tabs([]);
 
-
     $('.distribution').hide();
     $('.contribution').hide();
     $('.text').hide();
-
-    $('#contrib-tabs').html("");
-
-    
+    $('#contrib-tabs').html("");  
     $('.distribution .nvd3-svg').remove()
-
 }
 
-function get_contribution(){
-
+function get_contribution() {
+   if(debug) console.log("get_contribution");
     //count_flag = c_flag;
 
     let action = advanced_mode ? "contribution-advanced" : "contribution";
 
     let formatDate = advanced_mode ? "year" : "year";
 
-    if(parameters[0].term == ''){
+    if(parameters[0].term == '') {
       $('.kwic-button').hide();
-    }else{
+    }
+    else {
       $('.kwic-button').show();
     }
 
@@ -1680,7 +1720,6 @@ function get_contribution(){
         },
         500
     );
-
     
     $("#results_table").bootstrapTable("removeAll");
     
@@ -1699,6 +1738,7 @@ function get_contribution(){
             },
             sortName: sort_name,
             formatShowingRows: function(pageFrom, pageTo, totalRows){
+				console.log("\tfrom: "+pageFrom+", to: "+pageTo+", totalRows: "+totalRows)
                 return (
                     "Showing " +
                     pageFrom +
@@ -1744,8 +1784,7 @@ function get_contribution(){
             url: "src/php/search_functions.php",
             method: "get",
 
-            onLoadSuccess: (data)=>{
-              
+            onLoadSuccess: (data)=>{             
               func = "";
 
               $('.contribution-loader').hide();
@@ -1781,22 +1820,25 @@ function get_contribution(){
                     }
                     $(func + " #results_table th div").prop("disabled", false);
                     $(func + " #results_table th div").attr("data-disabled", false);
-                  } else {
+                  }
+                  else {
                     $("#contrib-result").html("Loading number of contributions");
                   }
       
                   if ($(func + " .convert-title").prop("checked")) {
                     $(func + " .table").bootstrapTable("showColumn", "description");
-                  } else {
+                  }
+                  else {
                     $(func + " .table").bootstrapTable("hideColumn", "description");
                   }
-                } else {
+                }
+                else {
                   $("#contrib-result").html(data.total + " contributions");
                 }
-              } else {
+              }
+              else {
                   error_handler("1 - contribution", "")
               }
-
               
               if(kwic_toggle && parameters[0].term != "") get_total_hits(parameters[0], "");
               
@@ -1879,14 +1921,12 @@ function get_contribution(){
                     break;
                 }
               }
-              
         })
-
-    
-
 }
 
 function resetContribution() {
+	if(debug) console.log("resetContribution");
+	
     $("#contribution_original").html();
 }
 
@@ -1898,6 +1938,8 @@ function showContribution(
   query_table,
   func
 ) {
+	if(debug) console.log("showContribution");
+	
   resetContribution();
 
   $(" #contribution_original").html("");
@@ -1947,16 +1989,15 @@ function showContribution(
       if ((data != null) & isJson(data)) {
         data_json = JSON.parse(data);
         $("#contribution_original").html(data_json.contributiontext);
-      } else {
+      }
+      else {
         error_handler("1 - show contribution", "");
       }
     },
     error: function(xhr, desc, err) {
-
       error_handler("2 - show contribution", "");
       console.log(xhr);
       console.log("Details: " + desc + "\nError:" + err);
-
     }
   });
 }

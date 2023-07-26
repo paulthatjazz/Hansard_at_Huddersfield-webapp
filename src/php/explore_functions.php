@@ -53,7 +53,8 @@ if (isset($_GET['action'])) {
         . "ORDER BY " . $sort . " " . $_GET['order'] . " "
         . "LIMIT " . $_GET['limit'] . " "
         . "OFFSET " . $_GET['offset'];
-    } else {
+    }
+    else {
 
       $limit = $_GET['limit'] / 2;
       $offset = $_GET['offset'] / 2;
@@ -102,7 +103,8 @@ if (isset($_GET['action'])) {
     $var = convert_data::gen_json_documents($rows, $_GET['word'], $total);
     $var2 = json_encode($var);
     echo $var2;
-  }else if($_GET['action'] == "periods"){
+  }
+  else if($_GET['action'] == "periods"){
 
     $sql = "SELECT * FROM hansard_precomp.hansard_kw_period ORDER BY id";
 
@@ -110,7 +112,8 @@ if (isset($_GET['action'])) {
     
     echo json_encode($rows);
 
-  }else if($_GET['action'] == "bubble_new"){
+  }
+  else if($_GET['action'] == "bubble_new"){
 
     $parameters = $_GET['params'];
 
@@ -129,7 +132,8 @@ if (isset($_GET['action'])) {
     echo json_encode($rows);
 
   }
-} else {
+}
+else {
 
   if (isset($_POST['house'])) {
     $house = strtolower($_POST['house']);
@@ -158,10 +162,7 @@ if (isset($_GET['action'])) {
 
     $SQL_clause = "";
 
-
     if ($house != "both") {
-
-
       $sql =
         "SELECT word, sum(hits) as freq " .
         "FROM ( " .
@@ -170,9 +171,8 @@ if (isset($_GET['action'])) {
         "where year in (" . $years . ") " .
         "and word not in (" . $stopwords_list . ")" .
         ") x group by word order by freq desc limit 500";
-    } else {
-
-
+    }
+    else {
       $sql =
         "SELECT word, sum(hits) as freq " .
         "FROM ( " .
@@ -194,8 +194,8 @@ if (isset($_GET['action'])) {
     $var = convert_data::gen_json_word_cloud($rows);
     $var2 = json_encode($var);
     echo $var2;
-  } else if ($_POST['action'] == "multiple_line_chart") {
-
+  }
+  else if ($_POST['action'] == "multiple_line_chart") {
     $i = 0;
     foreach ($_POST['parameters'] as &$value) {
 
@@ -215,7 +215,8 @@ if (isset($_GET['action'])) {
           "order by year ) x " .
           "JOIN (select year, total from hansard_precomp.hansard_" . $house . "_total_word_year) as y ON y.year = x.year " .
           "order by x.year asc";
-      } else {
+      }
+      else {
 
         $sql =
           "SELECT sum(frequency) as frequency, total as 0, myear " .
@@ -252,7 +253,8 @@ if (isset($_GET['action'])) {
         "group by year ORDER BY year";
 
       $total_both = query_handler::query_no_parameters($sql_extra, "dbname=hansard");
-    } else {
+    }
+    else {
       $total_both = "";
     }
 
@@ -260,108 +262,6 @@ if (isset($_GET['action'])) {
 
     $var2 = json_encode($var);
     echo $var2;
-  } else if ($_POST['action'] == "bubble") {
-
-    $parameters = $_POST['params'];
-
-    if ($parameters['comparisonCorpus']['preCalculated'][0] == "false") {
-
-      if ($parameters['comparisonCorpus']['term'] != "") {
-        $cleaned_term = convert_data::clean_query($parameters['comparisonCorpus']['term']);
-        $ts_term = convert_data::gen_postgresql_query($cleaned_term);
-        $sql_term_1 = ", to_tsquery('simple','" . $ts_term . "') as q ";
-        $sql_term_2 = "and idxfti_simple @@ q ";
-      } else {
-        $sql_term_1 = "";
-        $sql_term_2 = "";
-      }
-
-      if ($parameters['comparisonCorpus']['member'] != "") {
-        $sql_member = "and member = '" . $parameters['comparisonCorpus']['member'] . "'";
-      } else {
-        $sql_member = "";
-      }
-
-      $house = $parameters['comparisonCorpus']['house'];
-      $dateFrom = $parameters['comparisonCorpus']['dateFrom'];
-      $dateTo = $parameters['comparisonCorpus']['dateTo'];
-
-      $sql =
-        "SELECT contributiontext "
-        . "FROM hansard_" . $house . "." . $house . $sql_term_1 . " "
-        . "WHERE "
-        . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-        . $sql_member
-        . $sql_term_2;
-
-      $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
-      
-      $comparison_path = convert_data::gen_kw_documents($rows,  session_id() . "_comparison");
-      $pre_calculated_data_comparison = "null";
-    } else {
-
-      $type = $parameters['comparisonCorpus']['preCalculated'][0];
-      $house = $parameters['comparisonCorpus']['house'];
-      $file = $parameters['comparisonCorpus']['preCalculated'][1] . "_" . $house . ".Rda";
-
-      $pre_calculated_data_comparison = "/data/hansard_aux_src_code/R_data/" . $type . "/" . $file;
-    }
-
-    if ($parameters['targetCorpus']['preCalculated'][0] == "false") {
-
-      if ($parameters['targetCorpus']['term'] != "") {
-        $cleaned_term = convert_data::clean_query($parameters['targetCorpus']['term']);
-        $ts_term = convert_data::gen_postgresql_query($cleaned_term);
-        $sql_term_1 = ", to_tsquery('simple','" . $ts_term . "') as q ";
-        $sql_term_2 = "and idxfti_simple @@ q ";
-      } else {
-        $sql_term_1 = "";
-        $sql_term_2 = "";
-      }
-
-      if ($parameters['targetCorpus']['member'] != "") {
-        $sql_member = "and member = '" . $parameters['targetCorpus']['member'] . "'";
-      } else {
-        $sql_member = "";
-      }
-
-      $house = $parameters['targetCorpus']['house'];
-      $dateFrom = $parameters['targetCorpus']['dateFrom'];
-      $dateTo = $parameters['targetCorpus']['dateTo'];
-
-      $sql =
-        "SELECT contributiontext "
-        . "FROM hansard_" . $house . "." . $house . $sql_term_1 . " "
-        . "WHERE "
-        . "sittingday BETWEEN '" . $dateFrom . "'::DATE AND '" . $dateTo . "'::DATE "
-        . $sql_member
-        . $sql_term_2;
-
-      $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
-      $target_path = convert_data::gen_kw_documents($rows, session_id() . "_target");
-      $pre_calculated_data_target = "null";
-    } else {
-      $type = $parameters['targetCorpus']['preCalculated'][0];
-      $house = $parameters['targetCorpus']['house'];
-      $file = $parameters['targetCorpus']['preCalculated'][1] . "_" . $house . ".Rda";
-
-      $pre_calculated_data_target = "/data/hansard_aux_src_code/R_data/" . $type . "/" . $file;
-    }
-
-
-    //$exec = shell_exec("C:\\R-3.6.2\\bin\\Rscript.exe ..\\R\\keywords.r " . session_id() . " " . $pre_calculated_data_comparison . " " . $pre_calculated_data_target);
-    $_SESSION["R_PID"] = shell_exec("Rscript --no-save --no-restore --verbose ../R/keywords.r " . session_id() . " " . $pre_calculated_data_comparison . " " . $pre_calculated_data_target) . " & echo \$!";
-
-
-    if (file_exists("../../tmp/" . session_id() . "_kw.csv")) {
-      echo session_id() . "_kw.csv";
-    } else {
-      echo false;
-    }
-
-    #echo session_id() . " " . $pre_calculated_data_comparison . " " . $pre_calculated_data_target;
-  } else if ($_POST['action'] == "killBubble") {
-    $var2 = shell_exec("pkill -f /usr/lib/R/bin/exec/R");
-    echo $var2;
   }
+
 }

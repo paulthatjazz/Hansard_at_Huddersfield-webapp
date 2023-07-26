@@ -1120,8 +1120,7 @@ function generate_wc(){
     })
 }
 
-function update_dropdown(target, selections, current, other){
-
+function update_dropdown(target, selections, current, other) {
     ht = "";
 
     for (let x = 0; x < selections.length; x++) {

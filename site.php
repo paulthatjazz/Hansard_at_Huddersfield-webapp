@@ -59,8 +59,9 @@ session_start();
     <script src="vendor/d3-wordcloud/d3.wordcloud.js"></script>
     <!--script src="vendor/d3-bubble/d3.bubble.js"></script-->
     <script src="vendor/nvd3/nv.d3.1.8.6.min.js"></script>
-    <script src="vendor/bootstrap-table/bootstrap-table.1.12.1.js"></script>
-
+    
+	<!-- <script src="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.js"></script> -->
+	<script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
 
     <!-- Fonts -->
     <!--link href="vendor/fontawesome.5.11.2.min.css" rel="stylesheet"-->
@@ -70,7 +71,8 @@ session_start();
 
     <!--link rel="stylesheet" href="lib/bootstrap/bootstrap.4.3.1.min.css" -->
     <link href="vendor/gijgo/gijgo.1.9.10.min.css" rel="stylesheet" />
-    <link href="vendor/bootstrap-table/bootstrap-table.1.12.1.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.css"> -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
     <link href="vendor/bootstrap4-typeahead.js/typeaheadjs.css" rel="stylesheet" />
     <link href="vendor/tableexport/tableexport.5.0.0.min.css" rel="stylesheet" />
 
@@ -677,7 +679,7 @@ session_start();
     </section>
 
     <footer class="mt-5 mb-3 text-muted text-center text-small">
-        <p>© 2022 Hansard at Huddersfield</p>
+        <p>&copy; 2022 Hansard at Huddersfield</p>
     </footer>
 
 
