@@ -33,7 +33,7 @@
 
             $sql .= $sql_term_2;
             
-            $rows = self::query_no_parameters($sql, "dbname=hansard");
+            $rows = self::query_no_parameters($sql, "hansard");
 
             return $rows;
         }

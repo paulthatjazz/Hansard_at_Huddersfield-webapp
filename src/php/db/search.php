@@ -56,7 +56,7 @@
             
             $total = self::contributionTotal($count, $offset, $house, $termdata, $dateFrom, $dateTo, $desc, $member);
             
-            $rows = self::query_no_parameters($sql, "dbname=hansard");
+            $rows = self::query_no_parameters($sql, "hansard");
             
 
             if ($kwic == "contribution" || $kwic == "contribution_nonRank" || $kwic == "false") 
@@ -146,7 +146,7 @@
                     . $termquery2 . $memquery . $descquery;
                 }
                 
-                $total = query_handler::query_no_parameters($sql, "dbname=hansard");
+                $total = query_handler::query_no_parameters($sql, "hansard");
               }
 
             return $total;
@@ -392,7 +392,7 @@
                     $sql = self::getDistributionQuery($termdata, $house, $dateFrom, $dateTo, FALSE);
                 }
 
-                $rows[$i] = self::query_no_parameters($sql, "dbname=hansard");
+                $rows[$i] = self::query_no_parameters($sql, "hansard");
                 
                 $i++;
             }
@@ -424,7 +424,7 @@
             
             $sql = self::getDistributionQuery($term, $house, $dateFrom, $dateTo, TRUE, $monthly, $member, $desc);
 
-            $total = query_handler::query_no_parameters($sql, "dbname=hansard");
+            $total = query_handler::query_no_parameters($sql, "hansard");
 
             return $total;
 

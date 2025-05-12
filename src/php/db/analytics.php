@@ -26,7 +26,7 @@
             . " WHERE search.id = '" . $id . "'";
             
 
-            $r = query_handler::query_no_parameters($sql, "dbname=hansard");
+            $r = query_handler::query_no_parameters($sql, "hansard");
         }
 
         private function recordSingleQuery($paras, $dateFrom, $dateTo, $house, $adv){
@@ -65,7 +65,7 @@
 
             $sql .= " NOW(), '" . $house . "') ";
 
-            $r = query_handler::query_no_parameters($sql, "dbname=hansard");
+            $r = query_handler::query_no_parameters($sql, "hansard");
 
         }
 
@@ -145,7 +145,7 @@
             
             . "from hansard_analytics.search WHERE id = '" . $id . "'";
 
-            $r = query_handler::query_no_parameters($sql, "dbname=hansard");
+            $r = query_handler::query_no_parameters($sql, "hansard");
 
             return $r;
         }

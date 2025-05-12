@@ -15,10 +15,10 @@ else $id = $_REQUEST['id'];
 array_map('unlink', glob("../../tmp/" . session_id() . "*"));
 
 if (!isset($_SESSION['PID'])) {
-  $_SESSION["PID"] =  query_handler::gettingPID("dbname=hansard");
+  $_SESSION["PID"] =  query_handler::gettingPID("hansard");
 } else {
   $_SESSION["previous_PID"] = $_SESSION["PID"];
-  $_SESSION["PID"] =  query_handler::gettingPID("dbname=hansard");
+  $_SESSION["PID"] =  query_handler::gettingPID("hansard");
 }
 
 if (isset($_GET['action'])) {
@@ -42,7 +42,7 @@ if (isset($_GET['action'])) {
         . "sittingday BETWEEN '" . $_GET['year'] . "-01-01'::DATE AND '" . $_GET['year'] . "-12-31'::DATE "
         . "and idxfti_simple @@ q ";
 
-      $total = query_handler::query_no_parameters($sql, "dbname=hansard");
+      $total = query_handler::query_no_parameters($sql, "hansard");
 
       $sql =
         "SELECT id, sittingday, contributiontext, member, ts_rank(idxfti_simple, q) AS relevance "
@@ -76,7 +76,7 @@ if (isset($_GET['action'])) {
         . "and hansard_lords.lords.idxfti_simple @@ q "
         . ") x";
 
-      $total = query_handler::query_no_parameters($sql, "dbname=hansard");
+      $total = query_handler::query_no_parameters($sql, "hansard");
 
       $sql =
         "(SELECT id, sittingday, contributiontext, member, ts_rank(idxfti_simple, q) AS relevance, 'Commons' AS source "
@@ -98,7 +98,7 @@ if (isset($_GET['action'])) {
         . "OFFSET " . $offset . ")";
     }
 
-    $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+    $rows = query_handler::query_no_parameters($sql, "hansard");
 
     $var = convert_data::gen_json_documents($rows, $_GET['word'], $total);
     $var2 = json_encode($var);
@@ -108,7 +108,7 @@ if (isset($_GET['action'])) {
 
     $sql = "SELECT * FROM hansard_precomp.hansard_kw_period ORDER BY id";
 
-    $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+    $rows = query_handler::query_no_parameters($sql, "hansard");
     
     echo json_encode($rows);
 
@@ -127,7 +127,7 @@ if (isset($_GET['action'])) {
     WHERE compkwp.id = " . $parameters['comp'] .
     "  ORDER BY score desc";
 
-    $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+    $rows = query_handler::query_no_parameters($sql, "hansard");
 
     echo json_encode($rows);
 
@@ -142,7 +142,7 @@ else {
 
   if ($_POST['action'] == "wordcloud") {
 
-    $stopwords_list = " '§', '#', '|', 'hon', 'mr', 'sect', 'x2014', 'government', 'right', 'house', 'member', 'gentleman', 'bill', 'friend', 'minister', 'members', 'question', 'secretary', 'committee', 'x00a3', '0', 'sir', 'amendment', 'lord', 'clause', 'prime', 'parliament', 'noble', 'office', 'speaker', 'proposed', 'learned', 'chancellor', 'motion', 'beg', 'majesty', 'exchequer', '000l', 'chief', 'gentlemen', 'ministry', 'commissioners', 'baronet', 'honourable', 'ministers', 'department', 'colonel', 'constituency', 'gent', 'amendments', 'lords', 'attorney', 'paper', 'lieutenant', 'x0021', 'lieut', 'mrs', 'bishops', 'duke', 'bills', 'bishop', 'commons', 'marquis', 'x2013', 'x00e9', 'buonapart', 'clarke', 'moved', 'wellesley', 'highness', 'melville', 'castlereagh', 'oliver', 'wellington', 'rose', 'lordships', 'earl', 'act', 'baroness', 'debate', 'viscount', 'marquess', 'lady', 'peers', 'royal', 'king', 'queen', 'pergami', 'bergami', 'brougham', 'gordon', 'reverend', 'governor', 'russell', 'lordship', 'chamber', 'kimberley', 'baron', 'acts', 'edmunds', 'normanby', 'canning', 'moore', 'john', 'eldon', 'grenville', 'hawkesbury', 'gambier', 'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', 'hon:', 'mr:', 'sect:', 'hon', 'mr', 'sect', 'hon.', 'mr.', 'sect.', 'x2014', 'government', 'right', 'house', 'member', 'gentleman', 'bill', 'friend', 'minister', 'members', 'question', 'secretary', 'committee', 'sir', 'amendment', 'lord', 'clause', 'prime', 'parliament', 'noble', 'office', 'speaker', 'proposed', 'learned', 'chancellor', 'motion', 'beg', 'majesty', 'exchequer',  'chief', 'gentlemen', 'ministry', 'commissioners', 'baronet', 'honourable', 'ministers', 'department', 'colonel', 'constituency', 'gent', 'amendments', 'lords', 'attorney', 'paper', 'lieutenant',  'lieut', 'mrs', 'bishops', 'duke', 'bills', 'bishop', 'commons', 'marquis', 'x2013', 'x00e9', 'buonapart', 'clarke', 'moved', 'wellesley', 'highness', 'melville', 'castlereagh', 'oliver', 'wellington', 'rose', 'lordships', 'earl', 'act', 'baroness', 'debate', 'viscount', 'marquess', 'lady', 'peers', 'royal', 'king', 'queen', 'pergami', 'bergami', 'brougham', 'gordon', 'reverend', 'governor', 'russell', 'lordship', 'chamber', 'kimberley', 'baron', 'acts', 'edmunds', 'normanby', 'canning', 'moore', 'john', 'eldon', 'grenville', 'hawkesbury', 'gambier', 'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', 'hon:', 'mr:', 'sect:', 'hon', 'mr', 'sect', 'hon.', 'mr.', 'sect.', 'x2014', 'government', 'right', 'house', 'member', 'gentleman', 'bill', 'friend', 'minister', 'members', 'question', 'secretary', 'committee', 'sir', 'amendment', 'lord', 'clause', 'prime', 'parliament', 'noble', 'office', 'speaker', 'proposed', 'learned', 'chancellor', 'motion', 'beg', 'majesty', 'exchequer',  'chief', 'gentlemen', 'ministry', 'commissioners', 'baronet', 'honourable', 'ministers', 'department', 'colonel', 'constituency', 'gent', 'amendments', 'lords', 'attorney', 'paper', 'lieutenant',  'lieut', 'mrs', 'bishops', 'duke', 'bills', 'bishop', 'commons', 'marquis', 'x2013', 'x00e9', 'buonapart', 'clarke', 'moved', 'wellesley', 'highness', 'melville', 'castlereagh', 'oliver', 'wellington', 'rose', 'lordships', 'earl', 'act', 'baroness', 'debate', 'viscount', 'marquess', 'lady', 'peers', 'royal', 'king', 'queen', 'pergami', 'bergami', 'brougham', 'gordon', 'reverend', 'governor', 'russell', 'lordship', 'chamber', 'kimberley', 'baron', 'acts', 'edmunds', 'normanby', 'canning', 'moore', 'john', 'eldon', 'grenville', 'hawkesbury', 'gambier', 'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'rt', 'ought', 'should', 'would', 'could', 'might', 'may', 'shall', 'will' ";
+    $stopwords_list = " '§', '#', '|', 'hon', 'mr', 'sect', 'x2014', 'government', 'right', 'house', 'member', 'gentleman', 'bill', 'friend', 'minister', 'members', 'question', 'secretary', 'committee', 'x00a3', '0', 'sir', 'amendment', 'lord', 'clause', 'prime', 'parliament', 'noble', 'office', 'speaker', 'proposed', 'learned', 'chancellor', 'motion', 'beg', 'majesty', 'exchequer', '000l', 'chief', 'gentlemen', 'ministry', 'commissioners', 'baronet', 'honourable', 'ministers', 'department', 'colonel', 'constituency', 'gent', 'amendments', 'lords', 'attorney', 'paper', 'lieutenant', 'x0021', 'lieut', 'mrs', 'bishops', 'duke', 'bills', 'bishop', 'commons', 'marquis', 'x2013', 'x00e9', 'buonapart', 'clarke', 'moved', 'wellesley', 'highness', 'melville', 'castlereagh', 'oliver', 'wellington', 'rose', 'lordships', 'earl', 'act', 'baroness', 'debate', 'viscount', 'marquess', 'lady', 'peers', 'royal', 'king', 'queen', 'pergami', 'bergami', 'brougham', 'gordon', 'reverend', 'governor', 'russell', 'lordship', 'chamber', 'kimberley', 'baron', 'acts', 'edmunds', 'normanby', 'canning', 'moore', 'john', 'eldon', 'grenville', 'hawkesbury', 'gambier', 'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', 'hon:', 'mr:', 'sect:', 'hon', 'mr', 'sect', 'hon.', 'mr.', 'sect.', 'x2014', 'government', 'right', 'house', 'member', 'gentleman', 'bill', 'friend', 'minister', 'members', 'question', 'secretary', 'committee', 'sir', 'amendment', 'lord', 'clause', 'prime', 'parliament', 'noble', 'office', 'speaker', 'proposed', 'learned', 'chancellor', 'motion', 'beg', 'majesty', 'exchequer',  'chief', 'gentlemen', 'ministry', 'commissioners', 'baronet', 'honourable', 'ministers', 'department', 'colonel', 'constituency', 'gent', 'amendments', 'lords', 'attorney', 'paper', 'lieutenant',  'lieut', 'mrs', 'bishops', 'duke', 'bills', 'bishop', 'commons', 'marquis', 'x2013', 'x00e9', 'buonapart', 'clarke', 'moved', 'wellesley', 'highness', 'melville', 'castlereagh', 'oliver', 'wellington', 'rose', 'lordships', 'earl', 'act', 'baroness', 'debate', 'viscount', 'marquess', 'lady', 'peers', 'royal', 'king', 'queen', 'pergami', 'bergami', 'brougham', 'gordon', 'reverend', 'governor', 'russell', 'lordship', 'chamber', 'kimberley', 'baron', 'acts', 'edmunds', 'normanby', 'canning', 'moore', 'john', 'eldon', 'grenville', 'hawkesbury', 'gambier', 'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'rt', 'ought', 'should', 'would', 'could', 'might', 'may', 'shall', 'will' ";
 
     $year_start = $_POST["params"]["year"][0];
     $year_end = $_POST["params"]["year"][1];
@@ -189,7 +189,7 @@ else {
     }
 
 
-    $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+    $rows = query_handler::query_no_parameters($sql, "hansard");
 
     $var = convert_data::gen_json_word_cloud($rows);
     $var2 = json_encode($var);
@@ -235,7 +235,7 @@ else {
           ") x group by myear ORDER BY myear";
       }
 
-      $rows[$i] = query_handler::query_no_parameters($sql, "dbname=hansard");
+      $rows[$i] = query_handler::query_no_parameters($sql, "hansard");
       $i++;
     }
 
@@ -252,7 +252,7 @@ else {
         "x " .
         "group by year ORDER BY year";
 
-      $total_both = query_handler::query_no_parameters($sql_extra, "dbname=hansard");
+      $total_both = query_handler::query_no_parameters($sql_extra, "hansard");
     }
     else {
       $total_both = "";

@@ -6,7 +6,7 @@
  */
 class DBCxn {
    // What DSN to connect to?
-   public static $dsn = 'pgsql:host=localhost;port=5432';
+   public static $dsn = 'pgsql:host=db;port=5432';
    public static $driverOpts = NULL;
 
    //turn off search recording, recommended False in test environment
@@ -15,11 +15,11 @@ class DBCxn {
     // Internal variable to hold the connection
     private static $db;
     // No cloning or instantiating allowed
-    final private function __construct() { }
-    final private function __clone() { }
+    private function __construct() { }
+    private function __clone() { }
 
     public static function get($database_name) {
-      $dsn_new=self::$dsn.$database_name;
+      $dsn_new = self::$dsn . ';dbname=' . $database_name;
       try {
         // Connect if not already connected
            if (is_null(self::$db)) {

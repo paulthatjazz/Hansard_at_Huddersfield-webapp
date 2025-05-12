@@ -21,10 +21,10 @@ if (isset($_POST['house'])) {
 }
 
 if (!isset($_SESSION['PID'])) {
-  $_SESSION["PID"] =  query_handler::gettingPID("dbname=hansard");
+  $_SESSION["PID"] =  query_handler::gettingPID("hansard");
 } else {
   $_SESSION["previous_PID"] = $_SESSION["PID"];
-  $_SESSION["PID"] =  query_handler::gettingPID("dbname=hansard");
+  $_SESSION["PID"] =  query_handler::gettingPID("hansard");
 }
 
 session_write_close();
@@ -98,7 +98,7 @@ if (isset($_GET['action'])) {
     $sql = "SELECT id, sittingday, contributiontext, member, href as url FROM hansard_" . $_POST['row_house'] . "." . $_POST['row_house'] . " WHERE id='" . $_POST['id'] . "'";
   }
   
-  $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+  $rows = query_handler::query_no_parameters($sql, "hansard");
 
   $var = convert_data::format_contributionOne($rows, $_POST['query']);
 
@@ -150,7 +150,7 @@ if (isset($_GET['action'])) {
       "x " .
       "group by year ORDER BY year";
 
-    $total_both = query_handler::query_no_parameters($sql_extra, "dbname=hansard");
+    $total_both = query_handler::query_no_parameters($sql_extra, "hansard");
   } else {
     $total_both = "";
   }
@@ -216,19 +216,19 @@ if (isset($_GET['action'])) {
 
   $sql = search::getDocumentsById($house, $q);
 
-  $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+  $rows = query_handler::query_no_parameters($sql, "hansard");
 
   $var = convert_data::format_saveDocuments($rows, $_POST['offset']);
   
   echo $var;
 } else if ($_POST['action'] == "killPID") {
-  $var = query_handler::killingPID("dbname=hansard", $_SESSION["previous_PID"]);
+  $var = query_handler::killingPID("hansard", $_SESSION["previous_PID"]);
   echo $var;
 } else if ($_POST['action'] == "maxDate"){
 
   $sql = "SELECT max(sittingday) as upperdate FROM hansard_commons.commons";
 
-  $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+  $rows = query_handler::query_no_parameters($sql, "hansard");
   
   echo json_encode($rows);
 } else if ($_POST['action'] == 'sharedLink'){

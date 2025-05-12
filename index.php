@@ -69,17 +69,16 @@
 							<p class="lead">Welcome to Hansard at Huddersfield! Explore
                                 the official, substantially verbatim report of what was
                                 said in both
-                                houses of Parliament between 1803-
-                                <?php
-                                include_once 'src/php/db/query_handler.php';
+                                houses of Parliament between 1803-<?php
+									include_once 'src/php/db/query_handler.php';
 
-                                $sql = "SELECT max(sittingday) as upperdate FROM hansard_commons.commons";
+									$sql = "SELECT max(sittingday) as upperdate FROM hansard_commons.commons";
 
-                                $rows = query_handler::query_no_parameters($sql, "dbname=hansard");
+									$rows = query_handler::query_no_parameters($sql, "hansard");
 
-                                $maxd = str_split(strval($rows[0]["upperdate"]), 4)[0];
+									$maxd = str_split(strval($rows[0]["upperdate"]), 4)[0] ?? "2025";
 
-                                echo $maxd;
+									echo $maxd;
                                 ?>
                                 through various
                                 search functions and interactive visualisations.</p>
@@ -92,6 +91,7 @@
 						</div>
 					</div>
 					<div class="d-none d-md-inline-block col-md-4">
+						
 						<a class="twitter-timeline" data-lang="en" data-height="300"
 							data-theme="light"
 							href="https://twitter.com/HansardHuds?ref_src=twsrc%5Etfw">Tweets
